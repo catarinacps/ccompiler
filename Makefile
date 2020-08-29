@@ -58,23 +58,22 @@ INC := -I$(INC_DIR)
 
 #	- Main source files:
 #	Presumes that all "main" source files are in the root of SRC_DIR
-MAIN := $(wildcard $(SRC_DIR)/*.c)
+MAIN := $(notdir $(wildcard $(SRC_DIR)/*.c))
 
 #	- Path to all final binaries:
-TARGET := $(patsubst %.c, $(OUT_DIR)/%, $(notdir $(MAIN)))
-
-#	- Other source files:
-SRC := $(filter-out $(notdir $(MAIN)), $(shell find $(SRC_DIR) -name '*.c' | cut -d'/' -f2-))
+TARGET := $(MAIN:%.c=$(OUT_DIR)/%)
 
 #	- Lexer files:
 LEX := $(shell find $(SRC_DIR) -name '*.l')
 
 #	- Generated lexer sources:
-GEN := $(patsubst %.l, %.yy.c, $(LEX))
-SRC += $(patsubst $(SRC_DIR)/%, %, $(GEN))
+GEN := $(LEX:$(SRC_DIR)/%.l=%.yy.c)
+
+#	- Other source files:
+SRC := $(filter-out $(MAIN) $(GEN), $(shell find $(SRC_DIR) -name '*.c' | cut -d'/' -f2-)) $(GEN)
 
 #	- Objects to be created:
-OBJ := $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))
+OBJ := $(SRC:%.c=$(OBJ_DIR)/%.o)
 
 ################################################################################
 #	Rules:
@@ -84,8 +83,8 @@ $(TARGET): $(OUT_DIR)/%: $(SRC_DIR)/%.c $(OBJ)
 	$(CC) -o $@ $^ $(INC) $(OPT) $(LIB) $(DEBUGC)
 
 #	- Generated lexer source:
-$(GEN): %.yy.c: %.l
-	$(FLX) -o $@ $<
+$(GEN): %.yy.c: $(SRC_DIR)/%.l
+	$(FLX) -o $(SRC_DIR)/$@ $< $(DEBUGL)
 
 #	- Objects:
 $(OBJ): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
