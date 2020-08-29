@@ -37,7 +37,7 @@ DEBUG :=
 #	- Compilation flags:
 #	Compiler and language version
 CC := gcc -std=c17
-FLX := flex --nomain
+FLX := flex --nomain --yylineno
 #	If DEBUG is defined, we'll turn on the debug flag and attach address
 #	sanitizer on the executables.
 DEBUGC := $(if $(DEBUG),-g -fsanitize=address -DDEBUG)
@@ -48,9 +48,6 @@ CFLAGS :=\
 	-Wpedantic \
 	-Wshadow \
 	-Wunreachable-code
-LDFLAGS :=\
-	-shared \
-	-fPIC
 OPT := $(if $(DEBUG),-O0,-O3 -march=native)
 LIB := -L$(LIB_DIR) \
 	-lfl
@@ -133,4 +130,4 @@ help:
 print-%:
 	@echo $* = $($*)
 
-.PHONY: all clean redo help print-%
+.PHONY: all clean redo help tool print-%

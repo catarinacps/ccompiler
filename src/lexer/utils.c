@@ -14,7 +14,5 @@
 
 unsigned int get_line_number(void)
 {
-    // TODO: something
-
-    return 0;
+    return (unsigned int)yylineno;
 }

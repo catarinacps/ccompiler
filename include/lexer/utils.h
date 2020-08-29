@@ -20,6 +20,8 @@
 #define PRINT_NAME(TOKEN) printf("%d " #TOKEN " [%s]\n", get_line_number(), yytext)
 #define PRINT_SPC_NAME(TOKEN) printf("%d TK_ESPECIAL [%c]\n", get_line_number(), TOKEN)
 
+extern int yylineno;
+
 /**
  * Retrieves the line where the last token was recognized.
  *
