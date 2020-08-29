@@ -1,6 +1,6 @@
-#	-- c-template --
+#	-- ccompiler --
 #
-#	c-template's project Makefile.
+#	ccompiler's project Makefile.
 #
 #	Utilization example:
 #		make <TARGET> ["DEBUG=true"]
@@ -17,6 +17,7 @@
 #
 #	@author
 #		@hcpsilva - Henrique Silva
+#		@birromer - Bernardo Hummes
 #
 #	Make's default action is "all" when no parameters are provided.
 
@@ -33,16 +34,14 @@ LIB_DIR := lib
 
 DEBUG :=
 
-#	Add the extra paths through these variables in the command line
-LIB_EXTRA :=
-INC_EXTRA :=
-
 #	- Compilation flags:
 #	Compiler and language version
 CC := gcc -std=c17
+FLX := flex
 #	If DEBUG is defined, we'll turn on the debug flag and attach address
 #	sanitizer on the executables.
-DEBUGF := $(if $(DEBUG),-g -fsanitize=address)
+DEBUGC := $(if $(DEBUG),-g -fsanitize=address -DDEBUG)
+DEBUGL := $(if $(DEBUG),-d)
 CFLAGS :=\
 	-Wall \
 	-Wextra \
@@ -53,13 +52,9 @@ LDFLAGS :=\
 	-shared \
 	-fPIC
 OPT := $(if $(DEBUG),-O0,-O3 -march=native)
-LIB := -L$(LIB_DIR) $(LIB_EXTRA)
-INC := -I$(INC_DIR) -I$(SRC_DIR) $(INC_EXTRA)
-
-#	Put here any dependencies you wish to include in the project, according to the
-#	following format:
-#	"<name> <URL> [<URL> ...]" "<name> <URL> [<URL> ...]" ...
-DEPS :=
+LIB := -L$(LIB_DIR) \
+	-lfl
+INC := -I$(INC_DIR)
 
 ################################################################################
 #	Files:
@@ -69,61 +64,50 @@ DEPS :=
 MAIN := $(wildcard $(SRC_DIR)/*.c)
 
 #	- Path to all final binaries:
-TARGET_EXE := $(patsubst %.c, $(OUT_DIR)/%, $(notdir $(MAIN)))
-
-#	- Library directories:
-LIBS := $(shell find $(LIB_DIR) -maxdepth 1 -mindepth 1 -type d)
-
-#	- Path to all final libraries:
-TARGET_LIB := $(patsubst %, $(LIB_DIR)/lib%.so, $(basename $(LIBS)))
+TARGET := $(patsubst %.c, $(OUT_DIR)/%, $(notdir $(MAIN)))
 
 #	- Other source files:
-EXE_SRC := $(shell find $(SRC_DIR) -name '*.c' | cut -d'/' -f2-)
+SRC := $(shell find $(SRC_DIR) -name '*.c' | cut -d'/' -f2-)
 
 #	- Objects to be created:
-EXE_OBJ := $(patsubst %.c, $(OBJ_DIR)/%.o, $(EXE_SRC))
+OBJ := $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))
 
-#	- Library source files:
-LIB_SRC := $(shell find $(LIB_DIR) -mindepth 2 -type f -name '*.c' | cut -d'/' -f2-)
+#	- Lexer files:
+LEX := $(shell find $(SRC_DIR) -name '*.l')
 
-#	- Library objects:
-LIB_OBJ := $(patsubst %.c, $(OBJ_DIR)/%.o, $(LIB_SRC))
+#	- Generated lexer sources:
+GEN := $(patsubst %.l, %.yy.c, $(LEX))
 
 ################################################################################
 #	Rules:
 
 #	- Executables:
-$(TARGET_EXE): $(OUT_DIR)/%: $(SRC_DIR)/%.c $(EXE_OBJ)
-	$(CC) -o $@ $^ $(INC) $(LIB) $(DEBUGF) $(OPT)
+$(TARGET): $(OUT_DIR)/%: $(SRC_DIR)/%.c $(OBJ)
+	$(CC) -o $@ $^ $(INC) $(LIB) $(DEBUGC) $(OPT)
+
+#	- Generated lexer:
+$(GEN): %.yy.c: %.l
+	$(FLX) -o $@ $<
 
 #	- Objects:
-$(EXEC_OBJ): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+$(OBJ): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
-	$(CC) -c -o $@ $< $(INC) $(CFLAGS) $(DEBUGF) $(OPT)
-
-#	- Shared Libraries:
-$(TARGET_LIB): $(LIB_DIR)/lib%.so: $(LIB_OBJ)
-	$(CC) -o $@ $^ $(LDFLAGS) $(FUN) $(INC) $(CFLAGS) $(OPT)
-
-#	- Library objects
-$(LIB_OBJ): $(OBJ_DIR)/%.o: $(LIB_DIR)/%.c
-	@mkdir -p $(dir $@)
-	$(CC) -c -o $@ $< $(INC) $(CFLAGS) $(DEBUGF) $(OPT)
+	$(CC) -c -o $@ $< $(INC) $(CFLAGS) $(DEBUGC) $(OPT)
 
 ################################################################################
 #	Targets:
 
 .DEFAULT_GOAL = all
 
-all: deps $(TARGET_LIB) $(TARGET_EXE)
+all: $(GEN) $(TARGET)
 
 clean:
-	rm -rf $(OBJ_DIR)/* $(INC_DIR)/*~ $(TARGET_EXE) $(TARGET_LIB) *~ *.o
+	rm -rf $(OBJ_DIR)/* $(TARGET) $(GEN)
 
 redo: clean all
 
 help:
-	@echo "c-template's project Makefile."
+	@echo "ccompiler's project Makefile."
 	@echo
 	@echo "Utilization example:"
 	@echo " make <TARGET> ['DEBUG=true']"
@@ -145,8 +129,4 @@ help:
 print-%:
 	@echo $* = $($*)
 
-#	Dependency fetching
-deps:
-	@./scripts/build.sh '$(DEPS)'
-
-.PHONY: all clean redo help print-% deps
+.PHONY: all clean redo help print-%
