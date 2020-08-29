@@ -37,7 +37,7 @@ DEBUG :=
 #	- Compilation flags:
 #	Compiler and language version
 CC := gcc -std=c17
-FLX := flex
+FLX := flex --nomain
 #	If DEBUG is defined, we'll turn on the debug flag and attach address
 #	sanitizer on the executables.
 DEBUGC := $(if $(DEBUG),-g -fsanitize=address -DDEBUG)
@@ -67,32 +67,33 @@ MAIN := $(wildcard $(SRC_DIR)/*.c)
 TARGET := $(patsubst %.c, $(OUT_DIR)/%, $(notdir $(MAIN)))
 
 #	- Other source files:
-SRC := $(shell find $(SRC_DIR) -name '*.c' | cut -d'/' -f2-)
-
-#	- Objects to be created:
-OBJ := $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))
+SRC := $(filter-out $(notdir $(MAIN)), $(shell find $(SRC_DIR) -name '*.c' | cut -d'/' -f2-))
 
 #	- Lexer files:
 LEX := $(shell find $(SRC_DIR) -name '*.l')
 
 #	- Generated lexer sources:
 GEN := $(patsubst %.l, %.yy.c, $(LEX))
+SRC += $(patsubst $(SRC_DIR)/%, %, $(GEN))
+
+#	- Objects to be created:
+OBJ := $(patsubst %.c, $(OBJ_DIR)/%.o, $(SRC))
 
 ################################################################################
 #	Rules:
 
 #	- Executables:
 $(TARGET): $(OUT_DIR)/%: $(SRC_DIR)/%.c $(OBJ)
-	$(CC) -o $@ $^ $(INC) $(LIB) $(DEBUGC) $(OPT)
+	$(CC) -o $@ $^ $(INC) $(OPT) $(LIB) $(DEBUGC)
 
-#	- Generated lexer:
+#	- Generated lexer source:
 $(GEN): %.yy.c: %.l
 	$(FLX) -o $@ $<
 
 #	- Objects:
 $(OBJ): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
-	$(CC) -c -o $@ $< $(INC) $(CFLAGS) $(DEBUGC) $(OPT)
+	$(CC) -c -o $@ $< $(INC) $(CFLAGS) $(OPT) $(DEBUGC)
 
 ################################################################################
 #	Targets:
