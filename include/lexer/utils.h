@@ -21,7 +21,7 @@
 #define PRINT_SPC_NAME(TOKEN) printf("%u TK_ESPECIAL [%c]\n", get_line_number(), TOKEN)
 
 #ifdef VERBOSE
-#define V_LOG_LEXER() printf("\n==> [%d]: MATCH '%s'\n", get_line_number(), yytext)
+#define V_LOG_LEXER() printf("\n==> [%d]: MATCH {%s}\n", get_line_number(), yytext)
 #else
 #define V_LOG_LEXER() ((void)0)
 #endif
