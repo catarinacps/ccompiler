@@ -106,6 +106,9 @@ clean:
 
 redo: clean all
 
+tool: clean
+	bear make
+
 help:
 	@echo "ccompiler's project Makefile."
 	@echo
