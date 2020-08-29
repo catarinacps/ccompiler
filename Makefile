@@ -32,22 +32,24 @@ OUT_DIR := build
 SRC_DIR := src
 LIB_DIR := lib
 
-DEBUG :=
-
 #	- Compilation flags:
 #	Compiler and language version
-CC := gcc -std=c17
-FLX := flex --nomain --yylineno
+CC := gcc -std=c11
+FLX := flex
 #	If DEBUG is defined, we'll turn on the debug flag and attach address
 #	sanitizer on the executables.
-DEBUGC := $(if $(DEBUG),-g -fsanitize=address -DDEBUG)
-DEBUGL := $(if $(DEBUG),-d)
 CFLAGS :=\
 	-Wall \
 	-Wextra \
 	-Wpedantic \
 	-Wshadow \
 	-Wunreachable-code
+CFLAGS += $(if $(DEBUG),-g -fsanitize=address -DDEBUG)
+CFLAGS += $(if $(VERBOSE), -DVERBOSE)
+FLEXFLAGS :=\
+	--nomain \
+	--yylineno
+FLEXFLAGS += $(if $(DEBUG),-d)
 OPT := $(if $(DEBUG),-O0,-O3 -march=native)
 LIB := -L$(LIB_DIR) \
 	-lfl
@@ -80,16 +82,16 @@ OBJ := $(SRC:%.c=$(OBJ_DIR)/%.o)
 
 #	- Executables:
 $(TARGET): $(OUT_DIR)/%: $(SRC_DIR)/%.c $(OBJ)
-	$(CC) -o $@ $^ $(INC) $(OPT) $(LIB) $(DEBUGC)
+	$(CC) -o $@ $^ $(INC) $(CFLAGS) $(OPT) $(LIB)
 
 #	- Generated lexer source:
 $(GEN): %.yy.c: $(SRC_DIR)/%.l
-	$(FLX) -o $(SRC_DIR)/$@ $< $(DEBUGL)
+	$(FLX) $(FLEXFLAGS) -o $(SRC_DIR)/$@ $<
 
 #	- Objects:
 $(OBJ): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
-	$(CC) -c -o $@ $< $(INC) $(CFLAGS) $(OPT) $(DEBUGC)
+	$(CC) -c -o $@ $< $(INC) $(CFLAGS) $(OPT)
 
 ################################################################################
 #	Targets:

@@ -12,6 +12,6 @@ whitespace [[:blank:]]
 
 %%
 
-{whitespace}+ {}
+{whitespace}+ { V_LOG_LEXER(); }
 
 %%

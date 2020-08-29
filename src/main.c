@@ -19,6 +19,8 @@ int main(int argc, char** argv)
 {
     int token = 0;
 
+    V_PRINTF("=> Initiating lexer...\n");
+
     while ((token = yylex())) {
         switch (token) {
         case '~':

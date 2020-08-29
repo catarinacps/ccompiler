@@ -20,6 +20,7 @@
 
 #include <stdio.h>
 
+#include "lexer/tokens.h"
 #include "lexer/utils.h"
 #include "utils/debug.h"
 
