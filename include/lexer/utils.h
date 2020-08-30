@@ -17,13 +17,14 @@
 #ifndef _UTILS_H_
 #define _UTILS_H_
 
+#ifndef VERBOSE
+#define V_LOG_LEXER(STR) ((void)0)
 #define PRINT_NAME(TOKEN) printf("%u " #TOKEN " [%s]\n", get_line_number(), yytext)
 #define PRINT_SPC_NAME(TOKEN) printf("%u TK_ESPECIAL [%c]\n", get_line_number(), TOKEN)
-
-#ifdef VERBOSE
-#define V_LOG_LEXER(STR) printf("\n==> [%d]: " STR " {%s}\n", get_line_number(), yytext)
 #else
-#define V_LOG_LEXER(STR) ((void)0)
+#define V_LOG_LEXER(STR) printf("\n==> [%d]: " STR " {%s}\n", get_line_number(), yytext)
+#define PRINT_NAME(TOKEN) ((void)0)
+#define PRINT_SPC_NAME(TOKEN) ((void)0)
 #endif
 
 extern int yylineno;
