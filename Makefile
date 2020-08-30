@@ -101,7 +101,7 @@ $(OBJ): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 all: $(GEN) $(TARGET)
 
 clean:
-	rm -rf $(OBJ_DIR)/* $(TARGET) $(GEN)
+	rm -rf $(OBJ_DIR)/* $(TARGET) $(GEN:%=$(SRC_DIR)/%)
 
 redo: clean all
 
