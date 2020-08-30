@@ -12,7 +12,7 @@
 
 #include <stdio.h>
 
-#include "lexer/lexer.h"
+#include "lexer/scanner.h"
 #include "lexer/tokens.h"
 
 int main(int argc, char** argv)
