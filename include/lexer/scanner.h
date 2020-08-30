@@ -1,4 +1,4 @@
-/** lexer.h - Lexer specification header
+/** scanner.h - Lexical analysis scanner header
  *
  * @file
  * @author Henrique Silva <hcpsilva@inf.ufrgs.br>
@@ -15,8 +15,8 @@
  * itself uses or other public functions to other modules.
  */
 
-#ifndef _LEXER_H_
-#define _LEXER_H_
+#ifndef _SCANNER_H_
+#define _SCANNER_H_
 
 #include <stdio.h>
 
@@ -30,4 +30,4 @@ extern int yylex_destroy(void);
 extern FILE* yyin;
 extern char* yytext;
 
-#endif /* _LEXER_H_ */
+#endif /* _SCANNER_H_ */

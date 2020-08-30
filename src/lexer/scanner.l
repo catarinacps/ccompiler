@@ -5,7 +5,7 @@
  */
 
 %{
-#include "../../include/lexer/lexer.h"
+#include "../../include/lexer/scanner.h"
 %}
 
 WHITE [[:space:]]
@@ -124,8 +124,8 @@ SCI_NOT [eE][+-]?{NUMBER}+
 <END_QUOTE>"\'"                     { V_LOG_LEXER("CHAR"); BEGIN(INITIAL); }
 
     /* number literals */
-{NUMBER}+\.{NUMBER}*{SCI_NOT}?      { V_LOG_LEXER("FLOAT"); return TK_LIT_FLOAT; }
-{NUMBER}+                           { V_LOG_LEXER("INT"); return TK_LIT_INT; }
+[+-]?{NUMBER}+\.{NUMBER}*{SCI_NOT}? { V_LOG_LEXER("FLOAT"); return TK_LIT_FLOAT; }
+[+-]?{NUMBER}+                      { V_LOG_LEXER("INT"); return TK_LIT_INT; }
 
     /* identifiers */
 [[:alpha:]_][[:alnum:]_]*           { V_LOG_LEXER("IDENTIFIER"); return TK_IDENTIFICADOR; }
