@@ -9,6 +9,9 @@
 %}
 
 WHITE [[:space:]]
+GRAPH [[:graph:]]
+ALNUM [[:alnum:]_]
+ALPHA [[:alpha:]_]
 
      /* reserved keywords */
 RK_INT "int"
@@ -38,9 +41,9 @@ RK_PROTECTED "protected"
 RK_END "end"
 RK_DEFAULT "default"
 
-SPC_CHAR [\,\;\:\(\)\[\]\{\}\+\-\|\?\@\*\/\<\>\=\!\&\%\#\ˆ\.\$]
+SPC_CHAR [[:punct:]]{-}[\'\"\`_~\\]
+
 DELIM {SPC_CHAR}|{WHITE}
-NOT_DELIM [^\,\;\:\(\)\[\]\{\}\+\-\|\?\@\*\/\<\>\=\!\&\%\#\ˆ\.\$[:space:]]
 
 OP_LE "<="
 OP_GE ">="
@@ -85,7 +88,7 @@ SCI_NOT [eE][+\-]?{NUMBER}+
 
     /* ----------  words section ----------  */
 
-[[:alpha:]_]+/{DELIM}                  { BEGIN(WORD); yyless(0); V_LOG_LEXER("WORD STATE"); }
+{ALPHA}/{ALNUM}*                       { BEGIN(WORD); V_LOG_LEXER("WORD STATE"); yyless(0); }
 
 
     /* word state */
@@ -120,10 +123,10 @@ SCI_NOT [eE][+\-]?{NUMBER}+
 {RK_DEFAULT}                           { V_LOG_LEXER("RK_DEFAULT"); return TK_PR_DEFAULT; }
 
     /* identifiers */
-[[:alpha:]_][[:alnum:]_]*              { V_LOG_LEXER("IDENTIFIER"); return TK_IDENTIFICADOR; }
+{ALPHA}{ALNUM}*                        { V_LOG_LEXER("IDENTIFIER"); return TK_IDENTIFICADOR; }
 
     /* end word */
-{DELIM}                                { BEGIN(INITIAL); V_LOG_LEXER("INITIAL STATE"); }
+{DELIM}                                { BEGIN(INITIAL); V_LOG_LEXER("INITIAL STATE"); yyless(0); }
 
 }
 
@@ -141,7 +144,7 @@ SCI_NOT [eE][+\-]?{NUMBER}+
 {OP_SR}                                { V_LOG_LEXER("OP_SR"); return TK_OC_SR; }
 
     /* special characters */
-{SPC_CHAR}/{WHITE}                     { V_LOG_LEXER("SPECIAL"); return (int)*yytext; }
+{SPC_CHAR}/{WHITE}?                    { V_LOG_LEXER("SPECIAL"); return (int)*yytext; }
 
 
     /* ---------- literals section ----------  */
@@ -153,7 +156,7 @@ SCI_NOT [eE][+\-]?{NUMBER}+
     V_LOG_LEXER("QUOTED STRING");
     return TK_LIT_STRING;
     }
-<STRING>[^[:cntrl:]]                   {
+<STRING>{GRAPH}                        {
     yyless(1);
     BEGIN(INITIAL);
     V_LOG_LEXER("MALFORMED STRING");
@@ -167,7 +170,7 @@ SCI_NOT [eE][+\-]?{NUMBER}+
     V_LOG_LEXER("QUOTED CHARACTER");
     return TK_LIT_CHAR;
     }
-<QUOTE>[^[:cntrl:]]                    {
+<QUOTE>{GRAPH}                         {
     yyless(1);
     BEGIN(INITIAL);
     V_LOG_LEXER("MALFORMED QUOTE");
@@ -175,34 +178,43 @@ SCI_NOT [eE][+\-]?{NUMBER}+
     }
 
     /* number literals */
-[+\-]?{NUMBER}/{NOT_DELIM}*            { BEGIN(DECIMAL); yymore(); V_LOG_LEXER("DECIMAL STATE"); }
+[+\-]/{NUMBER}+                        {
+    BEGIN(DECIMAL);
+    V_LOG_LEXER("DECIMAL STATE");
+    yymore();
+    }
+{NUMBER}/{ALNUM}*                      {
+    BEGIN(DECIMAL);
+    V_LOG_LEXER("DECIMAL STATE");
+    yyless(0);
+    }
 
     /* decimal state */
 <DECIMAL>{
 
     /* float */
-{NUMBER}*\.{NUMBER}*{SCI_NOT}?/{DELIM} {
+{NUMBER}+\.{NUMBER}+{SCI_NOT}?         {
     BEGIN(INITIAL);
     V_LOG_LEXER("FLOATING POINT");
     return TK_LIT_FLOAT;
     }
 
     /* malformed float */
-{NUMBER}*\.[[:alnum:]]+                {
+{NUMBER}+\.{ALNUM}+                    {
     BEGIN(INITIAL);
     V_LOG_LEXER("MALFORMED FLOATING POINT");
     return TOKEN_ERRO;
     }
 
     /* integer */
-{NUMBER}*/{DELIM}                      {
+{NUMBER}+                              {
     BEGIN(INITIAL);
     V_LOG_LEXER("INTEGER");
     return TK_LIT_INT;
     }
 
     /* malformed decimal */
-{NOT_DELIM}+                           {
+{ALNUM}+                           {
     BEGIN(INITIAL);
     V_LOG_LEXER("MALFORMED DECIMAL");
     return TOKEN_ERRO;
