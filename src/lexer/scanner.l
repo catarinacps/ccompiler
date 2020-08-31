@@ -57,6 +57,9 @@ OP_SR "<<"
 NUMBER [[:digit:]]
 SCI_NOT [eE][+\-]?{NUMBER}+
 
+BOOL_T "true"
+BOOL_F "false"
+
      /* states */
 %x COMMENT
 %x WORD
@@ -121,6 +124,10 @@ SCI_NOT [eE][+\-]?{NUMBER}+
 {RK_PROTECTED}                         { V_LOG_LEXER("RK_PROTECTED"); return TK_PR_PROTECTED; }
 {RK_END}                               { V_LOG_LEXER("RK_END"); return TK_PR_END; }
 {RK_DEFAULT}                           { V_LOG_LEXER("RK_DEFAULT"); return TK_PR_DEFAULT; }
+
+    /* boolean literals */
+{BOOL_T}                               { V_LOG_LEXER("TRUE"); return TK_LIT_TRUE; }
+{BOOL_F}                               { V_LOG_LEXER("FALSE"); return TK_LIT_FALSE; }
 
     /* identifiers */
 {ALPHA}{ALNUM}*                        { V_LOG_LEXER("IDENTIFIER"); return TK_IDENTIFICADOR; }
