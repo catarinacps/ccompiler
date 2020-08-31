@@ -55,6 +55,9 @@ LIB := -L$(LIB_DIR) \
 	-lfl
 INC := -I$(INC_DIR)
 
+#	- Release version:
+RELEASE := etapa1
+
 ################################################################################
 #	Files:
 
@@ -99,9 +102,10 @@ $(OBJ): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 .DEFAULT_GOAL = all
 
 all: $(GEN) $(TARGET)
+	ln -s $(shell readlink -f $(TARGET)) $(RELEASE)
 
 clean:
-	rm -rf $(OBJ_DIR)/* $(TARGET) $(GEN:%=$(SRC_DIR)/%)
+	rm -rf $(OBJ_DIR)/* $(TARGET) $(GEN:%=$(SRC_DIR)/%) $(RELEASE)
 
 redo: clean all
 
