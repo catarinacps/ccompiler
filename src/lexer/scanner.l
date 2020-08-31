@@ -5,7 +5,7 @@
  */
 
 %{
-#include "../../include/lexer/scanner.h"
+#include "lexer/scanner.h"
 %}
 
 WHITE [[:space:]]
