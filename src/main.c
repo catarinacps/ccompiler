@@ -19,7 +19,7 @@ int main(void)
 {
     int token = 0;
 
-    V_PRINTF("=> Initiating lexer...\n",);
+    V_PRINTF("=> Initiating lexer...\n");
 
     while ((token = yylex())) {
         switch (token) {

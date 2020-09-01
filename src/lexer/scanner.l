@@ -10,7 +10,7 @@
 
 %option noyywrap
 
-WHITE [[:space:]]
+WHITE [[:blank:]]
 GRAPH [[:graph:]]
 ALNUM [[:alnum:]_]
 ALPHA [[:alpha:]_]
