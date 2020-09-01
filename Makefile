@@ -101,7 +101,7 @@ $(OBJ): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 .DEFAULT_GOAL = all
 
 all: $(GEN) $(TARGET)
-	ln -s $(shell readlink -f $(TARGET)) $(RELEASE)
+	ln -sf $(shell readlink -f $(TARGET)) $(RELEASE)
 
 clean:
 	rm -rf $(OBJ_DIR)/* $(TARGET) $(GEN:%=$(SRC_DIR)/%) $(RELEASE) $(RELEASE).tgz
