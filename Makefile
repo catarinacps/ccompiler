@@ -51,8 +51,7 @@ FLEXFLAGS :=\
 	--yylineno
 FLEXFLAGS += $(if $(DEBUG),-d)
 OPT := $(if $(DEBUG),-O0,-O3 -march=native)
-LIB := -L$(LIB_DIR) \
-	-lfl
+LIB := -L$(LIB_DIR)
 INC := -I$(INC_DIR)
 
 #	- Release version:

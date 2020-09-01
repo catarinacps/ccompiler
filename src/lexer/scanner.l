@@ -8,6 +8,8 @@
 #include "lexer/scanner.h"
 %}
 
+%option noyywrap
+
 WHITE [[:space:]]
 GRAPH [[:graph:]]
 ALNUM [[:alnum:]_]
@@ -221,7 +223,7 @@ BOOL_F "false"
     }
 
     /* malformed decimal */
-{ALNUM}+                           {
+{ALNUM}+                               {
     BEGIN(INITIAL);
     V_LOG_LEXER("MALFORMED DECIMAL");
     return TOKEN_ERRO;
