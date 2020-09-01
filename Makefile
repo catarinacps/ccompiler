@@ -105,7 +105,7 @@ all: $(GEN) $(TARGET)
 	ln -s $(shell readlink -f $(TARGET)) $(RELEASE)
 
 clean:
-	rm -rf $(OBJ_DIR)/* $(TARGET) $(GEN:%=$(SRC_DIR)/%) $(RELEASE)
+	rm -rf $(OBJ_DIR)/* $(TARGET) $(GEN:%=$(SRC_DIR)/%) $(RELEASE) $(RELEASE).tgz
 
 redo: clean all
 

@@ -29,6 +29,12 @@ pushd $root
 
 version=$(awk '/RELEASE :=/ {print $3}' Makefile)
 
-tar czf "$version.tgz" *
+make clean
+
+tar --exclude="$version.tgz" \
+    --exclude-vcs-ignores \
+    --exclude-vcs \
+    --exclude-backups \
+    -czf "$version.tgz" .
 
 popd
