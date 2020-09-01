@@ -28,4 +28,12 @@
 #define V_PERROR(f_) ((void)0)
 #endif
 
+#ifdef DEBUG
+#define D_PRINTF(f_, ...) \
+    fprintf(stderr, "%s:%d:%s():", __FILE__, __LINE__, __func__); \
+    fprintf(stderr, (f_), ##__VA_ARGS__)
+#else
+#define D_PRINTF(f_, ...) ((void)0)
+#endif
+
 #endif /* _DEBUG_H_ */

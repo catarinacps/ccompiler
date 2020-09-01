@@ -46,10 +46,10 @@ CFLAGS :=\
 	-Wunreachable-code
 CFLAGS += $(if $(DEBUG),-g -fsanitize=address -DDEBUG)
 CFLAGS += $(if $(VERBOSE), -DVERBOSE)
-FLEXFLAGS :=\
+FLXFLAGS :=\
 	--nomain \
 	--yylineno
-FLEXFLAGS += $(if $(DEBUG),-d)
+FLXFLAGS += $(if $(DEBUG),-d)
 OPT := $(if $(DEBUG),-O0,-O3 -march=native)
 LIB := -L$(LIB_DIR)
 INC := -I$(INC_DIR)
@@ -88,7 +88,7 @@ $(TARGET): $(OUT_DIR)/%: $(SRC_DIR)/%.c $(OBJ)
 
 #	- Generated lexer source:
 $(GEN): %.yy.c: $(SRC_DIR)/%.l
-	$(FLX) $(FLEXFLAGS) -o $(SRC_DIR)/$@ $<
+	$(FLX) $(FLXFLAGS) -o $(SRC_DIR)/$@ $<
 
 #	- Objects:
 $(OBJ): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
