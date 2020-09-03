@@ -23,7 +23,7 @@
 # This script runs some test cases for the first stage of INF01147's
 # final assignment.
 
-set -x
+set -eu
 
 TEST_DIR="$(dirname $(readlink -f $0))"
 ROOT_DIR="$(dirname $TEST_DIR)"

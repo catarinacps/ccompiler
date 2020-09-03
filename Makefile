@@ -31,6 +31,7 @@ OBJ_DIR := bin
 OUT_DIR := build
 SRC_DIR := src
 LIB_DIR := lib
+TST_DIR := test
 
 #	- Compilation flags:
 #	Compiler and language version
@@ -107,6 +108,9 @@ clean:
 	rm -rf $(OBJ_DIR)/* $(TARGET) $(GEN:%=$(SRC_DIR)/%) $(RELEASE) $(RELEASE).tgz
 
 redo: clean all
+
+test: redo
+	./$(TST_DIR)/$(RELEASE).sh
 
 tool: clean
 	bear make
