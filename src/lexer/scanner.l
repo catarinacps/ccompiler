@@ -15,6 +15,8 @@ GRAPH [[:graph:]]
 ALNUM [[:alnum:]_]
 ALPHA [[:alpha:]_]
 
+ESC_SEQ "\\"[abfnrtv\\\"\'?]
+
      /* reserved keywords */
 RK_INT "int"
 RK_FLOAT "float"
@@ -160,7 +162,7 @@ BOOL_F "false"
 
     /* string literals */
 "\""                                   { BEGIN(STRING); yymore(); V_LOG_LEXER("STRING STATE"); }
-<STRING>([^\"\n]|"\\"(?s:.))*"\""      {
+<STRING>({ESC_SEQ}|[^\"\n\\])*"\""     {
     BEGIN(INITIAL);
     V_LOG_LEXER("QUOTED STRING");
     return TK_LIT_STRING;
@@ -174,7 +176,7 @@ BOOL_F "false"
 
     /* character literals */
 "\'"                                   { BEGIN(QUOTE); yymore(); V_LOG_LEXER("CHAR STATE"); }
-<QUOTE>"\\"?."\'"                      {
+<QUOTE>({ESC_SEQ}|[^\'\n\\])"\'"       {
     BEGIN(INITIAL);
     V_LOG_LEXER("QUOTED CHARACTER");
     return TK_LIT_CHAR;

@@ -46,7 +46,7 @@ CFLAGS :=\
 	-Wshadow \
 	-Wunreachable-code
 CFLAGS += $(if $(DEBUG),-g -fsanitize=address -DDEBUG)
-CFLAGS += $(if $(VERBOSE), -DVERBOSE)
+CFLAGS += $(if $(VERBOSE),-DVERBOSE)
 FLXFLAGS :=\
 	--nomain \
 	--yylineno
@@ -69,16 +69,20 @@ MAIN := $(notdir $(wildcard $(SRC_DIR)/*.c))
 TARGET := $(MAIN:%.c=$(OUT_DIR)/%)
 
 #	- Lexer files:
-LEX := $(shell find $(SRC_DIR) -name '*.l')
+LEX := $(shell find $(SRC_DIR) -name '*.l' | cut -d'/' -f2-)
 
 #	- Generated lexer sources:
-GEN := $(LEX:$(SRC_DIR)/%.l=%.yy.c)
+GEN := $(LEX:%.l=%.yy.c)
 
 #	- Other source files:
-SRC := $(filter-out $(MAIN) $(GEN), $(shell find $(SRC_DIR) -name '*.c' | cut -d'/' -f2-)) $(GEN)
+SRC := $(shell find $(SRC_DIR) -name '*.c' | cut -d'/' -f2-)
+SRC := $(filter-out $(MAIN) $(GEN), $(SRC)) $(GEN)
 
 #	- Objects to be created:
 OBJ := $(SRC:%.c=$(OBJ_DIR)/%.o)
+
+#	- Final generated paths:
+GEN := $(GEN:%=$(SRC_DIR)/%)
 
 ################################################################################
 #	Rules:
@@ -88,8 +92,8 @@ $(TARGET): $(OUT_DIR)/%: $(SRC_DIR)/%.c $(OBJ)
 	$(CC) -o $@ $^ $(INC) $(CFLAGS) $(OPT) $(LIB)
 
 #	- Generated lexer source:
-$(GEN): %.yy.c: $(SRC_DIR)/%.l
-	$(FLX) $(FLXFLAGS) -o $(SRC_DIR)/$@ $<
+$(GEN): %.yy.c: %.l
+	$(FLX) $(FLXFLAGS) -o $@ $<
 
 #	- Objects:
 $(OBJ): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
@@ -105,7 +109,7 @@ all: $(GEN) $(TARGET)
 	ln -sf $(shell readlink -f $(TARGET)) $(RELEASE)
 
 clean:
-	rm -rf $(OBJ_DIR)/* $(TARGET) $(GEN:%=$(SRC_DIR)/%) $(RELEASE) $(RELEASE).tgz
+	rm -rf $(OBJ_DIR)/* $(TARGET) $(GEN) $(RELEASE) $(RELEASE).tgz
 
 redo: clean all
 
