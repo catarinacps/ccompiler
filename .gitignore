@@ -55,4 +55,3 @@ dkms.conf
 # Project files
 .clangd/
 compile_commands.json
-etapa*
