@@ -53,8 +53,9 @@ RK_DEFAULT "default"
 /* special punctuation characters */
 SPC_CHAR [[:punct:]]{-}[\'\"\`_~\\]
 
-/* delimiters, which are either whitespace or special characters */
-DELIM {SPC_CHAR}|{WHITE}
+/* delimiters, which are either whitespace or special punctuation
+ * characters */
+DELIM [[:punct:][:space:]]{-}[_\\~]
 
 /* composite operators */
 OP_LE "<="
