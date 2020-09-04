@@ -1,23 +1,25 @@
-#	-- ccompiler --
+##	-- ccompiler --
 #
 #	ccompiler's project Makefile.
 #
 #	Utilization example:
 #		make <TARGET> ["DEBUG=true"]
 #
-#	@param TARGET
+#	\param TARGET
 #		Can be any of the following:
 #		all - builds the project (DEFAULT TARGET)
 #		clean - cleans up all binaries generated during compilation
 #		redo - cleans up and then builds
 #		help - shows the utilization example
+#		test - builds and run tests
+#		tool - generates compile_commands.json
+#		release - builds and compresses the work directory for release
 #
-#	@param "DEBUG=true"
+#	\param "DEBUG=true"
 #		When present, the build will happen in debug mode.
 #
-#	@author
-#		@hcpsilva - Henrique Silva
-#		@birromer - Bernardo Hummes
+#	\author @hcpsilva - Henrique Silva
+#	\author @birromer - Bernardo Hummes
 #
 #	Make's default action is "all" when no parameters are provided.
 
@@ -119,6 +121,9 @@ test: redo
 tool: clean
 	bear make
 
+release: redo
+	./scripts/release.sh
+
 help:
 	@echo "ccompiler's project Makefile."
 	@echo
@@ -131,6 +136,9 @@ help:
 	@echo " clean - cleans up all binaries generated during compilation"
 	@echo " redo - cleans up and then builds"
 	@echo " help - shows the utilization example"
+	@echo " test - builds and run tests"
+	@echo " tool - generates compile_commands.json"
+	@echo " release - builds and compresses the work directory for release"
 	@echo
 	@echo "@param 'DEBUG=true'"
 	@echo " When present, the build will happen in debug mode."
@@ -142,4 +150,4 @@ help:
 print-%:
 	@echo $* = $($*)
 
-.PHONY: all clean redo help tool print-%
+.PHONY: all clean redo help tool test release print-%
