@@ -1,0 +1,33 @@
+#+title: =ccompiler= release 1
+#+author: Henrique Silva
+#+author: Bernardo Hummes
+#+email: hcpsilva@inf.ufrgs.br
+#+infojs_opt:
+#+property: cache yes
+
+In this file we'll provide a small account of the implementation process
+underwent until the release date.
+
+* Objective
+
+The first stage outlined a lexical analyzer (lexer) that achieves the
+following goals to this release:
+
+- line count;
+- ignore comments;
+- throw lexical errors;
+- match tokens
+  - reserved keywords;
+  - special characters;
+  - composite operators;
+  - identifiers;
+  - string and decimal literals.
+
+The tool that would enable us to achieve that is =flex=, the Fast Lexical
+Analyzer, part of the GNU's toolbox.
+
+* Tools
+
+* Methodology
+
+* Conclusion

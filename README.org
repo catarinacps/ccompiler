@@ -1,4 +1,4 @@
-#+title: ==ccompiler==
+#+title: =ccompiler=
 #+author: Henrique Silva
 #+author: Bernardo Hummes
 #+email: hcpsilva@inf.ufrgs.br
