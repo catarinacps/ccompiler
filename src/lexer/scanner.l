@@ -8,16 +8,21 @@
 #include "lexer/scanner.h"
 %}
 
-%option noyywrap
+/* no need to use the default flex main */
+%option noyywrap yylineno
 
+/* helpful character classes */
 WHITE [[:blank:]]
 GRAPH [[:graph:]]
 ALNUM [[:alnum:]_]
 ALPHA [[:alpha:]_]
 
-ESC_SEQ "\\"[abfnrtv\\\"\'?]
+/* to handle escape sequences require the modification of the matched
+ * string, which is not a good idea to do with yytext, as it points
+ * directly to the input stream */
+ESC_SEQ [abfnrtv\\\"\']
 
-     /* reserved keywords */
+/* reserved keywords */
 RK_INT "int"
 RK_FLOAT "float"
 RK_BOOL "bool"
@@ -45,10 +50,13 @@ RK_PROTECTED "protected"
 RK_END "end"
 RK_DEFAULT "default"
 
+/* special punctuation characters */
 SPC_CHAR [[:punct:]]{-}[\'\"\`_~\\]
 
+/* delimiters, which are either whitespace or special characters */
 DELIM {SPC_CHAR}|{WHITE}
 
+/* composite operators */
 OP_LE "<="
 OP_GE ">="
 OP_EQ "=="
@@ -58,13 +66,15 @@ OP_OR "||"
 OP_SL ">>"
 OP_SR "<<"
 
+/* decimals */
 NUMBER [[:digit:]]
 SCI_NOT [eE][+\-]?{NUMBER}+
 
+/* boolean literals */
 BOOL_T "true"
 BOOL_F "false"
 
-     /* states */
+/* states */
 %x COMMENT
 %x WORD
 %x STRING
@@ -82,15 +92,16 @@ BOOL_F "false"
     /* comment state */
 <COMMENT>{
 
-[^*\n]*                                { }
-"*"+[^*/\n]*                           { }
-\n                                     { }
 "*"+"/"                                { BEGIN(INITIAL); V_LOG_LEXER("INITIAL STATE"); }
+[^*\n]*
+"*"+[^*/\n]*
+\n
+<<EOF>>                                { return TOKEN_ERRO; }
 
 }
 
     /* line comments */
-"//".*                                 { }
+"//".*\n
 
 
     /* ----------  words section ----------  */
@@ -162,7 +173,7 @@ BOOL_F "false"
 
     /* string literals */
 "\""                                   { BEGIN(STRING); yymore(); V_LOG_LEXER("STRING STATE"); }
-<STRING>({ESC_SEQ}|[^\"\n\\])*"\""     {
+<STRING>("\\".|[^\"\n\\])*"\""         {
     BEGIN(INITIAL);
     V_LOG_LEXER("QUOTED STRING");
     return TK_LIT_STRING;
@@ -176,7 +187,7 @@ BOOL_F "false"
 
     /* character literals */
 "\'"                                   { BEGIN(QUOTE); yymore(); V_LOG_LEXER("CHAR STATE"); }
-<QUOTE>({ESC_SEQ}|[^\'\n\\])"\'"       {
+<QUOTE>("\\".|[^\'\n\\])"\'"           {
     BEGIN(INITIAL);
     V_LOG_LEXER("QUOTED CHARACTER");
     return TK_LIT_CHAR;
@@ -204,14 +215,14 @@ BOOL_F "false"
 <DECIMAL>{
 
     /* float */
-{NUMBER}+\.{NUMBER}+{SCI_NOT}?         {
+{NUMBER}+"."{NUMBER}+{SCI_NOT}?        {
     BEGIN(INITIAL);
     V_LOG_LEXER("FLOATING POINT");
     return TK_LIT_FLOAT;
     }
 
     /* malformed float */
-{NUMBER}+\.{ALNUM}+                    {
+{NUMBER}+"."{ALNUM}+                   {
     BEGIN(INITIAL);
     V_LOG_LEXER("MALFORMED FLOATING POINT");
     return TOKEN_ERRO;
