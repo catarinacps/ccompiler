@@ -109,9 +109,11 @@ $(OBJ): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 all: $(GEN) $(TARGET)
 	ln -sf $(shell readlink -f $(TARGET)) $(RELEASE)
+	emacs -batch doc/$(RELEASE).org --funcall org-latex-export-to-pdf
+	@rm doc/$(RELEASE).tex*
 
 clean:
-	rm -rf $(OBJ_DIR)/* $(TARGET) $(GEN) $(RELEASE) $(RELEASE).tgz
+	rm -rf $(OBJ_DIR)/* $(TARGET) $(GEN) $(RELEASE){,.tgz} doc/$(RELEASE).pdf
 
 redo: clean all
 
@@ -121,7 +123,7 @@ test: redo
 tool: clean
 	bear make
 
-release: redo
+release: clean
 	./scripts/release.sh
 
 help:

@@ -1,4 +1,4 @@
-# -*- org; org-export-babel-evaluate: nil; coding: utf-8;  -*-
+# -*- mode: org; org-export-babel-evaluate: nil; coding: utf-8  -*-
 
 #+title: Release Report
 #+subtitle: /INF01147 - Compilers/
