@@ -21,7 +21,7 @@
 #+begin_abstract
 In the first stage of the assignment, we've achieved a fully-functioning
 and correct implementation of a lexical analyzer. Our application
-utilized a simple project structure and makes use of several
+utilizes a simple project structure and makes use of several
 functionalities of the tools we've utilized in order to simplify the
 token rules and error recognition. The source code also provides simple
 control over the possible build actions through a full-featured build

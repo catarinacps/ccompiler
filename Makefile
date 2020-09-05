@@ -13,7 +13,7 @@
 #		help - shows the utilization example
 #		test - builds and run tests
 #		tool - generates compile_commands.json
-#		release - builds and compresses the work directory for release
+#		release - cleans and compresses the work directory for release
 #
 #	\param "DEBUG=true"
 #		When present, the build will happen in debug mode.
@@ -140,7 +140,7 @@ help:
 	@echo " help - shows the utilization example"
 	@echo " test - builds and run tests"
 	@echo " tool - generates compile_commands.json"
-	@echo " release - builds and compresses the work directory for release"
+	@echo " release - cleans and compresses the work directory for release"
 	@echo
 	@echo "@param 'DEBUG=true'"
 	@echo " When present, the build will happen in debug mode."
