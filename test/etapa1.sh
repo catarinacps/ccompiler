@@ -18,10 +18,12 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
-# Commentary:
+## Commentary:
 #
 # This script runs some test cases for the first stage of INF01147's
 # final assignment.
+#
+## Code:
 
 set -eu
 
@@ -40,3 +42,5 @@ for test_case in $TEST_DIR/etapa1/*; do
     $ROOT_DIR/etapa1 < $test_case >> $LOG_FILE
     echo >> $LOG_FILE
 done
+
+## etapa1.sh ends here

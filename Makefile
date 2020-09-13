@@ -38,7 +38,8 @@ TST_DIR := test
 #	- Compilation flags:
 #	Compiler and language version
 CC := gcc -std=c11
-FLX := flex
+LEX := flex
+YACC := bison
 #	If DEBUG is defined, we'll turn on the debug flag and attach address
 #	sanitizer on the executables.
 CFLAGS :=\
@@ -49,10 +50,8 @@ CFLAGS :=\
 	-Wunreachable-code
 CFLAGS += $(if $(DEBUG),-g -fsanitize=address -DDEBUG)
 CFLAGS += $(if $(VERBOSE),-DVERBOSE)
-FLXFLAGS :=\
-	--nomain \
-	--yylineno
-FLXFLAGS += $(if $(DEBUG),-d)
+LFLAGS := --nomain --yylineno $(if $(DEBUG),-d)
+YFLAGS := -Wall $(if $(DEBUG),--debug)
 OPT := $(if $(DEBUG),-O0,-O3 -march=native)
 LIB := -L$(LIB_DIR)
 INC := -I$(INC_DIR)
@@ -65,26 +64,25 @@ RELEASE := etapa1
 
 #	- Main source files:
 #	Presumes that all "main" source files are in the root of SRC_DIR
-MAIN := $(notdir $(wildcard $(SRC_DIR)/*.c))
+MAIN := $(wildcard $(SRC_DIR)/*.c)
 
 #	- Path to all final binaries:
-TARGET := $(MAIN:%.c=$(OUT_DIR)/%)
+TARGET := $(MAIN:$(SRC_DIR)/%.c=$(OUT_DIR)/%)
 
-#	- Lexer files:
-LEX := $(shell find $(SRC_DIR) -name '*.l' | cut -d'/' -f2-)
+#	- Yacc files:
+YSRC := $(shell find $(SRC_DIR) -name '*.y')
+YSRC := $(YSRC:.y=.tab.c)
 
-#	- Generated lexer sources:
-GEN := $(LEX:%.l=%.yy.c)
+#	- Lex files:
+LSRC := $(shell find $(SRC_DIR) -name '*.l')
+LSRC := $(LSRC:.l=.yy.c)
 
 #	- Other source files:
-SRC := $(shell find $(SRC_DIR) -name '*.c' | cut -d'/' -f2-)
-SRC := $(filter-out $(MAIN) $(GEN), $(SRC)) $(GEN)
+CSRC := $(shell find $(SRC_DIR) -name '*.c')
+CSRC := $(filter-out $(MAIN) $(YSRC) $(LSRC),$(CSRC)) $(YSRC) $(LSRC)
 
 #	- Objects to be created:
-OBJ := $(SRC:%.c=$(OBJ_DIR)/%.o)
-
-#	- Final generated paths:
-GEN := $(GEN:%=$(SRC_DIR)/%)
+OBJ := $(CSRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 ################################################################################
 #	Rules:
@@ -94,8 +92,12 @@ $(TARGET): $(OUT_DIR)/%: $(SRC_DIR)/%.c $(OBJ)
 	$(CC) -o $@ $^ $(INC) $(CFLAGS) $(OPT) $(LIB)
 
 #	- Generated lexer source:
-$(GEN): %.yy.c: %.l
-	$(FLX) $(FLXFLAGS) -o $@ $<
+$(LSRC): %.yy.c: %.l
+	$(LEX) $(LFLAGS) -o $@ $<
+
+#	- Generated grammar files:
+$(YSRC): $(SRC_DIR)/%.tab.c: $(INC_DIR)/%.tab.h %.y
+	$(YACC) $(YFLAGS) -o $@ --defines=$^
 
 #	- Objects:
 $(OBJ): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
@@ -107,13 +109,18 @@ $(OBJ): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 .DEFAULT_GOAL = all
 
-all: $(GEN) $(TARGET)
+all: $(LSRC) $(YSRC) $(TARGET)
 	ln -sf $(shell readlink -f $(TARGET)) $(RELEASE)
 	emacs -batch doc/$(RELEASE).org --funcall org-latex-export-to-pdf
 	@rm doc/$(RELEASE).tex*
 
 clean:
-	rm -rf $(OBJ_DIR)/* $(TARGET) $(GEN) $(RELEASE){,.tgz} doc/$(RELEASE).pdf
+	rm -rf $(OBJ_DIR)/* \
+		$(YSRC) $(YSRC:$(SRC_DIR)/%.tab.c=$(INC_DIR)/%.tab.h) \
+		$(LSRC) \
+		$(TARGET) \
+		$(RELEASE){,.tgz} \
+		doc/$(RELEASE).pdf
 
 redo: clean all
 

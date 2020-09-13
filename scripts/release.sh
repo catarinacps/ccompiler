@@ -18,10 +18,12 @@
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
-# Commentary:
+## Commentary:
 #
 # Creates a .tar.gz aggregate of all the project files in the directory
 # from where it was called.
+#
+## Code:
 
 root=$(dirname $(dirname $(readlink -f "$0")))
 
@@ -38,3 +40,5 @@ tar --exclude="$version.tgz" \
     -czf "$version.tgz" .
 
 popd
+
+## release.sh ends here
