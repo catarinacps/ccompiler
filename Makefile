@@ -51,7 +51,7 @@ CFLAGS :=\
 CFLAGS += $(if $(DEBUG),-g -fsanitize=address -DDEBUG)
 CFLAGS += $(if $(VERBOSE),-DVERBOSE)
 LFLAGS := --nomain --yylineno $(if $(DEBUG),-d)
-YFLAGS := -Wall $(if $(DEBUG),--debug)
+YFLAGS := -r all -Wall $(if $(DEBUG),--debug)
 OPT := $(if $(DEBUG),-O0,-O3 -march=native)
 LIB := -L$(LIB_DIR)
 INC := -I$(INC_DIR)
@@ -96,8 +96,10 @@ $(LSRC): %.yy.c: %.l
 	$(LEX) $(LFLAGS) -o $@ $<
 
 #	- Generated grammar files:
-$(YSRC): $(SRC_DIR)/%.tab.c: $(INC_DIR)/%.tab.h %.y
-	$(YACC) $(YFLAGS) -o $@ --defines=$^
+$(YSRC): $(SRC_DIR)/%.tab.c: $(SRC_DIR)/%.y
+	$(YACC) $(YFLAGS) --graph=$(OUT_DIR)/$(notdir $*).gv \
+		--report-file=$(OUT_DIR)/$(notdir $*).log \
+		--output=$@ --defines=$(INC_DIR)/$*.tab.h $<
 
 #	- Objects:
 $(OBJ): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
@@ -115,10 +117,10 @@ all: $(LSRC) $(YSRC) $(TARGET)
 	@rm doc/$(RELEASE).tex*
 
 clean:
-	rm -rf $(OBJ_DIR)/* \
+	rm -rf \
+		$(OBJ_DIR)/* $(OUT_DIR)/* \
 		$(YSRC) $(YSRC:$(SRC_DIR)/%.tab.c=$(INC_DIR)/%.tab.h) \
 		$(LSRC) \
-		$(TARGET) \
 		$(RELEASE){,.tgz} \
 		doc/$(RELEASE).pdf
 
