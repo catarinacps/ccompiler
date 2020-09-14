@@ -153,6 +153,7 @@ release: clean
 	./scripts/release.sh
 
 doc: $(PDF) $(GV) $(LOG)
+	@rm *.tab.c
 
 help:
 	@echo "ccompiler's project Makefile."
