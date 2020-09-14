@@ -12,6 +12,7 @@
 #		redo - cleans up and then builds
 #		help - shows the utilization example
 #		test - builds and run tests
+#		doc - builds the documentation
 #		tool - generates compile_commands.json
 #		release - cleans and compresses the work directory for release
 #
@@ -118,14 +119,11 @@ $(PDF): %.pdf: %.org
 #	- Graphviz generation:
 $(GV): %.gv: %.y
 	$(YACC) --graph=$@ $<
-	dot -Tpdf -o$*.pdf $@
-	@mv $*.pdf $(DOC_DIR)
-	@rm $@
+	dot -Tpdf -o$(DOC_DIR)/$(notdir $*).pdf $@ && rm $@
 
 #	- Automaton log generation:
 $(LOG): %.log: %.y
-	$(YACC) -r all --report-file=$@ $<
-	@mv $@ $(OUT_DIR)
+	$(YACC) -r all --report-file=$(DOC_DIR)/$(notdir $@) $<
 
 ################################################################################
 #	Targets:
@@ -139,7 +137,7 @@ gen: $(LSRC) $(YSRC)
 
 clean:
 	rm -rf $(OBJ_DIR)/* $(OUT_DIR)/* $(DOC_DIR)/*.pdf $(RELEASE){,.tgz}
-	rm -rf $(YSRC) $(YSRC:$(SRC_DIR)/%.c=$(INC_DIR)/%.h) $(LSRC)
+	rm -f $(YSRC) $(YSRC:$(SRC_DIR)/%.c=$(INC_DIR)/%.h) $(LSRC)
 
 redo: clean all
 
@@ -149,11 +147,10 @@ test: redo
 tool: clean
 	bear make
 
-release: clean
-	./scripts/release.sh
+release: ; scripts/release.sh
 
 doc: $(PDF) $(GV) $(LOG)
-	@rm *.tab.c
+	@rm $(notdir $(YSRC))
 
 help:
 	@echo "ccompiler's project Makefile."
@@ -168,6 +165,7 @@ help:
 	@echo " redo - cleans up and then builds"
 	@echo " help - shows the utilization example"
 	@echo " test - builds and run tests"
+	@echo " doc - builds the documentation"
 	@echo " tool - generates compile_commands.json"
 	@echo " release - cleans and compresses the work directory for release"
 	@echo
