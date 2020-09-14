@@ -118,7 +118,9 @@ $(PDF): %.pdf: %.org
 #	- Graphviz generation:
 $(GV): %.gv: %.y
 	$(YACC) --graph=$@ $<
-	@mv $@ $(DOC_DIR)
+	dot -Tpdf -o$*.pdf $@
+	@mv $*.pdf $(DOC_DIR)
+	@rm $@
 
 #	- Automaton log generation:
 $(LOG): %.log: %.y
@@ -133,8 +135,11 @@ $(LOG): %.log: %.y
 all: gen $(TARGET)
 	ln -sf $(shell readlink -f $(TARGET)) $(RELEASE)
 
+gen: $(LSRC) $(YSRC)
+
 clean:
-	rm -rf $(OBJ_DIR)/* $(OUT_DIR)/* $(YSRC) $(YSRC:$(SRC_DIR)/%.tab.c=$(INC_DIR)/%.tab.h) $(LSRC) $(RELEASE){,.tgz} $(PDF) $(GV) $(LOG)
+	rm -rf $(OBJ_DIR)/* $(OUT_DIR)/* $(DOC_DIR)/*.pdf $(RELEASE){,.tgz}
+	rm -rf $(YSRC) $(YSRC:$(SRC_DIR)/%.c=$(INC_DIR)/%.h) $(LSRC)
 
 redo: clean all
 
@@ -146,8 +151,6 @@ tool: clean
 
 release: clean
 	./scripts/release.sh
-
-gen: $(LSRC) $(YSRC)
 
 doc: $(PDF) $(GV) $(LOG)
 
