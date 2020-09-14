@@ -34,6 +34,7 @@ OUT_DIR := build
 SRC_DIR := src
 LIB_DIR := lib
 TST_DIR := test
+DOC_DIR := doc
 
 #	- Compilation flags:
 #	Compiler and language version
@@ -51,7 +52,7 @@ CFLAGS :=\
 CFLAGS += $(if $(DEBUG),-g -fsanitize=address -DDEBUG)
 CFLAGS += $(if $(VERBOSE),-DVERBOSE)
 LFLAGS := --nomain --yylineno $(if $(DEBUG),-d)
-YFLAGS := -r all -Wall $(if $(DEBUG),--debug)
+YFLAGS := -Wall $(if $(DEBUG),--debug)
 OPT := $(if $(DEBUG),-O0,-O3 -march=native)
 LIB := -L$(LIB_DIR)
 INC := -I$(INC_DIR)
@@ -84,6 +85,11 @@ CSRC := $(filter-out $(MAIN) $(YSRC) $(LSRC),$(CSRC)) $(YSRC) $(LSRC)
 #	- Objects to be created:
 OBJ := $(CSRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
+#	- Documentation and related files:
+PDF := $(DOC_DIR)/$(RELEASE).pdf
+GV  := $(YSRC:%.tab.c=%.gv)
+LOG := $(YSRC:%.tab.c=%.log)
+
 ################################################################################
 #	Rules:
 
@@ -97,32 +103,38 @@ $(LSRC): %.yy.c: %.l
 
 #	- Generated grammar files:
 $(YSRC): $(SRC_DIR)/%.tab.c: $(SRC_DIR)/%.y
-	$(YACC) $(YFLAGS) --graph=$(OUT_DIR)/$(notdir $*).gv \
-		--report-file=$(OUT_DIR)/$(notdir $*).log \
-		--output=$@ --defines=$(INC_DIR)/$*.tab.h $<
+	$(YACC) $(YFLAGS) --output=$@ --defines=$(INC_DIR)/$*.tab.h $<
 
 #	- Objects:
 $(OBJ): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
 	$(CC) -c -o $@ $< $(INC) $(CFLAGS) $(OPT)
 
+#	- Documentation:
+$(PDF): %.pdf: %.org
+	emacs -batch $< --funcall org-latex-export-to-pdf
+	@rm $*.tex*
+
+#	- Graphviz generation:
+$(GV): %.gv: %.y
+	$(YACC) --graph=$@ $<
+	@mv $@ $(DOC_DIR)
+
+#	- Automaton log generation:
+$(LOG): %.log: %.y
+	$(YACC) -r all --report-file=$@ $<
+	@mv $@ $(OUT_DIR)
+
 ################################################################################
 #	Targets:
 
 .DEFAULT_GOAL = all
 
-all: $(LSRC) $(YSRC) $(TARGET)
+all: gen $(TARGET)
 	ln -sf $(shell readlink -f $(TARGET)) $(RELEASE)
-	emacs -batch doc/$(RELEASE).org --funcall org-latex-export-to-pdf
-	@rm doc/$(RELEASE).tex*
 
 clean:
-	rm -rf \
-		$(OBJ_DIR)/* $(OUT_DIR)/* \
-		$(YSRC) $(YSRC:$(SRC_DIR)/%.tab.c=$(INC_DIR)/%.tab.h) \
-		$(LSRC) \
-		$(RELEASE){,.tgz} \
-		doc/$(RELEASE).pdf
+	rm -rf $(OBJ_DIR)/* $(OUT_DIR)/* $(YSRC) $(YSRC:$(SRC_DIR)/%.tab.c=$(INC_DIR)/%.tab.h) $(LSRC) $(RELEASE){,.tgz} $(PDF) $(GV) $(LOG)
 
 redo: clean all
 
@@ -134,6 +146,10 @@ tool: clean
 
 release: clean
 	./scripts/release.sh
+
+gen: $(LSRC) $(YSRC)
+
+doc: $(PDF) $(GV) $(LOG)
 
 help:
 	@echo "ccompiler's project Makefile."
@@ -161,4 +177,4 @@ help:
 print-%:
 	@echo $* = $($*)
 
-.PHONY: all clean redo help tool test release print-%
+.PHONY: all clean redo help tool test release doc gen
