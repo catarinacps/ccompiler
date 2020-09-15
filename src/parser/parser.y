@@ -1,6 +1,5 @@
 %{
-int yylex(void);
-void yyerror (char const *s);
+#include "parser.h"
 %}
 
 %token TK_PR_INT
@@ -51,6 +50,13 @@ void yyerror (char const *s);
 
 %%
 
-programa:
+programa: %empty
+    | programa global
+    | programa funcao
+    ;
+
+global: 'a'
+
+funcao: 'b'
 
 %%
