@@ -50,6 +50,8 @@
 
 %%
 
+    /* ---------- ESCOPO GLOBAL ---------- */
+
 programa: %empty
     | programa global
     | programa funcao
@@ -58,5 +60,9 @@ programa: %empty
 global: 'a'
 
 funcao: 'b'
+
+    /* ---------- BLOCOS DE COMANDO ---------- */
+
+    /* ---------- EXPRESSÕES ---------- */
 
 %%
