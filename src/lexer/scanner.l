@@ -203,11 +203,6 @@ BOOL_F "false"
     }
 
     /* number literals */
-[+\-]/{NUMBER}+                        {
-    BEGIN(DECIMAL);
-    V_LOG_LEXER("DECIMAL STATE");
-    yymore();
-    }
 {NUMBER}/{ALNUM}*                      {
     BEGIN(DECIMAL);
     V_LOG_LEXER("DECIMAL STATE");
