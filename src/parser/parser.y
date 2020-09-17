@@ -50,19 +50,154 @@
 
 %%
 
-    /* ---------- ESCOPO GLOBAL ---------- */
+    /* ---------- GLOBAL SCOPE ---------- */
 
-programa: %empty
-    | programa global
-    | programa funcao
+source: %empty
+    | source global
+    | source function
     ;
 
-global: 'a'
+global: type id_global
+    | TK_PR_STATIC type id_global
+    ;
 
-funcao: 'b'
+id_global: TK_IDENTIFICADOR '[' TK_LIT_INT ']'
+    | TK_IDENTIFICADOR
+    | id_global ',' TK_IDENTIFICADOR '[' TK_LIT_INT ']'
+    | id_global ',' TK_IDENTIFICADOR
+    ;
 
-    /* ---------- BLOCOS DE COMANDO ---------- */
+function: header block
+    ;
 
-    /* ---------- EXPRESSÕES ---------- */
+header: type TK_IDENTIFICADOR '(' def_params ')'
+    | TK_PR_STATIC type TK_IDENTIFICADOR '(' def_params ')'
+    | type TK_IDENTIFICADOR '(' ')'
+    | TK_PR_STATIC type TK_IDENTIFICADOR '(' ')'
+    ;
+
+def_params: type TK_IDENTIFICADOR
+    | TK_PR_CONST type TK_IDENTIFICADOR
+    | def_params ',' type TK_IDENTIFICADOR
+    | def_params ',' TK_PR_CONST  type TK_IDENTIFICADOR
+    ;
+
+block: '{' '}'
+    | '{' command_rep '}'
+
+    /* ---------- COMMANDS ---------- */
+
+command_rep: command_rep command
+    | command
+    ;
+
+command: atrib ';'
+    | local ';'
+    | control_flow ';'
+    | io ';'
+    | shift ';'
+    | return ';'
+    | block ';'
+    | call ';'
+    ;
+
+atrib: TK_IDENTIFICADOR TK_OC_EQ expr
+    | TK_IDENTIFICADOR index TK_OC_EQ expr
+    ;
+
+local: type id_local
+    | TK_PR_STATIC type id_local
+    | TK_PR_CONST type id_local
+    | TK_PR_STATIC TK_PR_CONST type id_local
+    ;
+
+id_local: TK_IDENTIFICADOR
+    | TK_IDENTIFICADOR TK_OC_EQ TK_IDENTIFICADOR
+    | TK_IDENTIFICADOR TK_OC_EQ literal
+    ;
+
+control_flow: if
+    | for
+    | while
+    ;
+
+if: TK_PR_IF '(' expr ')' block
+    | TK_PR_IF '(' expr ')' block TK_PR_ELSE block
+    ;
+
+for: TK_PR_FOR '(' atrib ':' expr ':' atrib ')' block
+
+while: TK_PR_WHILE '(' expr ')' block
+
+io: TK_PR_INPUT TK_IDENTIFICADOR
+    | TK_PR_OUTPUT TK_IDENTIFICADOR
+    | TK_PR_OUTPUT literal
+    ;
+
+shift: TK_IDENTIFICADOR index op_shift integer
+    ;
+
+return: TK_PR_RETURN expr
+    | TK_PR_BREAK
+    | TK_PR_CONTINUE
+    ;
+
+call: TK_IDENTIFICADOR '(' param ')'
+
+param: expr
+    | literal
+    | TK_IDENTIFICADOR
+    | param ',' expr
+    | param ',' literal
+    | param ',' TK_IDENTIFICADOR
+    ;
+
+    /* ---------- EXPRESSIONS ---------- */
+
+expr: 'a'
+
+    /* ---------- LITERALS ----------  */
+
+literal: decimal
+    | boolean
+    | TK_LIT_STRING
+    | TK_LIT_CHAR
+    ;
+
+decimal: integer
+    | float
+    ;
+
+integer: signal TK_LIT_INT
+    | TK_LIT_INT
+    ;
+
+float: signal TK_LIT_FLOAT
+    | TK_LIT_FLOAT
+    ;
+
+boolean: TK_LIT_TRUE
+    | TK_LIT_FALSE
+    ;
+
+    /* ---------- MISC ----------  */
+
+index: '[' expr ']'
+    ;
+
+signal: '+'
+    | '-'
+    ;
+
+op_shift: TK_OC_SR
+    | TK_OC_SL
+    ;
+
+type: TK_PR_INT
+    | TK_PR_FLOAT
+    | TK_PR_BOOL
+    | TK_PR_CHAR
+    | TK_PR_STRING
+    ;
 
 %%
