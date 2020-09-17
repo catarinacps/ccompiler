@@ -52,8 +52,10 @@ CFLAGS :=\
 	-Wunreachable-code
 CFLAGS += $(if $(DEBUG),-g -fsanitize=address -DDEBUG)
 CFLAGS += $(if $(VERBOSE),-DVERBOSE)
-LFLAGS := --nomain --yylineno $(if $(DEBUG),-d)
-YFLAGS := -Wall $(if $(DEBUG),--debug)
+LFLAGS := --nomain --yylineno
+LFLAGS += $(if $(DEBUG),-d)
+YFLAGS := -Wall
+YFLAGS += $(if $(DEBUG),--debug)
 OPT := $(if $(DEBUG),-O0,-O3 -march=native)
 LIB := -L$(LIB_DIR)
 INC := -I$(INC_DIR)
