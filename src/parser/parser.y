@@ -1,5 +1,5 @@
 %{
-#include "parser.h"
+#include "parser/parser.h"
 %}
 
 %token TK_PR_INT

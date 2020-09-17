@@ -1,0 +1,19 @@
+# -*- mode: org; org-export-babel-evaluate: nil; coding: utf-8  -*-
+
+#+title: Release Report
+#+subtitle: /INF01147 - Compilers/
+#+options: toc:nil author:nil
+
+#+latex_class: article
+#+latex_class_options: [twocolumn, a4paper]
+
+#+latex_header: \usepackage[margin=1in]{geometry}
+#+latex_header: \usepackage{authblk}
+#+latex_header: \usepackage{titling}
+#+latex_header: \usepackage{palatino}
+#+latex_header: \usepackage{enumitem}
+#+latex_header: \setlength{\droptitle}{-1.5cm}
+#+latex_header: \author{Henrique Corrêa Pereira da Silva}
+#+latex_header: \author{Bernardo Hummes Flores}
+#+latex_header: \affil[]{Informatics Institute\\Universidade Federal do Rio Grande do Sul}
+#+latex_header: \affil[]{\normalsize\texttt{\{hcpsilva, bhflores\}@inf.ufrgs.br}}

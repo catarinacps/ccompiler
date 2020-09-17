@@ -19,7 +19,7 @@
 
 #include <stdio.h>
 
-int yylex(void);
-void yyerror (char const *s);
+#include "lexer/scanner.h"
+#include "parser/utils.h"
 
 #endif /* _PARSER_H_ */

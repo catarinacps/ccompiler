@@ -59,7 +59,7 @@ LIB := -L$(LIB_DIR)
 INC := -I$(INC_DIR)
 
 #	- Release version:
-RELEASE := etapa1
+RELEASE := etapa2
 
 ################################################################################
 #	Files:
