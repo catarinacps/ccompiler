@@ -27,6 +27,7 @@ RK_INT "int"
 RK_FLOAT "float"
 RK_BOOL "bool"
 RK_CHAR "char"
+RK_STRING "string"
 RK_IF "if"
 RK_THEN "then"
 RK_ELSE "else"
@@ -64,8 +65,8 @@ OP_EQ "=="
 OP_NE "!="
 OP_AND "&&"
 OP_OR "||"
-OP_SL ">>"
-OP_SR "<<"
+OP_SL "<<"
+OP_SR ">>"
 
 /* decimals */
 NUMBER [[:digit:]]
@@ -118,6 +119,7 @@ BOOL_F "false"
 {RK_FLOAT}                             { V_LOG_LEXER("RK_FLOAT"); return TK_PR_FLOAT; }
 {RK_BOOL}                              { V_LOG_LEXER("RK_BOOL"); return TK_PR_BOOL; }
 {RK_CHAR}                              { V_LOG_LEXER("RK_CHAR"); return TK_PR_CHAR; }
+{RK_STRING}                            { V_LOG_LEXER("RK_STRING"); return TK_PR_STRING; }
 {RK_IF}                                { V_LOG_LEXER("RK_IF"); return TK_PR_IF; }
 {RK_THEN}                              { V_LOG_LEXER("RK_THEN"); return TK_PR_THEN; }
 {RK_ELSE}                              { V_LOG_LEXER("RK_ELSE"); return TK_PR_ELSE; }
