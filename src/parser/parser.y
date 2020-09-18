@@ -57,33 +57,38 @@ source: %empty
     | source function
     ;
 
-global: type id_global
-    | TK_PR_STATIC type id_global
+global: type id_global_rep ';'
+    | TK_PR_STATIC type id_global_rep ';'
+    ;
+
+id_global_rep: id_global
+    | id_global_rep ',' id_global
     ;
 
 id_global: TK_IDENTIFICADOR '[' TK_LIT_INT ']'
     | TK_IDENTIFICADOR
-    | id_global ',' TK_IDENTIFICADOR '[' TK_LIT_INT ']'
-    | id_global ',' TK_IDENTIFICADOR
     ;
 
 function: header block
     ;
 
-header: type TK_IDENTIFICADOR '(' def_params ')'
-    | TK_PR_STATIC type TK_IDENTIFICADOR '(' def_params ')'
+header: type TK_IDENTIFICADOR '(' def_params_rep ')'
+    | TK_PR_STATIC type TK_IDENTIFICADOR '(' def_params_rep ')'
     | type TK_IDENTIFICADOR '(' ')'
     | TK_PR_STATIC type TK_IDENTIFICADOR '(' ')'
     ;
 
+def_params_rep: def_params
+    | def_params_rep ',' def_params
+    ;
+
 def_params: type TK_IDENTIFICADOR
     | TK_PR_CONST type TK_IDENTIFICADOR
-    | def_params ',' type TK_IDENTIFICADOR
-    | def_params ',' TK_PR_CONST  type TK_IDENTIFICADOR
     ;
 
 block: '{' '}'
     | '{' command_rep '}'
+    ;
 
     /* ---------- COMMANDS ---------- */
 
@@ -126,8 +131,10 @@ if: TK_PR_IF '(' expr ')' block
     ;
 
 for: TK_PR_FOR '(' atrib ':' expr ':' atrib ')' block
+    ;
 
 while: TK_PR_WHILE '(' expr ')' block
+    ;
 
 io: TK_PR_INPUT TK_IDENTIFICADOR
     | TK_PR_OUTPUT TK_IDENTIFICADOR
@@ -142,19 +149,23 @@ return: TK_PR_RETURN expr
     | TK_PR_CONTINUE
     ;
 
-call: TK_IDENTIFICADOR '(' param ')'
+call: TK_IDENTIFICADOR '(' param_rep ')'
+    | TK_IDENTIFICADOR '(' ')'
+    ;
+
+param_rep: param
+    | param_rep ',' param
+    ;
 
 param: expr
     | literal
     | TK_IDENTIFICADOR
-    | param ',' expr
-    | param ',' literal
-    | param ',' TK_IDENTIFICADOR
     ;
 
     /* ---------- EXPRESSIONS ---------- */
 
 expr: 'a'
+    ;
 
     /* ---------- LITERALS ----------  */
 
