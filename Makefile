@@ -138,7 +138,7 @@ $(GV): %.gv: %.y
 
 #	- Automaton log generation:
 $(LOG): %.log: %.y
-	$(YACC) -r all --report-file=$(DOC_DIR)/$(notdir $@) $<
+	$(YACC) --report=all --report-file=$(DOC_DIR)/$(notdir $@) $<
 
 ################################################################################
 #	Targets:
