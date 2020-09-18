@@ -93,12 +93,16 @@ PDF := $(DOC_DIR)/$(RELEASE).pdf
 GV  := $(YSRC:%.tab.c=%.gv)
 LOG := $(YSRC:%.tab.c=%.log)
 
+#	- Include directories to be used in the release main.c
+INCMAIN := $(shell find $(INC_DIR) -mindepth 1 -type d)
+INCMAIN := $(INCMAIN:%=-I%)
+
 ################################################################################
 #	Rules:
 
 #	- Executables:
 $(TARGET): $(OUT_DIR)/%: $(SRC_DIR)/%.c $(OBJ)
-	$(CC) -o $@ $^ $(INC) $(CFLAGS) $(OPT) $(LIB)
+	$(CC) -o $@ $^ $(INC) $(INCMAIN) $(CFLAGS) $(OPT) $(LIB)
 
 #	- Generated lexer source:
 $(LSRC): %.yy.c: %.l
