@@ -3,7 +3,7 @@
 #	ccompiler's project Makefile.
 #
 #	Utilization example:
-#		make <TARGET> ["DEBUG=true"]
+#		make <TARGET> ["DEBUG=true"] ["VERBOSE=true"]
 #
 #	\param TARGET
 #		Can be any of the following:
@@ -18,6 +18,9 @@
 #
 #	\param "DEBUG=true"
 #		When present, the build will happen in debug mode.
+#
+#	\param "VERBOSE=true"
+#		When present, the final executable will be more verbose.
 #
 #	\author @hcpsilva - Henrique Silva
 #	\author @birromer - Bernardo Hummes
@@ -42,26 +45,32 @@ DOC_DIR := doc
 CC := gcc -std=c11
 LEX := flex
 YACC := bison
-#	If DEBUG is defined, we'll turn on the debug flag and attach address
-#	sanitizer on the executables.
+#	CFLAGS contains some basic sanity warning flags besides the eventual
+#	preprocessor definition or debug flag.
 CFLAGS :=\
 	-Wall \
 	-Wextra \
 	-Wpedantic \
 	-Wshadow \
 	-Wunreachable-code
+#	If DEBUG is defined, we'll turn on the debug flag and attach address
+#	sanitizer on the executables.
 CFLAGS += $(if $(DEBUG),-g -fsanitize=address -DDEBUG)
 CFLAGS += $(if $(VERBOSE),-DVERBOSE)
+#	Feature flags for the lex program
 LFLAGS := --nomain --yylineno
 LFLAGS += $(if $(DEBUG),-d)
+#	Basic warnings for the yacc program
 YFLAGS := -Wall
 YFLAGS += $(if $(DEBUG),--debug)
+#	Optimize if we aren't debugging
 OPT := $(if $(DEBUG),-O0,-O3 -march=native)
+#	Lookup directories
 LIB := -L$(LIB_DIR)
 INC := -I$(INC_DIR)
 
 #	- Release version:
-RELEASE := etapa2
+VERSION := etapa2
 
 ################################################################################
 #	Files:
@@ -89,16 +98,20 @@ CSRC := $(filter-out $(MAIN) $(YSRC) $(LSRC),$(CSRC)) $(YSRC) $(LSRC)
 OBJ := $(CSRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 #	- Documentation and related files:
-PDF := $(DOC_DIR)/$(RELEASE).pdf
-GV  := $(YSRC:%.tab.c=%.gv)
-LOG := $(YSRC:%.tab.c=%.log)
+PDF := $(DOC_DIR)/$(VERSION).pdf
+GV  := $(YSRC:.tab.c=.gv)
+LOG := $(YSRC:.tab.c=.log)
+
+#	- Include directories to be used in the release main.c
+INCMAIN := $(shell find $(INC_DIR) -mindepth 1 -type d)
+INCMAIN := $(INCMAIN:%=-I%)
 
 ################################################################################
 #	Rules:
 
 #	- Executables:
 $(TARGET): $(OUT_DIR)/%: $(SRC_DIR)/%.c $(OBJ)
-	$(CC) -o $@ $^ $(INC) $(CFLAGS) $(OPT) $(LIB)
+	$(CC) -o $@ $^ $(INC) $(INCMAIN) $(CFLAGS) $(OPT) $(LIB)
 
 #	- Generated lexer source:
 $(LSRC): %.yy.c: %.l
@@ -132,25 +145,31 @@ $(LOG): %.log: %.y
 
 .DEFAULT_GOAL = all
 
+#	Create a symlink in the expected executable location
 all: gen $(TARGET)
-	ln -sf $(shell readlink -f $(TARGET)) $(RELEASE)
+	ln -sf $(shell readlink -f $(TARGET)) $(VERSION)
 
+#	Prerequisites are the wanted files
 gen: $(LSRC) $(YSRC)
 
 clean:
-	rm -rf $(OBJ_DIR)/* $(OUT_DIR)/* $(DOC_DIR)/*.pdf $(RELEASE){,.tgz}
+	rm -rf $(OBJ_DIR)/* $(OUT_DIR)/* $(DOC_DIR)/*.{pdf,log} $(VERSION){,.tgz}
 	rm -f $(YSRC) $(YSRC:$(SRC_DIR)/%.c=$(INC_DIR)/%.h) $(LSRC)
 
 redo: clean all
 
+#	There should be a script with the version name in the test dir
 test: redo
-	./$(TST_DIR)/$(RELEASE).sh
+	$(TST_DIR)/$(VERSION).sh
 
+#	To help language servers as we're using additional include paths
 tool: clean
 	bear make
 
+#	The script takes care of any necessary cleaning
 release: ; scripts/release.sh
 
+#	Build all documentation and remove any stray yacc generated source
 doc: $(PDF) $(GV) $(LOG)
 	@rm $(notdir $(YSRC))
 
@@ -158,7 +177,7 @@ help:
 	@echo "ccompiler's project Makefile."
 	@echo
 	@echo "Utilization example:"
-	@echo " make <TARGET> ['DEBUG=true']"
+	@echo " make <TARGET> ['DEBUG=true'] ['VERBOSE=true']"
 	@echo
 	@echo "@param TARGET"
 	@echo " Can be any of the following:"
@@ -173,6 +192,9 @@ help:
 	@echo
 	@echo "@param 'DEBUG=true'"
 	@echo " When present, the build will happen in debug mode."
+	@echo
+	@echo "@param 'VERBOSE=true'"
+	@echo " When present, the final executable will be more verbose."
 
 ################################################################################
 #	Debugging and etc.:
