@@ -45,21 +45,27 @@ DOC_DIR := doc
 CC := gcc -std=c11
 LEX := flex
 YACC := bison
-#	If DEBUG is defined, we'll turn on the debug flag and attach address
-#	sanitizer on the executables.
+#	CFLAGS contains some basic sanity warning flags besides the eventual
+#	preprocessor definition or debug flag.
 CFLAGS :=\
 	-Wall \
 	-Wextra \
 	-Wpedantic \
 	-Wshadow \
 	-Wunreachable-code
+#	If DEBUG is defined, we'll turn on the debug flag and attach address
+#	sanitizer on the executables.
 CFLAGS += $(if $(DEBUG),-g -fsanitize=address -DDEBUG)
 CFLAGS += $(if $(VERBOSE),-DVERBOSE)
+#	Feature flags for the lex program
 LFLAGS := --nomain --yylineno
 LFLAGS += $(if $(DEBUG),-d)
+#	Basic warnings for the yacc program
 YFLAGS := -Wall
 YFLAGS += $(if $(DEBUG),--debug)
+#	Optimize if we aren't debugging
 OPT := $(if $(DEBUG),-O0,-O3 -march=native)
+#	Lookup directories
 LIB := -L$(LIB_DIR)
 INC := -I$(INC_DIR)
 
@@ -93,8 +99,8 @@ OBJ := $(CSRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 #	- Documentation and related files:
 PDF := $(DOC_DIR)/$(VERSION).pdf
-GV  := $(YSRC:%.tab.c=%.gv)
-LOG := $(YSRC:%.tab.c=%.log)
+GV  := $(YSRC:.tab.c=.gv)
+LOG := $(YSRC:.tab.c=.log)
 
 #	- Include directories to be used in the release main.c
 INCMAIN := $(shell find $(INC_DIR) -mindepth 1 -type d)
@@ -139,9 +145,11 @@ $(LOG): %.log: %.y
 
 .DEFAULT_GOAL = all
 
+#	Create a symlink in the expected executable location
 all: gen $(TARGET)
 	ln -sf $(shell readlink -f $(TARGET)) $(VERSION)
 
+#	Prerequisites are the wanted files
 gen: $(LSRC) $(YSRC)
 
 clean:
@@ -150,14 +158,18 @@ clean:
 
 redo: clean all
 
+#	There should be a script with the version name in the test dir
 test: redo
-	./$(TST_DIR)/$(VERSION).sh
+	$(TST_DIR)/$(VERSION).sh
 
+#	To help language servers as we're using additional include paths
 tool: clean
 	bear make
 
+#	The script takes care of any necessary cleaning
 release: ; scripts/release.sh
 
+#	Build all documentation and remove any stray yacc generated source
 doc: $(PDF) $(GV) $(LOG)
 	@rm $(notdir $(YSRC))
 
