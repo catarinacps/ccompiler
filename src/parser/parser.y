@@ -110,10 +110,14 @@ atrib: TK_IDENTIFICADOR TK_OC_EQ expr
     | TK_IDENTIFICADOR index TK_OC_EQ expr
     ;
 
-local: type id_local
-    | TK_PR_STATIC type id_local
-    | TK_PR_CONST type id_local
-    | TK_PR_STATIC TK_PR_CONST type id_local
+local: type id_local_rep
+    | TK_PR_STATIC type id_local_rep
+    | TK_PR_CONST type id_local_rep
+    | TK_PR_STATIC TK_PR_CONST type id_local_rep
+    ;
+
+id_local_rep: id_local
+    | id_local_rep ',' id_local
     ;
 
 id_local: TK_IDENTIFICADOR
