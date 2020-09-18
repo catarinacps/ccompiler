@@ -53,12 +53,12 @@
     /* ---------- GLOBAL SCOPE ---------- */
 
 source: %empty
-    | source global
+    | source global ';'
     | source function
     ;
 
-global: type id_global_rep ';'
-    | TK_PR_STATIC type id_global_rep ';'
+global: type id_global_rep
+    | TK_PR_STATIC type id_global_rep
     ;
 
 id_global_rep: id_global
@@ -92,18 +92,18 @@ block: '{' '}'
 
     /* ---------- COMMANDS ---------- */
 
-command_rep: command_rep command
-    | command
+command_rep: command_rep command ';'
+    | command ';'
     ;
 
-command: atrib ';'
-    | local ';'
-    | control_flow ';'
-    | io ';'
-    | shift ';'
-    | return ';'
-    | block ';'
-    | call ';'
+command: atrib
+    | local
+    | control_flow
+    | io
+    | shift
+    | return
+    | block
+    | call
     ;
 
 atrib: TK_IDENTIFICADOR TK_OC_EQ expr
