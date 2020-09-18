@@ -138,7 +138,7 @@ all: gen $(TARGET)
 gen: $(LSRC) $(YSRC)
 
 clean:
-	rm -rf $(OBJ_DIR)/* $(OUT_DIR)/* $(DOC_DIR)/*.pdf $(RELEASE){,.tgz}
+	rm -rf $(OBJ_DIR)/* $(OUT_DIR)/* $(DOC_DIR)/*.{pdf,log} $(RELEASE){,.tgz}
 	rm -f $(YSRC) $(YSRC:$(SRC_DIR)/%.c=$(INC_DIR)/%.h) $(LSRC)
 
 redo: clean all
