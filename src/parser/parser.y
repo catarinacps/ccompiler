@@ -145,7 +145,8 @@ io: TK_PR_INPUT TK_IDENTIFICADOR
     | TK_PR_OUTPUT literal
     ;
 
-shift: TK_IDENTIFICADOR index op_shift integer
+shift: TK_IDENTIFICADOR op_shift integer
+    | TK_IDENTIFICADOR index op_shift integer
     ;
 
 return: TK_PR_RETURN expr
