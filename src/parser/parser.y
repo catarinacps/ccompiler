@@ -53,19 +53,19 @@
     /* ---------- GLOBAL SCOPE ---------- */
 
 source: %empty
-    | source global ';'
+    | source var_global ';'
     | source function
     ;
 
-global: type id_global_rep
-    | TK_PR_STATIC type id_global_rep
+var_global: type id_var_global_rep
+    | TK_PR_STATIC type id_var_global_rep
     ;
 
-id_global_rep: id_global
-    | id_global_rep ',' id_global
+id_var_global_rep: id_var_global
+    | id_var_global_rep ',' id_var_global
     ;
 
-id_global: TK_IDENTIFICADOR '[' TK_LIT_INT ']'
+id_var_global: TK_IDENTIFICADOR '[' TK_LIT_INT ']'
     | TK_IDENTIFICADOR
     ;
 
@@ -97,30 +97,30 @@ command_rep: command_rep command ';'
     ;
 
 command: atrib
-    | local
+    | var_local
     | control_flow
     | io
     | shift
     | return
-    | block
     | call
+    | block
     ;
 
 atrib: TK_IDENTIFICADOR TK_OC_EQ expr
     | TK_IDENTIFICADOR index TK_OC_EQ expr
     ;
 
-local: type id_local_rep
-    | TK_PR_STATIC type id_local_rep
-    | TK_PR_CONST type id_local_rep
-    | TK_PR_STATIC TK_PR_CONST type id_local_rep
+var_local: type id_var_local_rep
+    | TK_PR_STATIC type id_var_local_rep
+    | TK_PR_CONST type id_var_local_rep
+    | TK_PR_STATIC TK_PR_CONST type id_var_local_rep
     ;
 
-id_local_rep: id_local
-    | id_local_rep ',' id_local
+id_var_local_rep: id_var_local
+    | id_var_local_rep ',' id_var_local
     ;
 
-id_local: TK_IDENTIFICADOR
+id_var_local: TK_IDENTIFICADOR
     | TK_IDENTIFICADOR TK_OC_EQ TK_IDENTIFICADOR
     | TK_IDENTIFICADOR TK_OC_EQ literal
     ;
