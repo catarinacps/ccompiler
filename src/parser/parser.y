@@ -179,10 +179,10 @@ expr: '(' expr ')'
     | expr_logic
     ;
 
-expr_arit: '(' expr_arit ')'
+expr_arit: elem_arit
     | expr_arit op_bin_arit expr_arit
     | op_un_arit expr_arit %prec USIG
-    | elem_arit
+    | '(' expr_arit ')'
     ;
 
 elem_arit: TK_IDENTIFICADOR
@@ -192,9 +192,9 @@ elem_arit: TK_IDENTIFICADOR
     | call
     ;
 
-expr_logic: expr_arit op_bin_rel expr_arit
+expr_logic: boolean
+    | expr_arit op_bin_rel expr_arit
     | expr_logic op_bin_logic expr_logic
-    | boolean
     ;
 
 op_un_arit: '+'
