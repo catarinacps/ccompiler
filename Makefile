@@ -3,7 +3,7 @@
 #	ccompiler's project Makefile.
 #
 #	Utilization example:
-#		make <TARGET> ["DEBUG=true"]
+#		make <TARGET> ["DEBUG=true"] ["VERBOSE=true"]
 #
 #	\param TARGET
 #		Can be any of the following:
@@ -18,6 +18,9 @@
 #
 #	\param "DEBUG=true"
 #		When present, the build will happen in debug mode.
+#
+#	\param "VERBOSE=true"
+#		When present, the final executable will be more verbose.
 #
 #	\author @hcpsilva - Henrique Silva
 #	\author @birromer - Bernardo Hummes
@@ -61,7 +64,7 @@ LIB := -L$(LIB_DIR)
 INC := -I$(INC_DIR)
 
 #	- Release version:
-RELEASE := etapa2
+VERSION := etapa2
 
 ################################################################################
 #	Files:
@@ -89,7 +92,7 @@ CSRC := $(filter-out $(MAIN) $(YSRC) $(LSRC),$(CSRC)) $(YSRC) $(LSRC)
 OBJ := $(CSRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 #	- Documentation and related files:
-PDF := $(DOC_DIR)/$(RELEASE).pdf
+PDF := $(DOC_DIR)/$(VERSION).pdf
 GV  := $(YSRC:%.tab.c=%.gv)
 LOG := $(YSRC:%.tab.c=%.log)
 
@@ -137,18 +140,18 @@ $(LOG): %.log: %.y
 .DEFAULT_GOAL = all
 
 all: gen $(TARGET)
-	ln -sf $(shell readlink -f $(TARGET)) $(RELEASE)
+	ln -sf $(shell readlink -f $(TARGET)) $(VERSION)
 
 gen: $(LSRC) $(YSRC)
 
 clean:
-	rm -rf $(OBJ_DIR)/* $(OUT_DIR)/* $(DOC_DIR)/*.{pdf,log} $(RELEASE){,.tgz}
+	rm -rf $(OBJ_DIR)/* $(OUT_DIR)/* $(DOC_DIR)/*.{pdf,log} $(VERSION){,.tgz}
 	rm -f $(YSRC) $(YSRC:$(SRC_DIR)/%.c=$(INC_DIR)/%.h) $(LSRC)
 
 redo: clean all
 
 test: redo
-	./$(TST_DIR)/$(RELEASE).sh
+	./$(TST_DIR)/$(VERSION).sh
 
 tool: clean
 	bear make
@@ -162,7 +165,7 @@ help:
 	@echo "ccompiler's project Makefile."
 	@echo
 	@echo "Utilization example:"
-	@echo " make <TARGET> ['DEBUG=true']"
+	@echo " make <TARGET> ['DEBUG=true'] ['VERBOSE=true']"
 	@echo
 	@echo "@param TARGET"
 	@echo " Can be any of the following:"
@@ -177,6 +180,9 @@ help:
 	@echo
 	@echo "@param 'DEBUG=true'"
 	@echo " When present, the build will happen in debug mode."
+	@echo
+	@echo "@param 'VERBOSE=true'"
+	@echo " When present, the final executable will be more verbose."
 
 ################################################################################
 #	Debugging and etc.:
