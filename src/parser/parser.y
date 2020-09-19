@@ -48,9 +48,8 @@
 %token TK_IDENTIFICADOR
 %token TOKEN_ERRO
 
-%left '+' '-'
-%left '/' '%' '^'
-%left USIG
+%right '*' '&'
+%right '^'
 
 %%
 
@@ -162,68 +161,83 @@ call: TK_IDENTIFICADOR '(' param_rep ')'
     | TK_IDENTIFICADOR '(' ')'
     ;
 
-param_rep: param
-    | param_rep ',' param
-    ;
-
-param: expr
-    | literal
-    | TK_IDENTIFICADOR
+param_rep: expr
+    | param_rep ',' expr
     ;
 
     /* ---------- EXPRESSIONS ---------- */
 
-expr: '(' expr ')'
-    | expr '?' expr ':' expr
-    | expr_arit
-    | expr_logic
+expr: op_log
     ;
 
-expr_arit: elem_arit
-    | expr_arit op_bin_arit expr_arit
-    | op_un_arit expr_arit %prec USIG
-    | '(' expr_arit ')'
+op_log: op_bws
+    | op_bws tk_op_log op_bws
     ;
 
-elem_arit: TK_IDENTIFICADOR
+op_bws: op_eq
+    | op_eq tk_op_bws op_eq
+    ;
+
+op_eq: op_cmp
+    | op_cmp tk_op_eq op_cmp
+    ;
+
+op_cmp:  op_mul
+    | op_mul tk_op_cmp op_mul
+    ;
+
+op_mul: op_exp
+    | op_exp tk_op_mul op_exp
+    ;
+
+op_exp: op_un
+    | op_un tk_op_exp op_un
+    ;
+
+op_un: tk_op_un op_un
+    | op_primary
+    ;
+
+op_primary: TK_IDENTIFICADOR
     | TK_IDENTIFICADOR index
     | TK_LIT_INT
     | TK_LIT_FLOAT
     | call
+    | boolean
+    | '(' expr ')'
     ;
 
-expr_logic: boolean
-    | expr_arit op_bin_rel expr_arit
-    | expr_logic op_bin_logic expr_logic
-    ;
-
-op_un_arit: '+'
-    | '-'
-    | '!'
-    | '&'
-    | '*'
-    | '?'
-    | '#'
-    ;
-
-op_bin_logic: TK_OC_AND
-    | TK_OC_OR
-    ;
-
-op_bin_rel: TK_OC_LE
-    | TK_OC_GE
-    | TK_OC_EQ
+tk_op_eq: TK_OC_EQ
     | TK_OC_NE
     ;
 
-op_bin_arit: '+'
-    | '-'
-    | '*'
+tk_op_log: TK_OC_AND
+    | TK_OC_OR
+    ;
+
+tk_op_cmp: TK_OC_LE
+    | TK_OC_GE
+    ;
+
+tk_op_bws: '|'
+    | '&'
+    ;
+
+tk_op_mul: '*'
     | '/'
     | '%'
-    | '^'
-    | '|'
+    ;
+
+tk_op_exp: '^'
+    ;
+
+tk_op_un: '*'
     | '&'
+    | '#'
+    | '+'
+    | '-'
+    | '!'
+    | '?'
     ;
 
     /* ---------- LITERALS ----------  */
