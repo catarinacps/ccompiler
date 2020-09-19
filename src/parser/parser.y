@@ -48,9 +48,6 @@
 %token TK_IDENTIFICADOR
 %token TOKEN_ERRO
 
-%right '*' '&'
-%right '^'
-
 %%
 
     /* ---------- GLOBAL SCOPE ---------- */
@@ -182,8 +179,12 @@ op_eq: op_cmp
     | op_cmp tk_op_eq op_cmp
     ;
 
-op_cmp:  op_mul
-    | op_mul tk_op_cmp op_mul
+op_cmp:  op_add
+    | op_add tk_op_cmp op_add
+    ;
+
+op_add: op_mul
+    | op_mul tk_op_add op_mul
     ;
 
 op_mul: op_exp
@@ -195,10 +196,10 @@ op_exp: op_un
     ;
 
 op_un: tk_op_un op_un
-    | op_primary
+    | op_elem
     ;
 
-op_primary: TK_IDENTIFICADOR
+op_elem: TK_IDENTIFICADOR
     | TK_IDENTIFICADOR index
     | TK_LIT_INT
     | TK_LIT_FLOAT
@@ -217,6 +218,10 @@ tk_op_log: TK_OC_AND
 
 tk_op_cmp: TK_OC_LE
     | TK_OC_GE
+    ;
+
+tk_op_add: '+'
+    | '-'
     ;
 
 tk_op_bws: '|'
