@@ -56,11 +56,16 @@ dkms.conf
 .clangd/
 compile_commands.json
 *.log
+*.tab.*
+*.yy.*
 
 # Releases
 *.tgz
 *.tar.gz
 *.pdf
+etapa*
+!etapa*.org
+!etapa*.sh
 
 # Temporaries
 *~
