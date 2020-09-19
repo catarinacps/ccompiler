@@ -138,7 +138,7 @@ $(GV): %.gv: %.y
 
 #	- Automaton log generation:
 $(LOG): %.log: %.y
-	$(YACC) -r all --report-file=$(DOC_DIR)/$(notdir $@) $<
+	$(YACC) --report=all --report-file=$(DOC_DIR)/$(notdir $@) $<
 
 ################################################################################
 #	Targets:
@@ -170,7 +170,7 @@ tool: clean
 release: ; scripts/release.sh
 
 #	Build all documentation and remove any stray yacc generated source
-doc: $(PDF) $(GV) $(LOG)
+doc: $(PDF) $(LOG) $(GV)
 	@rm $(notdir $(YSRC))
 
 help:

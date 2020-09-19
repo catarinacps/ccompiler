@@ -48,6 +48,9 @@
 %token TK_IDENTIFICADOR
 %token TOKEN_ERRO
 
+%right '*' '&'
+%right '^'
+
 %%
 
     /* ---------- GLOBAL SCOPE ---------- */
@@ -106,8 +109,8 @@ command: atrib
     | block
     ;
 
-atrib: TK_IDENTIFICADOR TK_OC_EQ expr
-    | TK_IDENTIFICADOR index TK_OC_EQ expr
+atrib: TK_IDENTIFICADOR '=' expr
+    | TK_IDENTIFICADOR index '=' expr
     ;
 
 var_local: type id_var_local_rep
@@ -158,18 +161,83 @@ call: TK_IDENTIFICADOR '(' param_rep ')'
     | TK_IDENTIFICADOR '(' ')'
     ;
 
-param_rep: param
-    | param_rep ',' param
-    ;
-
-param: expr
-    | literal
-    | TK_IDENTIFICADOR
+param_rep: expr
+    | param_rep ',' expr
     ;
 
     /* ---------- EXPRESSIONS ---------- */
 
-expr: 'a'
+expr: op_log
+    ;
+
+op_log: op_bws
+    | op_bws tk_op_log op_bws
+    ;
+
+op_bws: op_eq
+    | op_eq tk_op_bws op_eq
+    ;
+
+op_eq: op_cmp
+    | op_cmp tk_op_eq op_cmp
+    ;
+
+op_cmp:  op_mul
+    | op_mul tk_op_cmp op_mul
+    ;
+
+op_mul: op_exp
+    | op_exp tk_op_mul op_exp
+    ;
+
+op_exp: op_un
+    | op_un tk_op_exp op_un
+    ;
+
+op_un: tk_op_un op_un
+    | op_primary
+    ;
+
+op_primary: TK_IDENTIFICADOR
+    | TK_IDENTIFICADOR index
+    | TK_LIT_INT
+    | TK_LIT_FLOAT
+    | call
+    | boolean
+    | '(' expr ')'
+    ;
+
+tk_op_eq: TK_OC_EQ
+    | TK_OC_NE
+    ;
+
+tk_op_log: TK_OC_AND
+    | TK_OC_OR
+    ;
+
+tk_op_cmp: TK_OC_LE
+    | TK_OC_GE
+    ;
+
+tk_op_bws: '|'
+    | '&'
+    ;
+
+tk_op_mul: '*'
+    | '/'
+    | '%'
+    ;
+
+tk_op_exp: '^'
+    ;
+
+tk_op_un: '*'
+    | '&'
+    | '#'
+    | '+'
+    | '-'
+    | '!'
+    | '?'
     ;
 
     /* ---------- LITERALS ----------  */
