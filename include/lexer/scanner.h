@@ -19,6 +19,7 @@
 #define _SCANNER_H_
 
 #include <stdio.h>
+#include <string.h>
 
 #include "parser/parser.tab.h"
 #include "lexer/utils.h"
@@ -29,5 +30,8 @@ extern int yylex_destroy(void);
 
 extern FILE* yyin;
 extern char* yytext;
+
+extern char* yylinebuf;
+extern int yylinebuf_len;
 
 #endif /* _SCANNER_H_ */

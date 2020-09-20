@@ -48,6 +48,9 @@
 %token TK_IDENTIFICADOR
 %token TOKEN_ERRO
 
+%define parse.error verbose
+%locations
+
 %%
 
     /* ---------- GLOBAL SCOPE ---------- */
