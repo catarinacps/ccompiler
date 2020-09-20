@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## etapa1.sh
+## etapa2.sh
 #
 # Copyright: (C) 2020 Henrique Silva
 #
@@ -20,8 +20,8 @@
 #
 ## Commentary:
 #
-# This script runs some test cases for the first stage of INF01147's
-# final assignment.
+# This script runs the second stage executable with a batch of tests,
+# while including the test body in the final log.
 #
 ## Code:
 
@@ -29,18 +29,23 @@ set -u
 
 TEST_DIR="$(dirname $(readlink -f $0))"
 ROOT_DIR="$(dirname $TEST_DIR)"
-LOG_FILE="$TEST_DIR/etapa1.log"
+LOG_FILE="$TEST_DIR/etapa2.log"
 
 echo "$(date)" > $LOG_FILE
 echo >> $LOG_FILE
 echo >> $LOG_FILE
 
-for test_case in $TEST_DIR/etapa1/*; do
+for test_case in $TEST_DIR/etapa2/*; do
     echo "------------------------------------------------------------" >> $LOG_FILE
     echo "TEST CASE OF FILE '$test_case':" >> $LOG_FILE
     echo >> $LOG_FILE
-    $ROOT_DIR/etapa1 < $test_case >> $LOG_FILE
+    $ROOT_DIR/etapa2 < $test_case >> $LOG_FILE 2>&1
+    echo >> $LOG_FILE
+    echo "FILE CONTENTS:" >> $LOG_FILE
+    echo >> $LOG_FILE
+    cat $test_case >> $LOG_FILE
+    echo >> $LOG_FILE
     echo >> $LOG_FILE
 done
 
-## etapa1.sh ends here
+## etapa2.sh ends here

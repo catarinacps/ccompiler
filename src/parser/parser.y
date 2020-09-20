@@ -2,6 +2,8 @@
 #include "parser/parser.h"
 %}
 
+/* all tokens, even the ones not utilized (as, in the first stage, we
+ * did recognize them) */
 %token TK_PR_INT
 %token TK_PR_FLOAT
 %token TK_PR_BOOL
@@ -48,10 +50,16 @@
 %token TK_IDENTIFICADOR
 %token TOKEN_ERRO
 
+/* the following options enable us more information when printing the
+ * error */
+%define parse.error verbose
+%locations
+
 %%
 
     /* ---------- GLOBAL SCOPE ---------- */
 
+    /* the source code can be empty, and variables require ';' */
 source: %empty
     | source var_global ';'
     | source function
@@ -61,6 +69,7 @@ var_global: type id_var_global_rep
     | TK_PR_STATIC type id_var_global_rep
     ;
 
+    /* we can have multiple variables being initialized at once */
 id_var_global_rep: id_var_global
     | id_var_global_rep ',' id_var_global
     ;
@@ -72,6 +81,7 @@ id_var_global: TK_IDENTIFICADOR '[' TK_LIT_INT ']'
 function: header block
     ;
 
+    /* definition parameters can be empty, as well as calling parameters */
 header: type TK_IDENTIFICADOR '(' def_params_rep ')'
     | TK_PR_STATIC type TK_IDENTIFICADOR '(' def_params_rep ')'
     | type TK_IDENTIFICADOR '(' ')'
@@ -92,6 +102,7 @@ block: '{' '}'
 
     /* ---------- COMMANDS ---------- */
 
+    /* commands are chained through ';' */
 command_rep: command_rep command ';'
     | command ';'
     ;
@@ -106,8 +117,9 @@ command: atrib
     | block
     ;
 
-atrib: TK_IDENTIFICADOR '=' expr
-    | TK_IDENTIFICADOR index '=' expr
+    /* we use "<=" in attributions, for some reason */
+atrib: TK_IDENTIFICADOR TK_OC_LE expr
+    | TK_IDENTIFICADOR index TK_OC_LE expr
     ;
 
 var_local: type id_var_local_rep
@@ -116,13 +128,15 @@ var_local: type id_var_local_rep
     | TK_PR_STATIC TK_PR_CONST type id_var_local_rep
     ;
 
+    /* again, we can have multiple variables being declared at once */
 id_var_local_rep: id_var_local
     | id_var_local_rep ',' id_var_local
     ;
 
+    /* and they can be initialized (using "<=") */
 id_var_local: TK_IDENTIFICADOR
-    | TK_IDENTIFICADOR TK_OC_EQ TK_IDENTIFICADOR
-    | TK_IDENTIFICADOR TK_OC_EQ literal
+    | TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+    | TK_IDENTIFICADOR TK_OC_LE literal
     ;
 
 control_flow: if
@@ -164,35 +178,40 @@ param_rep: expr
 
     /* ---------- EXPRESSIONS ---------- */
 
-expr: op_log
+    /* the expression rules are implemented following precedence orders */
+expr: op_tern
+    ;
+
+op_tern: op_log
+    | op_log '?' op_tern ':' op_tern
     ;
 
 op_log: op_bws
-    | op_bws tk_op_log op_bws
+    | op_bws tk_op_log op_log
     ;
 
 op_bws: op_eq
-    | op_eq tk_op_bws op_eq
+    | op_eq tk_op_bws op_bws
     ;
 
 op_eq: op_cmp
-    | op_cmp tk_op_eq op_cmp
+    | op_cmp tk_op_eq op_eq
     ;
 
 op_cmp:  op_add
-    | op_add tk_op_cmp op_add
+    | op_add tk_op_cmp op_cmp
     ;
 
 op_add: op_mul
-    | op_mul tk_op_add op_mul
+    | op_mul tk_op_add op_add
     ;
 
 op_mul: op_exp
-    | op_exp tk_op_mul op_exp
+    | op_exp tk_op_mul op_mul
     ;
 
 op_exp: op_un
-    | op_un tk_op_exp op_un
+    | op_un tk_op_exp op_exp
     ;
 
 op_un: tk_op_un op_un
@@ -208,6 +227,7 @@ op_elem: TK_IDENTIFICADOR
     | '(' expr ')'
     ;
 
+    /* tokens of each expression rule */
 tk_op_eq: TK_OC_EQ
     | TK_OC_NE
     ;

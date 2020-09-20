@@ -6,6 +6,16 @@
 
 %{
 #include "lexer/scanner.h"
+/* to track the initial column of matched tokens */
+int yycolumn = 1;
+/* to save the line of the current matches*/
+char* yylinebuf;
+int yylinebuf_len = 0;
+
+/* helpful flex feature that helps us to track the location of the tokens */
+#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno; \
+    yylloc.first_column = yycolumn; yylloc.last_column = yycolumn + yyleng - 1; \
+    yycolumn += yyleng;
 %}
 
 /* no need to use the default flex main */
@@ -77,6 +87,7 @@ BOOL_T "true"
 BOOL_F "false"
 
 /* states */
+%x NORMAL
 %x COMMENT
 %x WORD
 %x STRING
@@ -86,29 +97,50 @@ BOOL_F "false"
 
 %%
 
+    /* ----------  first read line ---------- */
+
+    /* note that this rule is only here so we can save the first line of
+     * input to the error function */
+.*                                     {
+    /* if our line buffer is small, we grow it by 100 characters */
+    if (yyleng + 1 > yylinebuf_len) {
+        yylinebuf = realloc(yylinebuf, (yyleng+100)*sizeof(char));
+        yylinebuf_len = yyleng + 100;
+    }
+    strncpy(yylinebuf, yytext, yylinebuf_len - 1);
+    yycolumn = 1;
+    yyless(0);
+    BEGIN(NORMAL);
+}
+
     /* ----------  comments section ----------  */
 
     /* block comment*/
-"/*"                                   { BEGIN(COMMENT); V_LOG_LEXER("COMMENT STATE"); }
+<NORMAL>"/*"                           { BEGIN(COMMENT); V_LOG_LEXER("COMMENT STATE"); }
 
     /* comment state */
 <COMMENT>{
 
-"*"+"/"                                { BEGIN(INITIAL); V_LOG_LEXER("INITIAL STATE"); }
+"*"+"/"                                { BEGIN(NORMAL); V_LOG_LEXER("INITIAL STATE"); }
 [^*\n]*
 "*"+[^*/\n]*
-\n
+\n                                     { yycolumn = 1; }
 <<EOF>>                                { return TOKEN_ERRO; }
 
 }
 
     /* line comments */
-"//".*\n
+<NORMAL>"//".*                         { yycolumn = 1; }
 
 
     /* ----------  words section ----------  */
 
-{ALPHA}/{ALNUM}*                       { BEGIN(WORD); V_LOG_LEXER("WORD STATE"); yyless(0); }
+<NORMAL>{ALPHA}/{ALNUM}*               {
+    BEGIN(WORD);
+    V_LOG_LEXER("WORD STATE");
+    yycolumn -= yyleng;
+    yyless(0);
+    }
 
 
     /* word state */
@@ -151,7 +183,12 @@ BOOL_F "false"
 {ALPHA}{ALNUM}*                        { V_LOG_LEXER("IDENTIFIER"); return TK_IDENTIFICADOR; }
 
     /* end word */
-{DELIM}                                { BEGIN(INITIAL); V_LOG_LEXER("INITIAL STATE"); yyless(0); }
+{DELIM}                                {
+    BEGIN(NORMAL);
+    V_LOG_LEXER("INITIAL STATE");
+    yyless(0);
+    yycolumn--;
+}
 
 }
 
@@ -159,53 +196,57 @@ BOOL_F "false"
     /* ---------- special characters section ----------  */
 
     /* composite operators */
-{OP_LE}                                { V_LOG_LEXER("OP_LE"); return TK_OC_LE; }
-{OP_GE}                                { V_LOG_LEXER("OP_GE"); return TK_OC_GE; }
-{OP_EQ}                                { V_LOG_LEXER("OP_EQ"); return TK_OC_EQ; }
-{OP_NE}                                { V_LOG_LEXER("OP_NE"); return TK_OC_NE; }
-{OP_AND}                               { V_LOG_LEXER("OP_AND"); return TK_OC_AND; }
-{OP_OR}                                { V_LOG_LEXER("OP_OR"); return TK_OC_OR; }
-{OP_SL}                                { V_LOG_LEXER("OP_SL"); return TK_OC_SL; }
-{OP_SR}                                { V_LOG_LEXER("OP_SR"); return TK_OC_SR; }
+<NORMAL>{OP_LE}                        { V_LOG_LEXER("OP_LE"); return TK_OC_LE; }
+<NORMAL>{OP_GE}                        { V_LOG_LEXER("OP_GE"); return TK_OC_GE; }
+<NORMAL>{OP_EQ}                        { V_LOG_LEXER("OP_EQ"); return TK_OC_EQ; }
+<NORMAL>{OP_NE}                        { V_LOG_LEXER("OP_NE"); return TK_OC_NE; }
+<NORMAL>{OP_AND}                       { V_LOG_LEXER("OP_AND"); return TK_OC_AND; }
+<NORMAL>{OP_OR}                        { V_LOG_LEXER("OP_OR"); return TK_OC_OR; }
+<NORMAL>{OP_SL}                        { V_LOG_LEXER("OP_SL"); return TK_OC_SL; }
+<NORMAL>{OP_SR}                        { V_LOG_LEXER("OP_SR"); return TK_OC_SR; }
 
     /* special characters */
-{SPC_CHAR}/{WHITE}?                    { V_LOG_LEXER("SPECIAL"); return (int)*yytext; }
+<NORMAL>{SPC_CHAR}/{WHITE}?            {
+    V_LOG_LEXER("SPECIAL");
+    return (int)*yytext;
+}
 
 
     /* ---------- literals section ----------  */
 
     /* string literals */
-"\""                                   { BEGIN(STRING); yymore(); V_LOG_LEXER("STRING STATE"); }
+<NORMAL>"\""                           { BEGIN(STRING); yymore(); V_LOG_LEXER("STRING STATE"); }
 <STRING>("\\".|[^\"\n\\])*"\""         {
-    BEGIN(INITIAL);
+    BEGIN(NORMAL);
     V_LOG_LEXER("QUOTED STRING");
     return TK_LIT_STRING;
     }
 <STRING>{GRAPH}                        {
     yyless(1);
-    BEGIN(INITIAL);
+    BEGIN(NORMAL);
     V_LOG_LEXER("MALFORMED STRING");
     return TOKEN_ERRO;
     }
 
     /* character literals */
-"\'"                                   { BEGIN(QUOTE); yymore(); V_LOG_LEXER("CHAR STATE"); }
+<NORMAL>"\'"                           { BEGIN(QUOTE); yymore(); V_LOG_LEXER("CHAR STATE"); }
 <QUOTE>("\\".|[^\'\n\\])"\'"           {
-    BEGIN(INITIAL);
+    BEGIN(NORMAL);
     V_LOG_LEXER("QUOTED CHARACTER");
     return TK_LIT_CHAR;
     }
 <QUOTE>{GRAPH}                         {
     yyless(1);
-    BEGIN(INITIAL);
+    BEGIN(NORMAL);
     V_LOG_LEXER("MALFORMED QUOTE");
     return TOKEN_ERRO;
     }
 
     /* number literals */
-{NUMBER}/{ALNUM}*                      {
+<NORMAL>{NUMBER}/{ALNUM}*              {
     BEGIN(DECIMAL);
     V_LOG_LEXER("DECIMAL STATE");
+    yycolumn--;
     yyless(0);
     }
 
@@ -214,28 +255,28 @@ BOOL_F "false"
 
     /* float */
 {NUMBER}+"."{NUMBER}+{SCI_NOT}?        {
-    BEGIN(INITIAL);
+    BEGIN(NORMAL);
     V_LOG_LEXER("FLOATING POINT");
     return TK_LIT_FLOAT;
     }
 
     /* malformed float */
 {NUMBER}+"."{ALNUM}+                   {
-    BEGIN(INITIAL);
+    BEGIN(NORMAL);
     V_LOG_LEXER("MALFORMED FLOATING POINT");
     return TOKEN_ERRO;
     }
 
     /* integer */
 {NUMBER}+                              {
-    BEGIN(INITIAL);
+    BEGIN(NORMAL);
     V_LOG_LEXER("INTEGER");
     return TK_LIT_INT;
     }
 
     /* malformed decimal */
 {ALNUM}+                               {
-    BEGIN(INITIAL);
+    BEGIN(NORMAL);
     V_LOG_LEXER("MALFORMED DECIMAL");
     return TOKEN_ERRO;
     }
@@ -246,7 +287,17 @@ BOOL_F "false"
     /* ---------- misc section ----------  */
 
     /* whitespace or newlines between tokens */
-({WHITE}|\n)+                          { }
+<NORMAL>{WHITE}+
+    /* same thing as the first line, but we read the whole next line */
+<NORMAL>\n.*                           {
+    if (yyleng + 1 > yylinebuf_len) {
+        yylinebuf = realloc(yylinebuf, (yyleng+100)*sizeof(char));
+        yylinebuf_len = yyleng + 100;
+    }
+    strncpy(yylinebuf, yytext+1, yylinebuf_len - 1);
+    yycolumn = 1;
+    yyless(1);
+}
 
     /* error catch-all */
 <*>.                                   { V_LOG_LEXER("UNKNOWN"); return TOKEN_ERRO; }

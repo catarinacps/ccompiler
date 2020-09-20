@@ -12,8 +12,176 @@
 #+latex_header: \usepackage{titling}
 #+latex_header: \usepackage{palatino}
 #+latex_header: \usepackage{enumitem}
+#+latex_header: \usepackage{listings}
+#+latex_header: \usepackage{fancyvrb}
 #+latex_header: \setlength{\droptitle}{-1.5cm}
 #+latex_header: \author{Henrique Corrêa Pereira da Silva}
 #+latex_header: \author{Bernardo Hummes Flores}
 #+latex_header: \affil[]{Informatics Institute\\Universidade Federal do Rio Grande do Sul}
 #+latex_header: \affil[]{\normalsize\texttt{\{hcpsilva, bhflores\}@inf.ufrgs.br}}
+#+latex_header: \lstset{basicstyle=\tiny}
+#+latex_header: \setminted{fontsize=\tiny}
+
+#+begin_abstract
+After a non-optimal first stage, we implement a fully-featured syntax
+parser, as defined in the second stage of the assignment. The parser
+conforms to the given grammar rules and also implements rich error
+output through several features of both =flex= and =bison=. As future work,
+we intend to perpetuate the modular design and extend the source code
+documentation.
+#+end_abstract
+
+* Introduction
+
+In this document we will focus on this course's second objective of the
+final assignment: a syntax parser. We shall touch upon the definition
+itself in Section [[sec:objective]], talk about the tools utilized in
+Section [[sec:tools]] and the conclusion in Section [[sec:conclusion]].
+
+* Objective
+<<sec:objective>>
+
+The second stage outlined a parser that implements a language with the
+following building blocks:
+
+#+attr_latex: :options [noitemsep]
+- Variable assignment;
+- Function definition;
+- Command blocks;
+- Simple commands;
+- Arithmetical and logical expressions.
+
+All this would be enabled by =bison=, the GNU's =yacc= implementation. With
+both =flex= and it, we had little trouble to implement all that was put up
+in this milestone.
+
+* Tools
+<<sec:tools>>
+
+By the first look upon the =bison= instruction manual, we noted that it
+was indeed a well-featured tool. From the get-go we turned on all
+warnings and reports, the latter which proved to be specially useful
+when trying to find ambiguities in the generated grammar. That being
+said, some assembly was required in order to elegantly generate the
+header file in the correct location, following our project structure.
+
+After some struggle, we decided to enhance the error printing through
+the addition of some context: the whole error line. In order to do this,
+one must enable the =%location= flag in =bison=:
+
+#+begin_src bison :exports both
+/* the following options enable us more information when printing the
+ * error */
+%define parse.error verbose
+%locations
+#+end_src
+
+But, well, that's far from all we had to do. After that, we added the
+input line buffer to =flex=:
+
+#+begin_src c :exports both
+/* to track the initial column of matched tokens */
+int yycolumn = 1;
+/* to save the line of the current matches*/
+char* yylinebuf;
+int yylinebuf_len = 0;
+
+/* helpful flex feature that helps us to track the location of the tokens */
+#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno; \
+    yylloc.first_column = yycolumn; yylloc.last_column = yycolumn + yyleng - 1; \
+    yycolumn += yyleng;
+#+end_src
+
+The last define allow us to maintain the existing =lex= action mostly
+unchanged. That's because we had to actually copy the contents of the
+input to that buffer:
+
+#+begin_src c :exports both
+/* if our line buffer is small, we grow it by 100 characters */
+if (yyleng + 1 > yylinebuf_len) {
+    yylinebuf = realloc(yylinebuf, (yyleng+100)*sizeof(char));
+    yylinebuf_len = yyleng + 100;
+}
+strncpy(yylinebuf, yytext, yylinebuf_len - 1); /* in the <NORMAL>\n.*
+                                                ,* rule we copy from
+                                                ,* yytext+1 onwards */
+yycolumn = 1;
+yyless(0);
+BEGIN(NORMAL);
+#+end_src
+
+That's the action of two rules: =.*= and =<NORMAL>\n.*=. The state =NORMAL=
+had to be used in order to correctly match the whole first line of
+input. That is, the standard =INITIAL= state is only used to copy the
+first line of input. Perhaps not that performant, but it's only done
+once.
+
+With that information, we finally implement the =yyerror= function:
+
+#+begin_src c :exports both
+void yyerror(char const* s, ...)
+{
+    va_list ap;
+    va_start(ap, s);
+    char* underline = cc_parser_underline(yylloc.last_column + 2,
+                                          yylloc.first_column,
+                                          yylloc.last_column);
+
+    if (yylloc.first_line) {
+        fprintf(stderr, "%d:%d: error: ",
+                yylloc.first_line,
+                yylloc.first_column);
+    }
+    vfprintf(stderr, s, ap);
+    fprintf(stderr, "\n    | %s\n    | %s\n",
+            yylinebuf, underline);
+
+    free(underline);
+}
+#+end_src
+
+Why variadic parameters? Well, maybe we need to actively print out
+errors with more information in our grammar rules. Anyways, the output
+is the following:
+
+#+begin_export latex
+\begin{Verbatim}[fontsize=\tiny]
+7:13: error: syntax error, unexpected ',', expecting ':'
+    |   for(i <= 0, j <= 0 : i : i <= 2, j <= 3) {
+    |             ^
+\end{Verbatim}
+#+end_export
+
+With that done, we again did implement a test suite of sorts in the
+shape of a shell script (included together with this release). Here is a
+snippet of it:
+
+#+begin_export latex
+\begin{Verbatim}[fontsize=\tiny]
+------------------------------------------------------------
+TEST CASE OF FILE 'ccompiler/test/etapa2/teste_065':
+
+7:13: error: syntax error, unexpected ',', expecting ':'
+    |   for(i <= 0, j <= 0 : i : i <= 2, j <= 3) {
+    |             ^
+
+FILE CONTENTS:
+
+//ERROR: As construções iterativas são separadas com ':' e só uma atribuição
+int f()
+{
+  int i;
+  int j;
+  for(i <= 0, j <= 0 : i : i <= 2, j <= 3) {
+  };
+}
+\end{Verbatim}
+#+end_export
+
+* Conclusion
+<<sec:conclusion>>
+
+The choices made early in this assignment paid out: we had little
+trouble with this milestone, and the source code is still well
+modularized. We hope that it keeps paying out throughout the milestones,
+as we expect the code complexity to increase considerably.
