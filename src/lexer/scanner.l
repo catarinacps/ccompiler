@@ -99,13 +99,15 @@ BOOL_F "false"
 
     /* ----------  first read line ---------- */
 
-.*\n                                   {
+    /* note that this rule is only here so we can save the first line of
+     * input to the error function */
+.*                                     {
+    /* if our line buffer is small, we grow it by 100 characters */
     if (yyleng + 1 > yylinebuf_len) {
         yylinebuf = realloc(yylinebuf, (yyleng+100)*sizeof(char));
         yylinebuf_len = yyleng + 100;
     }
     strncpy(yylinebuf, yytext, yylinebuf_len - 1);
-    yylinebuf[yyleng-1] = ' ';
     yycolumn = 1;
     yyless(0);
     BEGIN(NORMAL);
@@ -286,6 +288,7 @@ BOOL_F "false"
 
     /* whitespace or newlines between tokens */
 <NORMAL>{WHITE}+
+    /* same thing as the first line, but we read the whole next line */
 <NORMAL>\n.*                           {
     if (yyleng + 1 > yylinebuf_len) {
         yylinebuf = realloc(yylinebuf, (yyleng+100)*sizeof(char));
