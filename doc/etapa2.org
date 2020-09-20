@@ -69,7 +69,7 @@ After some struggle, we decided to enhance the error printing through
 the addition of some context: the whole error line. In order to do this,
 one must enable the =%location= flag in =bison=:
 
-#+begin_src bison :exports both
+#+begin_src c :exports both
 /* the following options enable us more information when printing the
  * error */
 %define parse.error verbose
