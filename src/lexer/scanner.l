@@ -128,7 +128,7 @@ BOOL_F "false"
 }
 
     /* line comments */
-<NORMAL>"//".*\n                       { yycolumn = 1; }
+<NORMAL>"//".*                         { yycolumn = 1; }
 
 
     /* ----------  words section ----------  */

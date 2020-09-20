@@ -167,35 +167,39 @@ param_rep: expr
 
     /* ---------- EXPRESSIONS ---------- */
 
-expr: op_log
+expr: op_tern
+    ;
+
+op_tern: op_log
+    | op_log '?' op_tern ':' op_tern
     ;
 
 op_log: op_bws
-    | op_bws tk_op_log op_bws
+    | op_bws tk_op_log op_log
     ;
 
 op_bws: op_eq
-    | op_eq tk_op_bws op_eq
+    | op_eq tk_op_bws op_bws
     ;
 
 op_eq: op_cmp
-    | op_cmp tk_op_eq op_cmp
+    | op_cmp tk_op_eq op_eq
     ;
 
 op_cmp:  op_add
-    | op_add tk_op_cmp op_add
+    | op_add tk_op_cmp op_cmp
     ;
 
 op_add: op_mul
-    | op_mul tk_op_add op_mul
+    | op_mul tk_op_add op_add
     ;
 
 op_mul: op_exp
-    | op_exp tk_op_mul op_exp
+    | op_exp tk_op_mul op_mul
     ;
 
 op_exp: op_un
-    | op_un tk_op_exp op_un
+    | op_un tk_op_exp op_exp
     ;
 
 op_un: tk_op_un op_un

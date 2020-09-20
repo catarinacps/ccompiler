@@ -12,7 +12,7 @@
  *
  * @section DESCRIPTION
  *
- *
+ * Features functions that enhance the default bison error printing.
  */
 
 #ifndef _PARSER_UTILS_H_
