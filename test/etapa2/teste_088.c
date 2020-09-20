@@ -2,5 +2,5 @@
 int f()
 {
   int a;
-  if (a == 0) { x = 2; } else
+  if (a == 0) { x <= 2; } else
 }

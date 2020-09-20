@@ -109,8 +109,8 @@ command: atrib
     | block
     ;
 
-atrib: TK_IDENTIFICADOR '=' expr
-    | TK_IDENTIFICADOR index '=' expr
+atrib: TK_IDENTIFICADOR TK_OC_LE expr
+    | TK_IDENTIFICADOR index TK_OC_LE expr
     ;
 
 var_local: type id_var_local_rep
@@ -124,8 +124,8 @@ id_var_local_rep: id_var_local
     ;
 
 id_var_local: TK_IDENTIFICADOR
-    | TK_IDENTIFICADOR TK_OC_EQ TK_IDENTIFICADOR
-    | TK_IDENTIFICADOR TK_OC_EQ literal
+    | TK_IDENTIFICADOR TK_OC_LE TK_IDENTIFICADOR
+    | TK_IDENTIFICADOR TK_OC_LE literal
     ;
 
 control_flow: if

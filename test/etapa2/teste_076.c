@@ -4,5 +4,5 @@ int f()
   int a;
   int b;
   int c;
-  a = 2*c+a/b;
+  a <= 2*c+a/b;
 }

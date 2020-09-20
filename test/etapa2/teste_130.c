@@ -2,5 +2,5 @@
 int main()
 {
   if (true)
-    x = 2;
+    x <= 2;
 }
