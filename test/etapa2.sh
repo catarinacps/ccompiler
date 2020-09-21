@@ -35,7 +35,7 @@ echo "$(date)" > $LOG_FILE
 echo >> $LOG_FILE
 echo >> $LOG_FILE
 
-for test_case in $TEST_DIR/etapa2/*; do
+for test_case in $TEST_DIR/etapa2-cases/*; do
     echo "------------------------------------------------------------" >> $LOG_FILE
     echo "TEST CASE OF FILE '$test_case':" >> $LOG_FILE
     echo >> $LOG_FILE
