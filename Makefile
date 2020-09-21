@@ -12,7 +12,7 @@
 #		redo - cleans up and then builds
 #		help - shows the utilization example
 #		test - builds and run tests
-#		doc - builds the documentation
+#		doc - builds the full documentation
 #		tool - generates compile_commands.json
 #		release - cleans and compresses the work directory for release
 #
@@ -128,7 +128,7 @@ $(OBJ): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 
 #	- Documentation:
 $(PDF): %.pdf: %.org
-	emacs -batch $< --funcall org-latex-export-to-pdf
+	emacs -batch -l $(DOC_DIR)/setup.el $< --funcall org-latex-export-to-pdf
 	@rm $*.tex*
 
 #	- Graphviz generation:
@@ -146,7 +146,7 @@ $(LOG): %.log: %.y
 .DEFAULT_GOAL = all
 
 #	Create a symlink in the expected executable location
-all: gen $(TARGET)
+all: gen $(PDF) $(TARGET)
 	ln -sf $(shell readlink -f $(TARGET)) $(VERSION)
 
 #	Prerequisites are the wanted files
@@ -186,7 +186,7 @@ help:
 	@echo " redo - cleans up and then builds"
 	@echo " help - shows the utilization example"
 	@echo " test - builds and run tests"
-	@echo " doc - builds the documentation"
+	@echo " doc - builds the full documentation"
 	@echo " tool - generates compile_commands.json"
 	@echo " release - cleans and compresses the work directory for release"
 	@echo

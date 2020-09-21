@@ -29,7 +29,7 @@ root=$(dirname $(dirname $(readlink -f "$0")))
 
 pushd $root
 
-version=$(awk '/RELEASE :=/ {print $3}' Makefile)
+version=$(awk '/VERSION :=/ {print $3}' Makefile)
 
 make clean
 
