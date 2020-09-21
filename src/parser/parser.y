@@ -1,3 +1,9 @@
+/** parser.y - Syntax parser specification file
+ *
+ * @author Henrique Silva <hcpsilva@inf.ufrgs.br>
+ * @author Bernardo Hummes <bhflores@inf.ufrgs.br>
+ */
+
 %{
 #include "parser/parser.h"
 %}
