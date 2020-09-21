@@ -14,6 +14,7 @@
 #+latex_header: \usepackage{enumitem}
 #+latex_header: \usepackage{listings}
 #+latex_header: \usepackage{fancyvrb}
+#+latex_header: \usepackage{minted}
 #+latex_header: \setlength{\droptitle}{-1.5cm}
 #+latex_header: \author{Henrique Corrêa Pereira da Silva}
 #+latex_header: \author{Bernardo Hummes Flores}

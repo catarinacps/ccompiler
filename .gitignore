@@ -46,14 +46,14 @@ build/*
 # Kernel Module Compile Results
 *.mod*
 *.cmd
-.tmp_versions/
+.tmp_versions
 modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
 
 # Project files
-.clangd/
+.clangd
 compile_commands.json
 *.log
 *.tab.*
@@ -63,9 +63,7 @@ compile_commands.json
 *.tgz
 *.tar.gz
 *.pdf
-etapa*
-!etapa*.org
-!etapa*.sh
+etapa[0-9]
 
 # Temporaries
 *~
