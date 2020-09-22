@@ -65,5 +65,6 @@ compile_commands.json
 *.pdf
 etapa[0-9]
 
-# Temporaries
+# Temporaries and backups
 *~
+*.bak

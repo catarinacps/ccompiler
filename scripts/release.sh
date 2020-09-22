@@ -30,6 +30,8 @@ root=$(dirname $(dirname $(readlink -f "$0")))
 pushd $root
 
 version=$(awk '/VERSION :=/ {print $3}' Makefile)
+mv Makefile Makefile.bak
+sed 's/RELEASE ?=/RELEASE := TRUE/g' Makefile.bak > Makefile
 
 make clean
 
@@ -38,6 +40,8 @@ tar --exclude="$version.tgz" \
     --exclude-vcs \
     --exclude-backups \
     -czf "$version.tgz" .
+
+mv Makefile.bak Makefile
 
 popd
 
