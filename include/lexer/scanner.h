@@ -24,15 +24,12 @@
 #include "lexer/tools.h"
 #include "parser/parser.tab.h"
 #include "utils/debug.h"
-#include "utils/memory.h"
 
 extern int yylex(void);
 extern int yylex_destroy(void);
 
 extern FILE* yyin;
 extern char* yytext;
-
-extern char* yylinebuf;
-extern int yylinebuf_len;
+extern int yycolumn;
 
 #endif /* _SCANNER_H_ */

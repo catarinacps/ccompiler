@@ -16,3 +16,12 @@ unsigned int cc_match_line_number(void)
 {
     return (unsigned int)yylineno;
 }
+
+void cc_update_line_buffer(char* text, size_t match_lenght)
+{
+    if (match_lenght + 1 > yylinebuf_len) {
+        yylinebuf = (char*)cc_try_realloc(yylinebuf, (match_lenght + 100) * sizeof(char));
+        yylinebuf_len = match_lenght + 100;
+    }
+    strncpy(yylinebuf, text, yylinebuf_len - 1);
+}

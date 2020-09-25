@@ -18,6 +18,9 @@
 #define _TOOLS_H_
 
 #include <stdio.h>
+#include <string.h>
+
+#include "utils/memory.h"
 
 #ifndef VERBOSE
 #define V_LOG_LEXER(STR) ((void)0)
@@ -31,11 +34,16 @@
 
 extern int yylineno;
 
+extern char* yylinebuf;
+extern size_t yylinebuf_len;
+
 /**
  * Retrieves the line where the last token was recognized.
  *
  * @return the line number.
  */
 unsigned int cc_match_line_number(void);
+
+void cc_update_line_buffer(char* text, size_t match_lenght);
 
 #endif /* _TOOLS_H_ */

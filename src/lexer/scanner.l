@@ -10,7 +10,7 @@
 int yycolumn = 1;
 /* to save the line of the current matches*/
 char* yylinebuf;
-int yylinebuf_len = 0;
+size_t yylinebuf_len = 0;
 
 /* helpful flex feature that helps us to track the location of the tokens */
 #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno; \
@@ -103,11 +103,7 @@ BOOL_F "false"
      * input to the error function */
 .*                                     {
     /* if our line buffer is small, we grow it by 100 characters */
-    if (yyleng + 1 > yylinebuf_len) {
-        yylinebuf = cc_try_realloc(yylinebuf, (yyleng + 100) * sizeof(char));
-        yylinebuf_len = yyleng + 100;
-    }
-    strncpy(yylinebuf, yytext, yylinebuf_len - 1);
+    cc_update_line_buffer(yytext, yyleng);
     yycolumn = 1;
     yyless(0);
     BEGIN(NORMAL);
@@ -290,11 +286,7 @@ BOOL_F "false"
 <NORMAL>{WHITE}+
     /* same thing as the first line, but we read the whole next line */
 <NORMAL>\n.*                           {
-    if (yyleng + 1 > yylinebuf_len) {
-        yylinebuf = cc_try_realloc(yylinebuf, (yyleng + 100) * sizeof(char));
-        yylinebuf_len = yyleng + 100;
-    }
-    strncpy(yylinebuf, yytext+1, yylinebuf_len - 1);
+    cc_update_line_buffer(yytext, yyleng);
     yycolumn = 1;
     yyless(1);
 }
