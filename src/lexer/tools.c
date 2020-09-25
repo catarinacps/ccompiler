@@ -1,4 +1,4 @@
-/** utils.c
+/** tools.c
  *
  * @file
  * @author Henrique Silva <hcpsilva@inf.ufrgs.br>
@@ -10,9 +10,9 @@
  * 'LICENSE', which is part of this source code package.
  */
 
-#include "lexer/utils.h"
+#include "lexer/tools.h"
 
-unsigned int get_line_number(void)
+unsigned int cc_match_line_number(void)
 {
     return (unsigned int)yylineno;
 }
