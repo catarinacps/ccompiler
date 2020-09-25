@@ -123,9 +123,8 @@ command: atrib
     | block
     ;
 
-    /* we use "<=" in attributions, for some reason */
-atrib: TK_IDENTIFICADOR TK_OC_LE expr
-    | TK_IDENTIFICADOR index TK_OC_LE expr
+atrib: TK_IDENTIFICADOR '=' expr
+    | TK_IDENTIFICADOR index '=' expr
     ;
 
 var_local: type id_var_local_rep
