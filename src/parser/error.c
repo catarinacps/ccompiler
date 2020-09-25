@@ -25,6 +25,9 @@ void yyerror(char const* s, ...)
     fprintf(stderr, "\n    | %s\n    | %s\n", yylinebuf, underline);
 
     free(underline);
+    va_end(ap);
+
+    return;
 }
 
 char* cc_error_underline(size_t size, unsigned int start, unsigned int end)
