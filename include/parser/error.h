@@ -17,12 +17,12 @@
 #ifndef _ERROR_H_
 #define _ERROR_H_
 
-#include <stdio.h>
 #include <stdarg.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "lexer/scanner.h"
-#include "lexer/utils.h"
+#include "lexer/tools.h"
 
 /**
  * Prints to stderr a message with interesting information regarding the

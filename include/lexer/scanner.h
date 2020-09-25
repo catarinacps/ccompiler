@@ -21,9 +21,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "lexer/tools.h"
 #include "parser/parser.tab.h"
-#include "lexer/utils.h"
 #include "utils/debug.h"
+#include "utils/memory.h"
 
 extern int yylex(void);
 extern int yylex_destroy(void);

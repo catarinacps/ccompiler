@@ -104,7 +104,7 @@ BOOL_F "false"
 .*                                     {
     /* if our line buffer is small, we grow it by 100 characters */
     if (yyleng + 1 > yylinebuf_len) {
-        yylinebuf = realloc(yylinebuf, (yyleng+100)*sizeof(char));
+        yylinebuf = cc_try_realloc(yylinebuf, (yyleng + 100) * sizeof(char));
         yylinebuf_len = yyleng + 100;
     }
     strncpy(yylinebuf, yytext, yylinebuf_len - 1);
@@ -291,7 +291,7 @@ BOOL_F "false"
     /* same thing as the first line, but we read the whole next line */
 <NORMAL>\n.*                           {
     if (yyleng + 1 > yylinebuf_len) {
-        yylinebuf = realloc(yylinebuf, (yyleng+100)*sizeof(char));
+        yylinebuf = cc_try_realloc(yylinebuf, (yyleng + 100) * sizeof(char));
         yylinebuf_len = yyleng + 100;
     }
     strncpy(yylinebuf, yytext+1, yylinebuf_len - 1);
