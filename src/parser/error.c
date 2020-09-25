@@ -1,4 +1,4 @@
-/** utils.c
+/** error.c
  *
  * @file
  * @author Henrique Silva <hcpsilva@inf.ufrgs.br>
@@ -10,13 +10,13 @@
  * 'LICENSE', which is part of this source code package.
  */
 
-#include "parser/utils.h"
+#include "parser/error.h"
 
 void yyerror(char const* s, ...)
 {
     va_list ap;
     va_start(ap, s);
-    char* underline = cc_parser_underline(yylloc.last_column + 2, yylloc.first_column, yylloc.last_column);
+    char* underline = cc_error_underline(yylloc.last_column + 2, yylloc.first_column, yylloc.last_column);
 
     if (yylloc.first_line) {
         fprintf(stderr, "%d:%d: error: ", yylloc.first_line, yylloc.first_column);
@@ -27,7 +27,7 @@ void yyerror(char const* s, ...)
     free(underline);
 }
 
-char* cc_parser_underline(size_t size, unsigned int start, unsigned int end)
+char* cc_error_underline(size_t size, unsigned int start, unsigned int end)
 {
     char* string = (char*)malloc((size + 1)*sizeof(char));
 

@@ -1,4 +1,4 @@
-/** utils.h
+/** error.h
  *
  * @file
  * @author Henrique Silva <hcpsilva@inf.ufrgs.br>
@@ -14,8 +14,8 @@
  * Features functions that enhance the default bison error printing.
  */
 
-#ifndef _PARSER_UTILS_H_
-#define _PARSER_UTILS_H_
+#ifndef _ERROR_H_
+#define _ERROR_H_
 
 #include <stdio.h>
 #include <stdarg.h>
@@ -45,6 +45,6 @@ void yyerror(char const* s, ...);
  *
  * @return a pointer to the generated string
  */
-char* cc_parser_underline(size_t size, unsigned int start, unsigned int end);
+char* cc_error_underline(size_t size, unsigned int start, unsigned int end);
 
-#endif /* _PARSER_UTILS_H_ */
+#endif /* _ERROR_H_ */

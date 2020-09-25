@@ -1,4 +1,4 @@
-/** utils.h
+/** utils.h - Lexer input info and screen output
  *
  * @file
  * @author Henrique Silva <hcpsilva@inf.ufrgs.br>
@@ -14,8 +14,8 @@
  * Includes some utilities to printing things in the lexer.
  */
 
-#ifndef _LEXER_UTILS_H_
-#define _LEXER_UTILS_H_
+#ifndef _UTILS_H_
+#define _UTILS_H_
 
 #include <stdio.h>
 
@@ -38,4 +38,4 @@ extern int yylineno;
  */
 unsigned int get_line_number(void);
 
-#endif /* _LEXER_UTILS_H_ */
+#endif /* _UTILS_H_ */

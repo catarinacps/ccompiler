@@ -20,6 +20,6 @@
 #include <stdio.h>
 
 #include "lexer/scanner.h"
-#include "parser/utils.h"
+#include "parser/error.h"
 
 #endif /* _PARSER_H_ */
