@@ -251,6 +251,7 @@ BOOL_F "false"
 
     /* float */
 {NUMBER}+"."{NUMBER}+{SCI_NOT}?        {
+    yylval.lexic_value = cc_alloc_lexic_literal((cc_literal_t)atof(yytext));
     BEGIN(NORMAL);
     V_LOG_LEXER("FLOATING POINT");
     return TK_LIT_FLOAT;
@@ -265,6 +266,7 @@ BOOL_F "false"
 
     /* integer */
 {NUMBER}+                              {
+    yylval.lexic_value = cc_alloc_lexic_literal((cc_literal_t)atoi(yytext));
     BEGIN(NORMAL);
     V_LOG_LEXER("INTEGER");
     return TK_LIT_INT;

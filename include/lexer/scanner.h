@@ -24,6 +24,7 @@
 #include "lexer/tools.h"
 #include "parser/parser.tab.h"
 #include "utils/debug.h"
+#include "ast/alloc.h"
 
 extern int yylex(void);
 extern int yylex_destroy(void);

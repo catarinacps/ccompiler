@@ -10,7 +10,7 @@
 
 %union {
     cc_ast_t* node;
-    cc_lexic_value_t* value;
+    cc_lexic_value_t* lexic_value;
 }
 
 /* all tokens, even the ones not utilized (as, in the first stage, we

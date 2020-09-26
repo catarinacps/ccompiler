@@ -1,8 +1,9 @@
-/** parser.h - Yacc parser header file
+/** alloc.h
  *
- * @file
+ * @copyright (C) 2020 Henrique Silva
+ *
+ *
  * @author Henrique Silva <hcpsilva@inf.ufrgs.br>
- * @author Bernardo Hummes <bhflores@inf.ufrgs.br>
  *
  * @section LICENSE
  *
@@ -11,16 +12,18 @@
  *
  * @section DESCRIPTION
  *
- * Cointains some basic declarations as of now. May change later.
+ *
  */
 
-#ifndef _PARSER_H_
-#define _PARSER_H_
+#ifndef _ALLOC_H_
+#define _ALLOC_H_
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "ast/ast.h"
-#include "lexer/scanner.h"
-#include "parser/error.h"
+#include "utils/debug.h"
 
-#endif /* _PARSER_H_ */
+cc_lexic_value_t* cc_alloc_lexic_literal(cc_literal_t value);
+
+#endif /* _ALLOC_H_ */

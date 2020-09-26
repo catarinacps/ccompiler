@@ -20,25 +20,27 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-enum cc_ast_data_type {
+typedef enum {
     cc_id,
     cc_lit,
     cc_expr,
     cc_comm
-};
+} cc_data_kind_t;
+
+typedef union {
+    char* text;
+    double floating;
+    int integer;
+    char character;
+    bool boolean;
+} cc_literal_t;
 
 typedef struct {
-    enum cc_ast_data_type type;
+    cc_data_kind_t type;
     unsigned int line;
     bool is_const;
     bool is_static;
-    union {
-        char* text;
-        double floating;
-        int integer;
-        char character;
-        bool boolean;
-    } data;
+    cc_literal_t data;
 } cc_lexic_value_t;
 
 typedef struct cc_ast {
