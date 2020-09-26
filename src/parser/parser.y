@@ -185,7 +185,7 @@ if: TK_PR_IF '(' expr ')' block
 for: TK_PR_FOR '(' atrib ':' expr ':' atrib ')' block
     ;
 
-while: TK_PR_WHILE '(' expr ')' block
+while: TK_PR_WHILE '(' expr ')' TK_PR_DO block
     ;
 
 io: TK_PR_INPUT TK_IDENTIFICADOR
