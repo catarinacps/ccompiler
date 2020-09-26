@@ -4,9 +4,14 @@
  * @author Bernardo Hummes <bhflores@inf.ufrgs.br>
  */
 
-%{
+%code requires {
 #include "parser/parser.h"
-%}
+}
+
+%union {
+    cc_ast_t* node;
+    cc_lexic_value_t* value;
+}
 
 /* all tokens, even the ones not utilized (as, in the first stage, we
  * did recognize them) */
@@ -47,14 +52,38 @@
 %token TK_OC_SR
 %token TK_OC_FORWARD_PIPE
 %token TK_OC_BASH_PIPE
-%token TK_LIT_INT
-%token TK_LIT_FLOAT
-%token TK_LIT_FALSE
-%token TK_LIT_TRUE
-%token TK_LIT_CHAR
-%token TK_LIT_STRING
-%token TK_IDENTIFICADOR
+%token <value> TK_LIT_INT
+%token <value> TK_LIT_FLOAT
+%token <value> TK_LIT_FALSE
+%token <value> TK_LIT_TRUE
+%token <value> TK_LIT_CHAR
+%token <value> TK_LIT_STRING
+%token <value> TK_IDENTIFICADOR
 %token TOKEN_ERRO
+
+%type <node> var_global
+%type <node> function
+%type <node> atrib
+%type <node> var_local
+%type <node> if
+%type <node> for
+%type <node> while
+%type <node> io
+%type <node> shift
+%type <node> return
+%type <node> call
+%type <node> block
+%type <node> op_tern
+%type <node> op_log
+%type <node> op_bws
+%type <node> op_eq
+%type <node> op_cmp
+%type <node> op_add
+%type <node> op_mul
+%type <node> op_exp
+%type <node> op_un
+
+%type <value> integer float
 
 /* the following options enable us more information when printing the
  * error */
