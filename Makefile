@@ -58,25 +58,37 @@ CFLAGS :=\
 	-Wpedantic \
 	-Wshadow \
 	-Wunreachable-code
-#	If DEBUG is defined, we'll turn on the debug flag and attach address
-#	sanitizer on the executables.
-CFLAGS += $(if $(DEBUG),-g -fsanitize=address -DDEBUG)
-CFLAGS += $(if $(VERBOSE),-DVERBOSE)
 #	Feature flags for the lex program
 LFLAGS := --nomain --yylineno
-LFLAGS += $(if $(DEBUG),-d)
 #	Basic warnings for the yacc program
 YFLAGS := -Wall
-YFLAGS += $(if $(DEBUG),--debug)
-#	Optimize if we aren't debugging
-OPT := $(if $(DEBUG),-O0,-O3 -march=native)
 #	Lookup directories
 LIB := -L$(LIB_DIR)
 INC := -I$(INC_DIR)
 
+#	- Command line interface flags:
+#	Release or debug build?
+ifeq ($(RELEASE),true)
 #	Permanent fix for the usage of external files
-ifeq ($(RELEASE),TRUE)
 INC += $(patsubst %,-I%,$(shell find $(INC_DIR) -mindepth 1 -type d))
+CFLAGS += -DRELEASE
+#	Optimize on release
+OPT := -O3 -march=native
+else ifeq ($(DEBUG),true)
+#	If DEBUG is true, we'll turn on the debug flag and attach address
+#	sanitizer on the executables.
+CFLAGS += -g -fsanitize=address -DDEBUG
+LFLAGS += -d
+YFLAGS += --debug
+OPT := -O0
+else
+#	Optimize if we aren't debugging
+OPT := -O3 -march=native
+endif
+
+#	Verbose flag
+ifeq ($(VERBOSE),true)
+CFLAGS += -DVERBOSE
 endif
 
 #	- Release version:
