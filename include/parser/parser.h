@@ -19,7 +19,6 @@
 
 #include <stdio.h>
 
-#include "ast/ast.h"
 #include "lexer/scanner.h"
 #include "parser/error.h"
 
