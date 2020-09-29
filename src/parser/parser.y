@@ -5,6 +5,10 @@
  */
 
 %code requires {
+#include "ast/ast.h"
+}
+
+%code {
 #include "parser/parser.h"
 }
 
@@ -52,13 +56,13 @@
 %token TK_OC_SR
 %token TK_OC_FORWARD_PIPE
 %token TK_OC_BASH_PIPE
-%token <value> TK_LIT_INT
-%token <value> TK_LIT_FLOAT
-%token <value> TK_LIT_FALSE
-%token <value> TK_LIT_TRUE
-%token <value> TK_LIT_CHAR
-%token <value> TK_LIT_STRING
-%token <value> TK_IDENTIFICADOR
+%token <lexic_value> TK_LIT_INT
+%token <lexic_value> TK_LIT_FLOAT
+%token <lexic_value> TK_LIT_FALSE
+%token <lexic_value> TK_LIT_TRUE
+%token <lexic_value> TK_LIT_CHAR
+%token <lexic_value> TK_LIT_STRING
+%token <lexic_value> TK_IDENTIFICADOR
 %token TOKEN_ERRO
 
 %type <node> var_global
@@ -83,7 +87,7 @@
 %type <node> op_exp
 %type <node> op_un
 
-%type <value> integer float
+%type <lexic_value> integer float
 
 /* the following options enable us more information when printing the
  * error */
