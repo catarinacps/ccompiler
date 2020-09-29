@@ -12,19 +12,22 @@
  */
 
 #include "ast/alloc.h"
+#include "ast/ast.h"
 
-cc_lexic_value_t* cc_alloc_lexic_literal(cc_literal_t value)
+cc_lexic_value_t* cc_create_lexic_value(
+    cc_data_kind_t type,
+    unsigned int line,
+    bool is_const,
+    bool is_static,
+    cc_node_data_t data)
 {
-    cc_lexic_value_t* new_value;
+    cc_lexic_value_t* pointer = (cc_lexic_value_t*)cc_try_malloc(sizeof(cc_lexic_value_t));
 
-    new_value = (cc_lexic_value_t*)malloc(sizeof(cc_lexic_value_t));
+    pointer->data = data;
+    pointer->is_const = is_const;
+    pointer->is_static = is_static;
+    pointer->line = line;
+    pointer->type = type;
 
-    if (new_value == NULL) {
-        D_PRINTF("malloc just failed!\n");
-        cc_die("out of memory", CC_OOMEM);
-    }
-
-    new_value->data = value;
-
-    return new_value;
+    return pointer;
 }

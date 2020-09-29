@@ -23,7 +23,17 @@
 
 #include "ast/ast.h"
 #include "utils/debug.h"
+#include "utils/memory.h"
 
-cc_lexic_value_t* cc_alloc_lexic_literal(cc_literal_t value);
+/**
+ * Creates a new lexic value in dynamic memory.
+ */
+cc_lexic_value_t* cc_create_lexic_value(
+    cc_data_kind_t type,
+    unsigned int line,
+    bool is_const,
+    bool is_static,
+    cc_node_data_t data);
+
 
 #endif /* _ALLOC_H_ */
