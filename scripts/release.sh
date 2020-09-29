@@ -31,7 +31,7 @@ pushd $root
 
 version=$(awk '/VERSION :=/ {print $3}' Makefile)
 mv Makefile Makefile.bak
-sed 's/RELEASE ?=/RELEASE := TRUE/g' Makefile.bak > Makefile
+sed 's/RELEASE ?=/RELEASE := true/g' Makefile.bak > Makefile
 
 make clean
 

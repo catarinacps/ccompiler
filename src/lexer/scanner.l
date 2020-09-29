@@ -176,7 +176,11 @@ BOOL_F "false"
 {BOOL_F}                               { V_LOG_LEXER("FALSE"); return TK_LIT_FALSE; }
 
     /* identifiers */
-{ALPHA}{ALNUM}*                        { V_LOG_LEXER("IDENTIFIER"); return TK_IDENTIFICADOR; }
+{ALPHA}{ALNUM}*                        {
+    /* TODO: add read string to global set */
+    V_LOG_LEXER("IDENTIFIER");
+    return TK_IDENTIFICADOR;
+    }
 
     /* end word */
 {DELIM}                                {
@@ -213,6 +217,7 @@ BOOL_F "false"
     /* string literals */
 <NORMAL>"\""                           { BEGIN(STRING); yymore(); V_LOG_LEXER("STRING STATE"); }
 <STRING>("\\".|[^\"\n\\])*"\""         {
+    /* TODO: add read string to global set */
     BEGIN(NORMAL);
     V_LOG_LEXER("QUOTED STRING");
     return TK_LIT_STRING;
@@ -227,6 +232,17 @@ BOOL_F "false"
     /* character literals */
 <NORMAL>"\'"                           { BEGIN(QUOTE); yymore(); V_LOG_LEXER("CHAR STATE"); }
 <QUOTE>("\\".|[^\'\n\\])"\'"           {
+    cc_node_data_t input;
+    if (yyleng > 3) {
+        char* escaped_char = cc_expand_escape_codes(yytext + 1, 2);
+        input.lit.type = cc_lit_char;
+        input.lit.value.character = escaped_char[0];
+        free(escaped_char);
+    } else {
+        input.lit.type = cc_lit_char;
+        input.lit.value.character = yytext[1];
+    }
+    yylval.lexic_value = cc_create_lexic_value(cc_lit, cc_match_line_number(), false, false, input);
     BEGIN(NORMAL);
     V_LOG_LEXER("QUOTED CHARACTER");
     return TK_LIT_CHAR;
@@ -251,7 +267,8 @@ BOOL_F "false"
 
     /* float */
 {NUMBER}+"."{NUMBER}+{SCI_NOT}?        {
-    yylval.lexic_value = cc_alloc_lexic_literal((cc_literal_t)atof(yytext));
+    cc_node_data_t input = { .lit = { cc_lit_float, { .floating = atof(yytext) } } };
+    yylval.lexic_value = cc_create_lexic_value(cc_lit, cc_match_line_number(), false, false, input);
     BEGIN(NORMAL);
     V_LOG_LEXER("FLOATING POINT");
     return TK_LIT_FLOAT;
@@ -266,7 +283,8 @@ BOOL_F "false"
 
     /* integer */
 {NUMBER}+                              {
-    yylval.lexic_value = cc_alloc_lexic_literal((cc_literal_t)atoi(yytext));
+    cc_node_data_t input = { .lit = { cc_lit_int, { .integer = atoi(yytext) } } };
+    yylval.lexic_value = cc_create_lexic_value(cc_lit, cc_match_line_number(), false, false, input);
     BEGIN(NORMAL);
     V_LOG_LEXER("INTEGER");
     return TK_LIT_INT;
