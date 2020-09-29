@@ -33,4 +33,6 @@
  */
 void* cc_try_realloc(void* pointer, size_t new_size);
 
+void* cc_try_malloc(size_t desired_size);
+
 #endif /* _MEMORY_H_ */
