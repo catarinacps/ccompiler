@@ -234,7 +234,7 @@ BOOL_F "false"
 <QUOTE>("\\".|[^\'\n\\])"\'"           {
     cc_node_data_t input;
     if (yyleng > 3) {
-        char* escaped_char = cc_expand_escape_codes(yytext + 1, 2);
+        char* escaped_char = cc_convert_escape_codes(yytext + 1, 2);
         input.lit.type = cc_lit_char;
         input.lit.value.character = escaped_char[0];
         free(escaped_char);

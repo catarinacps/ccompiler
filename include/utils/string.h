@@ -23,6 +23,6 @@
 
 #include "utils/debug.h"
 
-char* cc_expand_escape_codes(const char* input, size_t limit);
+char* cc_convert_escape_codes(const char* input, size_t limit);
 
 #endif /* _STRING_H_ */

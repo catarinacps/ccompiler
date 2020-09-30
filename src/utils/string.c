@@ -13,7 +13,7 @@
 
 #include "utils/string.h"
 
-char* cc_expand_escape_codes(const char* input, size_t limit)
+char* cc_convert_escape_codes(const char* input, size_t limit)
 {
     if (limit < 2) {
         D_PRINTF("tried to expand escape codes of string of size %u\n", limit);

@@ -30,10 +30,12 @@ typedef enum {
     cc_cmd_output,
     cc_cmd_if,
     cc_cmd_call,
-    cc_cmd_shift,
-    cc_cmd_decl,
+    cc_cmd_shift_left,
+    cc_cmd_shift_right,
     cc_cmd_block,
-    cc_cmd_atrib
+    cc_cmd_atrib,
+    cc_cmd_decl,
+    cc_cmd_init
 } cc_command_t;
 
 typedef enum {
@@ -46,8 +48,8 @@ typedef enum {
     cc_expr_bin_rem,
     cc_expr_bin_and_bws,
     cc_expr_bin_or_bws,
-    cc_expr_log_and,
-    cc_expr_log_or,
+    cc_expr_log_and_log,
+    cc_expr_log_or_log,
     cc_expr_log_ge,
     cc_expr_log_le,
     cc_expr_log_eq,
@@ -86,7 +88,8 @@ typedef enum {
     cc_id,
     cc_lit,
     cc_expr,
-    cc_comm
+    cc_comm,
+    cc_func
 } cc_data_kind_t;
 
 typedef union {
