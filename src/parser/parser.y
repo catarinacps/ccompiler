@@ -66,7 +66,8 @@
 %token <lexic_value> TK_IDENTIFICADOR
 %token TOKEN_ERRO
 
-%type <node> var_global function
+%type <node> source function
+%type <lexic_value> header
 
 %type <node> command command_rep
 %type <node> atrib
@@ -107,9 +108,17 @@
     /* ---------- GLOBAL SCOPE ---------- */
 
     /* the source code can be empty, and variables require ; */
-source: %empty
+source: %empty { $$ = NULL; }
     | source var_global ';'
-    | source function
+    | source function {
+    if ($1 != NULL) {
+        $1->next = $2;
+        $$ = $1;
+    } else {
+        $$ = $2;
+    }
+    ast_g = $$;
+    }
     ;
 
 var_global: type id_var_global_rep
@@ -125,14 +134,17 @@ id_var_global: TK_IDENTIFICADOR '[' TK_LIT_INT ']'
     | TK_IDENTIFICADOR
     ;
 
-function: header block
+function: header block {
+    $1->kind = cc_func;
+    $$ = cc_create_ast_node($1, NULL, $2, NULL);
+    }
     ;
 
     /* definition parameters can be empty, as well as calling parameters */
-header: type TK_IDENTIFICADOR '(' def_params_rep ')'
-    | TK_PR_STATIC type TK_IDENTIFICADOR '(' def_params_rep ')'
-    | type TK_IDENTIFICADOR '(' ')'
-    | TK_PR_STATIC type TK_IDENTIFICADOR '(' ')'
+header: type TK_IDENTIFICADOR '(' def_params_rep ')' { $$ = $2; }
+    | TK_PR_STATIC type TK_IDENTIFICADOR '(' def_params_rep ')' { $$ = $3; }
+    | type TK_IDENTIFICADOR '(' ')' { $$ = $2; }
+    | TK_PR_STATIC type TK_IDENTIFICADOR '(' ')' { $$ = $3; }
     ;
 
 def_params_rep: def_params
