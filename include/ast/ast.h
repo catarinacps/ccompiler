@@ -17,100 +17,76 @@
 #ifndef _AST_H_
 #define _AST_H_
 
-#include <stdbool.h>
+#include <stdarg.h>
 #include <stdio.h>
 
-typedef enum {
-    cc_cmd_return,
-    cc_cmd_continue,
-    cc_cmd_break,
-    cc_cmd_for,
-    cc_cmd_while,
-    cc_cmd_input,
-    cc_cmd_output,
-    cc_cmd_if,
-    cc_cmd_call,
-    cc_cmd_shift_left,
-    cc_cmd_shift_right,
-    cc_cmd_block,
-    cc_cmd_atrib,
-    cc_cmd_decl,
-    cc_cmd_init
-} cc_command_t;
+#include "ast/base_types.h"
+#include "utils/debug.h"
+#include "utils/memory.h"
 
-typedef enum {
-    cc_expr_tern,
-    cc_expr_bin_add,
-    cc_expr_bin_sub,
-    cc_expr_bin_mul,
-    cc_expr_bin_div,
-    cc_expr_bin_exp,
-    cc_expr_bin_rem,
-    cc_expr_bin_and_bws,
-    cc_expr_bin_or_bws,
-    cc_expr_log_and_log,
-    cc_expr_log_or_log,
-    cc_expr_log_ge,
-    cc_expr_log_le,
-    cc_expr_log_eq,
-    cc_expr_log_ne,
-    cc_expr_un_deref,
-    cc_expr_un_addr,
-    cc_expr_un_hash,
-    cc_expr_un_sign_pos,
-    cc_expr_un_sign_neg,
-    cc_expr_un_negat,
-    cc_expr_un_logic,
-} cc_expression_t;
-
-typedef union {
-    char* string;
-    double floating;
-    int integer;
-    char character;
-    bool boolean;
-} cc_literal_data_t;
-
-typedef enum {
-    cc_lit_string,
-    cc_lit_float,
-    cc_lit_int,
-    cc_lit_char,
-    cc_lit_bool
-} cc_literal_kind_t;
-
-typedef struct {
-    cc_literal_kind_t type;
-    cc_literal_data_t value;
-} cc_literal_t;
+/* --------------------------------------------------------------------------- */
+/* Type definitions: */
 
 typedef enum {
     cc_id,
     cc_lit,
     cc_expr,
-    cc_comm,
-    cc_func
-} cc_data_kind_t;
+    cc_cmd,
+    cc_func,
+    cc_call
+} cc_node_data_kind_t;
 
 typedef union {
     char* id;
     cc_literal_t lit;
     cc_expression_t expr;
-    cc_command_t comm;
+    cc_command_t cmd;
 } cc_node_data_t;
 
 typedef struct {
-    cc_data_kind_t type;
-    unsigned int line;
-    bool is_const;
-    bool is_static;
     cc_node_data_t data;
+    cc_node_data_kind_t kind;
+    unsigned int line;
 } cc_lexic_value_t;
 
 typedef struct cc_ast_s {
-    cc_lexic_value_t content;
+    cc_lexic_value_t* content;
     size_t num_children;
-    struct cc_ast_s* children;
+    struct cc_ast_s** children;
+    struct cc_ast_s* next;
 } cc_ast_t;
+
+/* pointer to global abstract syntax tree */
+extern cc_ast_t* ast_g;
+
+/* --------------------------------------------------------------------------- */
+/* Function declarations: */
+
+/**
+ */
+void cc_export_ast(cc_ast_t* ast);
+
+/**
+ */
+void cc_free_ast(cc_ast_t* ast);
+
+/**
+ * Creates a new lexic value in dynamic memory.
+ *
+ * @return the address of the created `cc_lexic_value_t`.
+ */
+cc_lexic_value_t* cc_create_lexic_value(cc_node_data_t data, cc_node_data_kind_t kind, unsigned int line);
+
+/**
+ * Creates a new AST node in dynamic memory. The last argument must
+ * always be `NULL`, even when there are no children nodes.
+ *
+ * @param content a pointer to the lexic value you wish to assign to the node.
+ * @param next a pointer to the next command, if there is any.
+ * @param elipse a list of addresses to the children of this node, followed by a `NULL`.
+ *
+ * @return the address of the created `cc_ast_t`.
+ */
+cc_ast_t* cc_create_ast_node(cc_lexic_value_t* content, cc_ast_t* next, ...);
 
 #endif /* _AST_H_ */
