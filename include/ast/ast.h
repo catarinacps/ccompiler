@@ -75,6 +75,10 @@ void cc_free_ast(cc_ast_t* ast);
 /**
  * Creates a new lexic value in dynamic memory.
  *
+ * @param data the new lexic value data (a union, check above).
+ * @param kind the type of node, an enum.
+ * @param line the line of match.
+ *
  * @return the address of the created `cc_lexic_value_t`.
  */
 cc_lexic_value_t* cc_create_lexic_value(cc_node_data_t data, cc_node_data_kind_t kind, unsigned int line);
