@@ -148,22 +148,62 @@ BOOL_F "false"
 {RK_BOOL}                              { V_LOG_LEXER("RK_BOOL"); return TK_PR_BOOL; }
 {RK_CHAR}                              { V_LOG_LEXER("RK_CHAR"); return TK_PR_CHAR; }
 {RK_STRING}                            { V_LOG_LEXER("RK_STRING"); return TK_PR_STRING; }
-{RK_IF}                                { V_LOG_LEXER("RK_IF"); return TK_PR_IF; }
+{RK_IF}                                {
+    cc_node_data_t input = { .cmd = cc_cmd_if };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_cmd, cc_match_line_number());
+    V_LOG_LEXER("RK_IF");
+    return TK_PR_IF;
+    }
 {RK_THEN}                              { V_LOG_LEXER("RK_THEN"); return TK_PR_THEN; }
 {RK_ELSE}                              { V_LOG_LEXER("RK_ELSE"); return TK_PR_ELSE; }
-{RK_WHILE}                             { V_LOG_LEXER("RK_WHILE"); return TK_PR_WHILE; }
+{RK_WHILE}                             {
+    cc_node_data_t input = { .cmd = cc_cmd_while };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_cmd, cc_match_line_number());
+    V_LOG_LEXER("RK_WHILE");
+    return TK_PR_WHILE;
+    }
 {RK_DO}                                { V_LOG_LEXER("RK_DO"); return TK_PR_DO; }
-{RK_INPUT}                             { V_LOG_LEXER("RK_INPUT"); return TK_PR_INPUT; }
-{RK_OUTPUT}                            { V_LOG_LEXER("RK_OUTPUT"); return TK_PR_OUTPUT; }
-{RK_RETURN}                            { V_LOG_LEXER("RK_RETURN"); return TK_PR_RETURN; }
+{RK_INPUT}                             {
+    cc_node_data_t input = { .cmd = cc_cmd_input };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_cmd, cc_match_line_number());
+    V_LOG_LEXER("RK_INPUT");
+    return TK_PR_INPUT;
+    }
+{RK_OUTPUT}                            {
+    cc_node_data_t input = { .cmd = cc_cmd_output };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_cmd, cc_match_line_number());
+    V_LOG_LEXER("RK_OUTPUT");
+    return TK_PR_OUTPUT;
+    }
+{RK_RETURN}                            {
+    cc_node_data_t input = { .cmd = cc_cmd_return };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_cmd, cc_match_line_number());
+    V_LOG_LEXER("RK_RETURN");
+    return TK_PR_RETURN;
+    }
 {RK_CONST}                             { V_LOG_LEXER("RK_CONST"); return TK_PR_CONST; }
 {RK_STATIC}                            { V_LOG_LEXER("RK_STATIC"); return TK_PR_STATIC; }
 {RK_FOREACH}                           { V_LOG_LEXER("RK_FOREACH"); return TK_PR_FOREACH; }
-{RK_FOR}                               { V_LOG_LEXER("RK_FOR"); return TK_PR_FOR; }
+{RK_FOR}                               {
+    cc_node_data_t input = { .cmd = cc_cmd_for };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_cmd, cc_match_line_number());
+    V_LOG_LEXER("RK_FOR");
+    return TK_PR_FOR;
+    }
 {RK_SWITCH}                            { V_LOG_LEXER("RK_SWITCH"); return TK_PR_SWITCH; }
 {RK_CASE}                              { V_LOG_LEXER("RK_CASE"); return TK_PR_CASE; }
-{RK_BREAK}                             { V_LOG_LEXER("RK_BREAK"); return TK_PR_BREAK; }
-{RK_CONTINUE}                          { V_LOG_LEXER("RK_CONTINUE"); return TK_PR_CONTINUE; }
+{RK_BREAK}                             {
+    cc_node_data_t input = { .cmd = cc_cmd_break };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_cmd, cc_match_line_number());
+    V_LOG_LEXER("RK_BREAK");
+    return TK_PR_BREAK;
+    }
+{RK_CONTINUE}                          {
+    cc_node_data_t input = { .cmd = cc_cmd_continue };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_cmd, cc_match_line_number());
+    V_LOG_LEXER("RK_CONTINUE");
+    return TK_PR_CONTINUE;
+    }
 {RK_CLASS}                             { V_LOG_LEXER("RK_CLASS"); return TK_PR_CLASS; }
 {RK_PRIVATE}                           { V_LOG_LEXER("RK_PRIVATE"); return TK_PR_PRIVATE; }
 {RK_PUBLIC}                            { V_LOG_LEXER("RK_PUBLIC"); return TK_PR_PUBLIC; }
@@ -172,12 +212,24 @@ BOOL_F "false"
 {RK_DEFAULT}                           { V_LOG_LEXER("RK_DEFAULT"); return TK_PR_DEFAULT; }
 
     /* boolean literals */
-{BOOL_T}                               { V_LOG_LEXER("TRUE"); return TK_LIT_TRUE; }
-{BOOL_F}                               { V_LOG_LEXER("FALSE"); return TK_LIT_FALSE; }
+{BOOL_T}                               {
+    cc_node_data_t input = { .lit = { cc_type_bool, { .boolean = true } } };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_lit, cc_match_line_number());
+    V_LOG_LEXER("TRUE");
+    return TK_LIT_TRUE;
+    }
+{BOOL_F}                               {
+    cc_node_data_t input = { .lit = { cc_type_bool, { .boolean = false } } };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_lit, cc_match_line_number());
+    V_LOG_LEXER("FALSE");
+    return TK_LIT_FALSE;
+    }
 
     /* identifiers */
 {ALPHA}{ALNUM}*                        {
     /* TODO: add read string to global set */
+    cc_node_data_t input = { .id = strndup(yytext, yyleng) };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_id, cc_match_line_number());
     V_LOG_LEXER("IDENTIFIER");
     return TK_IDENTIFICADOR;
     }
@@ -188,7 +240,7 @@ BOOL_F "false"
     V_LOG_LEXER("INITIAL STATE");
     yyless(0);
     yycolumn--;
-}
+    }
 
 }
 
@@ -197,19 +249,54 @@ BOOL_F "false"
 
     /* composite operators */
 <NORMAL>{OP_LE}                        { V_LOG_LEXER("OP_LE"); return TK_OC_LE; }
-<NORMAL>{OP_GE}                        { V_LOG_LEXER("OP_GE"); return TK_OC_GE; }
-<NORMAL>{OP_EQ}                        { V_LOG_LEXER("OP_EQ"); return TK_OC_EQ; }
-<NORMAL>{OP_NE}                        { V_LOG_LEXER("OP_NE"); return TK_OC_NE; }
-<NORMAL>{OP_AND}                       { V_LOG_LEXER("OP_AND"); return TK_OC_AND; }
-<NORMAL>{OP_OR}                        { V_LOG_LEXER("OP_OR"); return TK_OC_OR; }
-<NORMAL>{OP_SL}                        { V_LOG_LEXER("OP_SL"); return TK_OC_SL; }
-<NORMAL>{OP_SR}                        { V_LOG_LEXER("OP_SR"); return TK_OC_SR; }
+<NORMAL>{OP_GE}                        {
+    cc_node_data_t input = { .expr = cc_expr_log_ge };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    V_LOG_LEXER("OP_GE");
+    return TK_OC_GE;
+    }
+<NORMAL>{OP_EQ}                        {
+    cc_node_data_t input = { .expr = cc_expr_log_eq };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    V_LOG_LEXER("OP_EQ");
+    return TK_OC_EQ;
+    }
+<NORMAL>{OP_NE}                        {
+    cc_node_data_t input = { .expr = cc_expr_log_ne };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    V_LOG_LEXER("OP_NE");
+    return TK_OC_NE;
+    }
+<NORMAL>{OP_AND}                       {
+    cc_node_data_t input = { .expr = cc_expr_log_and };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    V_LOG_LEXER("OP_AND");
+    return TK_OC_AND;
+    }
+<NORMAL>{OP_OR}                        {
+    cc_node_data_t input = { .expr = cc_expr_log_or };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    V_LOG_LEXER("OP_OR");
+    return TK_OC_OR;
+    }
+<NORMAL>{OP_SL}                        {
+    cc_node_data_t input = { .cmd = cc_cmd_shift_left };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_cmd, cc_match_line_number());
+    V_LOG_LEXER("OP_SL");
+    return TK_OC_SL;
+    }
+<NORMAL>{OP_SR}                        {
+    cc_node_data_t input = { .cmd = cc_cmd_shift_right };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_cmd, cc_match_line_number());
+    V_LOG_LEXER("OP_SR");
+    return TK_OC_SR;
+    }
 
     /* special characters */
 <NORMAL>{SPC_CHAR}/{WHITE}?            {
     V_LOG_LEXER("SPECIAL");
     return (int)*yytext;
-}
+    }
 
 
     /* ---------- literals section ----------  */
@@ -218,6 +305,9 @@ BOOL_F "false"
 <NORMAL>"\""                           { BEGIN(STRING); yymore(); V_LOG_LEXER("STRING STATE"); }
 <STRING>("\\".|[^\"\n\\])*"\""         {
     /* TODO: add read string to global set */
+    char* converted_string = cc_convert_escape_codes(yytext + 1, yyleng - 2);
+    cc_node_data_t input = { .lit = { cc_type_string , { .string = converted_string } } };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_lit, cc_match_line_number());
     BEGIN(NORMAL);
     V_LOG_LEXER("QUOTED STRING");
     return TK_LIT_STRING;
@@ -235,14 +325,13 @@ BOOL_F "false"
     cc_node_data_t input;
     if (yyleng > 3) {
         char* escaped_char = cc_convert_escape_codes(yytext + 1, 2);
-        input.lit.type = cc_lit_char;
         input.lit.value.character = escaped_char[0];
         free(escaped_char);
     } else {
-        input.lit.type = cc_lit_char;
         input.lit.value.character = yytext[1];
     }
-    yylval.lexic_value = cc_create_lexic_value(cc_lit, cc_match_line_number(), false, false, input);
+    input.lit.type = cc_type_char;
+    yylval.lexic_value = cc_create_lexic_value(input, cc_lit, cc_match_line_number());
     BEGIN(NORMAL);
     V_LOG_LEXER("QUOTED CHARACTER");
     return TK_LIT_CHAR;
@@ -267,8 +356,8 @@ BOOL_F "false"
 
     /* float */
 {NUMBER}+"."{NUMBER}+{SCI_NOT}?        {
-    cc_node_data_t input = { .lit = { cc_lit_float, { .floating = atof(yytext) } } };
-    yylval.lexic_value = cc_create_lexic_value(cc_lit, cc_match_line_number(), false, false, input);
+    cc_node_data_t input = { .lit = { cc_type_float, { .floating = atof(yytext) } } };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_lit, cc_match_line_number());
     BEGIN(NORMAL);
     V_LOG_LEXER("FLOATING POINT");
     return TK_LIT_FLOAT;
@@ -283,8 +372,8 @@ BOOL_F "false"
 
     /* integer */
 {NUMBER}+                              {
-    cc_node_data_t input = { .lit = { cc_lit_int, { .integer = atoi(yytext) } } };
-    yylval.lexic_value = cc_create_lexic_value(cc_lit, cc_match_line_number(), false, false, input);
+    cc_node_data_t input = { .lit = { cc_type_int, { .integer = atoi(yytext) } } };
+    yylval.lexic_value = cc_create_lexic_value(input, cc_lit, cc_match_line_number());
     BEGIN(NORMAL);
     V_LOG_LEXER("INTEGER");
     return TK_LIT_INT;
@@ -309,7 +398,7 @@ BOOL_F "false"
     cc_update_line_buffer(yytext, yyleng);
     yycolumn = 1;
     yyless(1);
-}
+    }
 
     /* error catch-all */
 <*>.                                   { V_LOG_LEXER("UNKNOWN"); return TOKEN_ERRO; }
