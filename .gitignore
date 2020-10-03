@@ -54,7 +54,7 @@ dkms.conf
 
 # Project files
 .clangd
-compile_commands.json
+compile_commands*.json
 *.log
 *.tab.*
 *.yy.*
