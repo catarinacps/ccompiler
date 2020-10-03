@@ -182,7 +182,7 @@ test: redo
 
 #	To help language servers as we're using additional include paths
 tool: clean
-	bear make
+	bear -- make
 
 #	The script takes care of any necessary cleaning
 release: ; scripts/release.sh
