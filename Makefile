@@ -47,7 +47,7 @@ DOC_DIR := doc
 
 #	- Compilation flags:
 #	Compiler and language version
-CC := gcc -std=c11
+CC := gcc -std=gnu11
 LEX := flex
 YACC := bison
 #	CFLAGS contains some basic sanity warning flags besides the eventual
