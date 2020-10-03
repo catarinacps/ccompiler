@@ -12,14 +12,19 @@
 
 #include <stdio.h>
 
-#include "parser/parser.tab.h"
-#include "lexer/scanner.h"
+extern int yyparse(void);
+extern int yylex_destroy(void);
+
+void* arvore = NULL;
+void exporta(void* arvore);
+void libera(void* arvore);
 
 int main(void)
 {
     int ret = yyparse();
-
+    /* exporta(arvore); */
+    /* libera(arvore); */
+    arvore = NULL;
     yylex_destroy();
-
     return ret;
 }

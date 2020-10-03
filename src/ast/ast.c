@@ -15,8 +15,6 @@
 
 /* declaration and definition of `ast_g` global */
 cc_ast_t* ast_g = NULL;
-/* and also its alias, arvore (what a terrible name) */
-void* arvore = NULL;
 
 cc_lexic_value_t* cc_create_lexic_value(cc_node_data_t data, cc_node_data_kind_t kind, unsigned int line)
 {
