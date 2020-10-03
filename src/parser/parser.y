@@ -86,8 +86,9 @@
 %type <node> op_add op_mul op_exp op_un op_elem
 %type <node> index
 
-%type <lexic_value> tk_op_eq tk_op_log tk_op_cmp tk_op_add tk_cmd_shift
-%type <lexic_value> tk_op_bws tk_op_mul tk_op_exp tk_op_un tk_cmd_atrib tk_cmd_init
+%type <lexic_value> tk_op_eq tk_op_log tk_op_cmp tk_op_add
+%type <lexic_value> tk_op_bws tk_op_mul tk_op_exp tk_op_un
+%type <lexic_value> tk_cmd_atrib tk_cmd_init tk_cmd_shift
 
 %type <lexic_value> literal decimal integer float boolean
 
@@ -149,7 +150,19 @@ block: '{' '}' { $$ = NULL; }
     /* ---------- COMMANDS ---------- */
 
     /* commands are chained through ; */
-command_rep: command_rep command ';' { $1->next = $2; $$ = $1; }
+command_rep: command_rep command ';' {
+    if ($1->next == NULL) {
+        $1->next = $2;
+    } else {
+        cc_ast_t *aux = $1->next, *cur = NULL;
+        while (aux != NULL) {
+            cur = aux;
+            aux = aux->next;
+        }
+        cur->next = $2;
+    }
+    $$ = $1;
+    }
     | command ';'
     ;
 
