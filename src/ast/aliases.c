@@ -12,7 +12,6 @@
  */
 
 #include "ast/aliases.h"
-#include "lexer/tools.h"
 
 void exporta(void* raiz)
 {
@@ -25,8 +24,10 @@ void libera(void* raiz)
 {
     cc_free_ast((cc_ast_t*)raiz);
 
-    if (yylinebuf != NULL)
+    if (yylinebuf != NULL) {
         free(yylinebuf);
+        yylinebuf_len = 0;
+    }
 
     return;
 }
