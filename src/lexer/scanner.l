@@ -9,7 +9,7 @@
 /* to track the initial column of matched tokens */
 int yycolumn = 1;
 /* to save the line of the current matches*/
-char* yylinebuf;
+char* yylinebuf = NULL;
 size_t yylinebuf_len = 0;
 
 /* helpful flex feature that helps us to track the location of the tokens */

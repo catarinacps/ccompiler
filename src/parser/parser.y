@@ -118,6 +118,7 @@ source: %empty { $$ = NULL; }
         $$ = $2;
     }
     ast_g = $$;
+    arvore = (void*)$$;
     }
     ;
 
@@ -285,7 +286,7 @@ call: TK_IDENTIFICADOR '(' param_rep ')' {
     ;
 
 param_rep: expr
-    | param_rep ',' expr
+    | param_rep ',' expr { $1->next = $3; $$ = $1; }
     ;
 
     /* ---------- EXPRESSIONS ---------- */
