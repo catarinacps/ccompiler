@@ -254,19 +254,33 @@ while: TK_PR_WHILE '(' expr ')' TK_PR_DO block {
     }
     ;
 
-io: TK_PR_INPUT TK_IDENTIFICADOR { $$ = cc_create_ast_node($1, NULL, $2, NULL); }
-    | TK_PR_OUTPUT TK_IDENTIFICADOR { $$ = cc_create_ast_node($1, NULL, $2, NULL); }
-    | TK_PR_OUTPUT literal { $$ = cc_create_ast_node($1, NULL, $2, NULL); }
+io: TK_PR_INPUT TK_IDENTIFICADOR {
+    cc_ast_t* id_node = cc_create_ast_node($2, NULL, NULL);
+    $$ = cc_create_ast_node($1, NULL, id_node, NULL);
+    }
+    | TK_PR_OUTPUT TK_IDENTIFICADOR {
+    cc_ast_t* id_node = cc_create_ast_node($2, NULL, NULL);
+    $$ = cc_create_ast_node($1, NULL, id_node, NULL);
+    }
+    | TK_PR_OUTPUT literal {
+    cc_ast_t* lit_node = cc_create_ast_node($2, NULL, NULL);
+    $$ = cc_create_ast_node($1, NULL, lit_node, NULL);
+    }
     ;
 
-shift: TK_IDENTIFICADOR tk_cmd_shift integer { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
+shift: TK_IDENTIFICADOR tk_cmd_shift integer {
+    cc_ast_t* id_node = cc_create_ast_node($1, NULL, NULL);
+    cc_ast_t* lit_node = cc_create_ast_node($3, NULL, NULL);
+    $$ = cc_create_ast_node($2, NULL, id_node, lit_node, NULL);
+    }
     | TK_IDENTIFICADOR index tk_cmd_shift integer {
     cc_node_data_t input = { .expr = cc_expr_un_index };
     cc_lexic_value_t* node_content = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
     cc_ast_t* id_node = cc_create_ast_node($1, NULL, NULL);
+    cc_ast_t* lit_node = cc_create_ast_node($4, NULL, NULL);
     cc_ast_t* index_node = cc_create_ast_node(node_content, NULL, id_node, $2, NULL);
 
-    $$ = cc_create_ast_node($3, NULL, index_node, $4, NULL);
+    $$ = cc_create_ast_node($3, NULL, index_node, lit_node, NULL);
     }
     ;
 
