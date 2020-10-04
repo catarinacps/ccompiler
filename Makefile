@@ -92,7 +92,7 @@ CFLAGS += -DVERBOSE
 endif
 
 #	- Release version:
-VERSION := etapa2
+VERSION := etapa3
 
 ################################################################################
 #	Files:

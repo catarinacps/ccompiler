@@ -1,0 +1,32 @@
+# -*- mode: org; org-export-babel-evaluate: nil; coding: utf-8  -*-
+
+#+title: Release Report
+#+subtitle: /INF01147 - Compilers/
+#+options: toc:nil author:nil
+
+#+latex_class: article
+#+latex_class_options: [twocolumn, a4paper]
+
+#+latex_header: \usepackage[margin=1in]{geometry}
+#+latex_header: \usepackage{authblk}
+#+latex_header: \usepackage{titling}
+#+latex_header: \usepackage{palatino}
+#+latex_header: \usepackage{enumitem}
+#+latex_header: \usepackage{listings}
+#+latex_header: \usepackage{fancyvrb}
+#+latex_header: \usepackage{minted}
+#+latex_header: \setlength{\droptitle}{-1.5cm}
+#+latex_header: \author{Henrique Corrêa Pereira da Silva}
+#+latex_header: \affil[]{Informatics Institute\\Universidade Federal do Rio Grande do Sul}
+#+latex_header: \affil[]{\normalsize\texttt{hcpsilva@inf.ufrgs.br}}
+#+latex_header: \lstset{basicstyle=\tiny}
+#+latex_header: \setminted{fontsize=\tiny}
+
+#+begin_abstract
+After a non-optimal first stage, we implement a fully featured syntax
+parser, as defined in the second stage of the assignment. The parser
+conforms to the given grammar rules and also implements rich error
+output through several features of both =flex= and =bison=. As future work,
+we intend to perpetuate the modular design and extend the source code
+documentation.
+#+end_abstract
