@@ -16,6 +16,29 @@
 /* declaration and definition of `ast_g` global */
 cc_ast_t* ast_g = NULL;
 
+void cc_free_ast(cc_ast_t* ast)
+{
+    if (ast == NULL)
+        return;
+
+    for (unsigned int i = 0; i < ast->num_children; i++)
+        cc_free_ast(ast->children[i]);
+
+    if (ast->next != NULL)
+        cc_free_ast(ast->next);
+
+    if (ast->content->kind == cc_call ||
+        ast->content->kind == cc_func ||
+        ast->content->kind == cc_id)
+        free(ast->content->data.id);
+
+    free(ast->content);
+    free(ast->children);
+    free(ast);
+
+    return;
+}
+
 cc_lexic_value_t* cc_create_lexic_value(cc_node_data_t data, cc_node_data_kind_t kind, unsigned int line)
 {
     cc_lexic_value_t* pointer = (cc_lexic_value_t*)cc_try_malloc(sizeof(cc_lexic_value_t));
