@@ -66,10 +66,6 @@ extern void* arvore;
 
 /**
  */
-void cc_export_ast(cc_ast_t* ast);
-
-/**
- */
 void cc_free_ast(cc_ast_t* ast);
 
 /**
