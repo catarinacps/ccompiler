@@ -395,7 +395,7 @@ BOOL_F "false"
 <NORMAL>{WHITE}+
     /* same thing as the first line, but we read the whole next line */
 <NORMAL>\n.*                           {
-    cc_update_line_buffer(yytext, yyleng);
+    cc_update_line_buffer(yytext + 1, yyleng);
     yycolumn = 1;
     yyless(1);
     }

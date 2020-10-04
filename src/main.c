@@ -22,8 +22,8 @@ void libera(void* arvore);
 int main(void)
 {
     int ret = yyparse();
-    /* exporta(arvore); */
-    /* libera(arvore); */
+    exporta(arvore);
+    libera(arvore);
     arvore = NULL;
     yylex_destroy();
     return ret;
