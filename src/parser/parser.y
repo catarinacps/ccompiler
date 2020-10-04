@@ -164,17 +164,21 @@ block: '{' '}' { $$ = NULL; }
 
     /* commands are chained through ; */
 command_rep: command_rep command ';' {
-    if ($1->next == NULL) {
-        $1->next = $2;
+    if ($1 == NULL) {
+        $$ = $2;
     } else {
-        cc_ast_t *aux = $1->next, *cur = NULL;
-        while (aux != NULL) {
-            cur = aux;
-            aux = aux->next;
+        if ($1->next == NULL) {
+            $1->next = $2;
+        } else {
+            cc_ast_t *aux = $1->next, *cur = NULL;
+            while (aux != NULL) {
+                cur = aux;
+                aux = aux->next;
+            }
+            cur->next = $2;
         }
-        cur->next = $2;
+        $$ = $1;
     }
-    $$ = $1;
     }
     | command ';'
     ;
@@ -211,16 +215,18 @@ var_local: type id_var_local_rep { $$ = $2; }
 
     /* again, we can have multiple variables being declared at once */
 id_var_local_rep: id_var_local
-    | id_var_local_rep ',' id_var_local
+    | id_var_local_rep ',' id_var_local {
+    if ($1 == NULL) {
+        $$ = $3;
+    } else {
+        $1->next = $3;
+        $$ = $1;
+    }
+    }
     ;
 
     /* and they can be initialized (using <=) */
-id_var_local: TK_IDENTIFICADOR {
-    cc_node_data_t input = { .cmd = cc_cmd_decl };
-    cc_lexic_value_t* node_content = cc_create_lexic_value(input, cc_cmd, cc_match_line_number());
-    cc_ast_t* id_node = cc_create_ast_node($1, NULL, NULL);
-    $$ = cc_create_ast_node(node_content, NULL, id_node, NULL);
-    }
+id_var_local: TK_IDENTIFICADOR { $$ = NULL; }
     | TK_IDENTIFICADOR tk_cmd_init TK_IDENTIFICADOR {
     cc_ast_t* id_node = cc_create_ast_node($1, NULL, NULL);
     cc_ast_t* init_val_node = cc_create_ast_node($3, NULL, NULL);

@@ -162,8 +162,6 @@ void cc_print_ast_node(const cc_ast_t* restrict node)
         case cc_cmd_output:
             fputs("output", stdout);
             break;
-        case cc_cmd_decl:
-            break;
         }
     }
     }

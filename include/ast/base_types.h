@@ -44,7 +44,7 @@ typedef enum {
     cc_cmd_shift_right,
     /* cc_cmd_block, */
     cc_cmd_atrib,
-    cc_cmd_decl,
+    /* cc_cmd_decl, */
     cc_cmd_init
 } cc_command_t;
 
