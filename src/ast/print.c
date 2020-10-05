@@ -15,7 +15,7 @@
 #include "ast/ast.h"
 #include "ast/base_types.h"
 
-void cc_print_ast_children(const cc_ast_t* restrict node)
+void cc_print_ast_children(cc_ast_t const* restrict node)
 {
     for (unsigned int i = 0; i < node->num_children; i++)
         printf("%p, %p\n", (void*)node, (void*)node->children[i]);
@@ -26,7 +26,7 @@ void cc_print_ast_children(const cc_ast_t* restrict node)
     return;
 }
 
-void cc_print_ast_node(const cc_ast_t* restrict node)
+void cc_print_ast_node(cc_ast_t const* restrict node)
 {
     printf("%p [label=\"", (void*)node);
 
@@ -171,7 +171,7 @@ void cc_print_ast_node(const cc_ast_t* restrict node)
     return;
 }
 
-void cc_print_ast(const cc_ast_t* restrict ast)
+void cc_print_ast(cc_ast_t const* restrict ast)
 {
     if (ast == NULL)
         return;

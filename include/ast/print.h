@@ -24,14 +24,14 @@
 
 /**
  */
-void cc_print_ast_children(const cc_ast_t* restrict node);
+void cc_print_ast_children(cc_ast_t const* restrict node);
 
 /**
  */
-void cc_print_ast_node(const cc_ast_t* restrict node);
+void cc_print_ast_node(cc_ast_t const* restrict node);
 
 /**
  */
-void cc_print_ast(const cc_ast_t* restrict ast);
+void cc_print_ast(cc_ast_t const* restrict ast);
 
 #endif /* _PRINT_H_ */
