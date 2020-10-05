@@ -44,6 +44,13 @@ extern size_t yylinebuf_len;
  */
 unsigned int cc_match_line_number(void);
 
-void cc_update_line_buffer(char* text, size_t match_lenght);
+/**
+ * Updates the global line buffer with the contents of `text` up until
+ * `match_length`.
+ *
+ * @param text the input character array.
+ * @param match_length the size of the input character array.
+ */
+void cc_update_line_buffer(char* text, size_t match_length);
 
 #endif /* _TOOLS_H_ */

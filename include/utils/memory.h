@@ -32,6 +32,13 @@
  */
 void* cc_try_realloc(void* pointer, size_t new_size);
 
+/**
+ * Tries to malloc the memory region, doing all required safety checks.
+ *
+ * @param desired_size the desired new size.
+ *
+ * @return the pointer to the memory block.
+ */
 void* cc_try_malloc(size_t desired_size);
 
 #endif /* _MEMORY_H_ */
