@@ -131,8 +131,8 @@ id_var_global_rep: id_var_global
     | id_var_global_rep ',' id_var_global
     ;
 
-id_var_global: TK_IDENTIFICADOR '[' TK_LIT_INT ']'
-    | TK_IDENTIFICADOR
+id_var_global: TK_IDENTIFICADOR '[' TK_LIT_INT ']' { free($1->data.id); free($1); free($3); }
+    | TK_IDENTIFICADOR { free($1->data.id); free($1); }
     ;
 
 function: header block {
@@ -152,8 +152,8 @@ def_params_rep: def_params
     | def_params_rep ',' def_params
     ;
 
-def_params: type TK_IDENTIFICADOR
-    | TK_PR_CONST type TK_IDENTIFICADOR
+def_params: type TK_IDENTIFICADOR { free($2->data.id); free($2); }
+    | TK_PR_CONST type TK_IDENTIFICADOR { free($3->data.id); free($3); }
     ;
 
 block: '{' '}' { $$ = NULL; }
@@ -226,7 +226,7 @@ id_var_local_rep: id_var_local
     ;
 
     /* and they can be initialized (using <=) */
-id_var_local: TK_IDENTIFICADOR { $$ = NULL; }
+id_var_local: TK_IDENTIFICADOR { $$ = NULL; free($1->data.id); free($1); }
     | TK_IDENTIFICADOR tk_cmd_init TK_IDENTIFICADOR {
     cc_ast_t* id_node = cc_create_ast_node($1, NULL, NULL);
     cc_ast_t* init_val_node = cc_create_ast_node($3, NULL, NULL);

@@ -27,10 +27,19 @@ void cc_free_ast(cc_ast_t* ast)
     if (ast->next != NULL)
         cc_free_ast(ast->next);
 
-    if (ast->content->kind == cc_call ||
-        ast->content->kind == cc_func ||
-        ast->content->kind == cc_id)
+    switch (ast->content->kind) {
+    case cc_call:
+    case cc_func:
+    case cc_id:
         free(ast->content->data.id);
+        break;
+    case cc_lit:
+        if (ast->content->data.lit.type == cc_type_string)
+            free(ast->content->data.lit.value.string);
+        break;
+    default:
+        break;
+    }
 
     free(ast->content);
     free(ast->children);
