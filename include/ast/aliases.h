@@ -22,8 +22,18 @@
 #include "ast/print.h"
 #include "lexer/tools.h"
 
+/**
+ * An alias to the function `cc_print_ast`.
+ *
+ * @param raiz the void pointer to a `cc_ast_t` object.
+ */
 void exporta(void* raiz);
 
+/**
+ * An alias to the function `cc_free_ast`. Also cleans up flex's `yylinebuf`.
+ *
+ * @param raiz the void pointer to a `cc_ast_t` object.
+ */
 void libera(void* raiz);
 
 #endif /* _ALIASES_H_ */
