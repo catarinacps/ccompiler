@@ -21,7 +21,7 @@ void* cc_try_realloc(void* pointer, size_t new_size)
     if (new_pointer == NULL) {
         free(pointer);
         D_PRINTF("realloc just failed! error code %u\n", CC_OOMEM);
-        D_PRINTF("required size was %u\n", new_size);
+        D_PRINTF("required size was %lu\n", new_size);
         cc_die("out of memory", CC_OOMEM);
     }
 
@@ -34,7 +34,7 @@ void* cc_try_malloc(size_t desired_size)
 
     if (new_pointer == NULL) {
         D_PRINTF("malloc just failed! error code %u\n", CC_OOMEM);
-        D_PRINTF("required size was %u\n", desired_size);
+        D_PRINTF("required size was %lu\n", desired_size);
         cc_die("out of memory", CC_OOMEM);
     }
 

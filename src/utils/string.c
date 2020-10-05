@@ -15,7 +15,7 @@
 char* cc_convert_escape_codes(const char* input, size_t limit)
 {
     if (limit < 2) {
-        D_PRINTF("tried to expand escape codes of string of size %u\n", limit);
+        D_PRINTF("tried to expand escape codes of string of size %lu\n", limit);
         return NULL;
     }
 
