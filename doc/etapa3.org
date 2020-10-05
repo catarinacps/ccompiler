@@ -23,10 +23,96 @@
 #+latex_header: \setminted{fontsize=\tiny}
 
 #+begin_abstract
-After a non-optimal first stage, we implement a fully featured syntax
-parser, as defined in the second stage of the assignment. The parser
-conforms to the given grammar rules and also implements rich error
-output through several features of both =flex= and =bison=. As future work,
-we intend to perpetuate the modular design and extend the source code
-documentation.
+In the third stage of this assignment, we achieved a well functioning
+abstract syntax tree generator with a generic implementation and leak
+free. Also any mistake previously overlooked and exposed after the last
+stage was fixed and the in-code documentation of it also has been
+improved. As future work, I intend to improved the automatic testing
+process and maybe explore an unit test solution.
 #+end_abstract
+
+
+* Introduction
+
+In this document we will focus on this course's third objective of the
+final assignment: the abstract syntax tree construction. We shall touch
+upon the definition itself in Section [[sec:objective]], talk about the
+tools utilized in Section [[sec:tools]] and the conclusion in Section
+[[sec:conclusion]].
+
+* Objective
+<<sec:objective>>
+
+The third stage outlined the expected structure of the abstract syntax
+tree (AST), encompassing function definition, command blocks,
+expressions and other simple commands.
+
+All this would be, again, enabled by =bison=, the GNU's =yacc=
+implementation. While there was a bit of a struggle to clean-up the
+leaks present, we achieved that in a clean fashion.
+
+* Tools
+<<sec:tools>>
+
+Perhaps this stage's spotlight should be to both AddressSanitizer[fn:1] and
+Valgrind[fn:2]. These tools may not possess the best documentation ever
+(Valgrind latest release has a =troff= formatting error in its =man= page),
+but they sure helped us to pinpoint any mistake we made in dereferencing
+pointers and in cleaning leaks.
+
+Besides that, maybe we should showcase our node creating function:
+
+#+begin_src c :exports both
+cc_ast_t* cc_create_ast_node(cc_lexic_value_t* content, cc_ast_t* next, ...)
+{
+    va_list ap, aux;
+    va_start(aux, next);
+    va_copy(ap, aux);
+
+    unsigned int param_count = 0;
+
+    while (va_arg(aux, cc_ast_t*) != NULL)
+        param_count++;
+
+    va_end(aux); /* free the aux va_list */
+
+    cc_ast_t* pointer =
+        (cc_ast_t*)cc_try_malloc(sizeof(cc_ast_t));
+
+    pointer->content = content;
+    pointer->num_children = param_count;
+
+    if (param_count > 0) {
+        cc_ast_t** children =
+            (cc_ast_t**)cc_try_malloc(param_count * sizeof(cc_ast_t*));
+
+        for (unsigned int i = 0; i < param_count; i++)
+            children[i] = va_arg(ap, cc_ast_t*);
+
+        pointer->children = children;
+    } else {
+        pointer->children = NULL;
+    }
+
+    pointer->next = next;
+
+    va_end(ap); /* free the main va_list */
+
+    return pointer;
+}
+#+end_src
+
+We got around C's difficulties and implemented a nice looking generic
+node creating function.
+
+[fn:1] Link: https://github.com/google/sanitizers
+[fn:2] Link: https://valgrind.org/
+
+* Conclusion
+<<sec:conclusion>>
+
+Perhaps this sounds a little repetitive, but again our initial choices
+paid off. The code is modular and nice looking, with a decent
+documentation and with simple to understand code. I hope that this keeps
+being true for the future iterations of this assignment. Thanks for
+reading this far, by the way!
