@@ -12,8 +12,6 @@
  */
 
 #include "ast/print.h"
-#include "ast/ast.h"
-#include "ast/base_types.h"
 
 void cc_print_ast_children(cc_ast_t const* restrict node)
 {

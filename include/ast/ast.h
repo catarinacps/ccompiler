@@ -65,10 +65,6 @@ extern void* arvore;
 /* Function declarations: */
 
 /**
- */
-void cc_free_ast(cc_ast_t* ast);
-
-/**
  * Creates a new lexic value in dynamic memory.
  *
  * @param data the new lexic value data (a union, check above).
@@ -90,5 +86,17 @@ cc_lexic_value_t* cc_create_lexic_value(cc_node_data_t data, cc_node_data_kind_t
  * @return the address of the created `cc_ast_t`.
  */
 cc_ast_t* cc_create_ast_node(cc_lexic_value_t* content, cc_ast_t* next, ...);
+
+/**
+ */
+void cc_free_lexic_value(cc_lexic_value_t* value);
+
+/**
+ */
+void cc_free_ast_node(cc_ast_t* node);
+
+/**
+ */
+void cc_free_ast(cc_ast_t* ast);
 
 #endif /* _AST_H_ */
