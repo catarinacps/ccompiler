@@ -12,7 +12,6 @@
  */
 
 #include "utils/debug.h"
-#include <stdlib.h>
 
 void cc_die(const char* message, error_t code)
 {

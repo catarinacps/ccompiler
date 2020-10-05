@@ -21,6 +21,7 @@
 #include <stdlib.h>
 
 #include "utils/debug.h"
+#include "utils/memory.h"
 
 /**
  * Copies the input string up until limit and converts the explicit

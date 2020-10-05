@@ -54,6 +54,7 @@ dkms.conf
 
 # Project files
 .clangd
+.vscode
 compile_commands*.json
 *.log
 *.tab.*

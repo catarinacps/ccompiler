@@ -19,6 +19,7 @@
 #define _DEBUG_H_
 
 #include <stdio.h>
+#include <stdlib.h>
 
 /**
  * All errors are defined using the 'error_t' type, as an attempt to
