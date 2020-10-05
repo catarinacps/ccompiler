@@ -41,4 +41,14 @@ void* cc_try_realloc(void* pointer, size_t new_size);
  */
 void* cc_try_malloc(size_t desired_size);
 
+/**
+ * Tries to calloc a memory region, doing all required safety checks.
+ *
+ * @param quantity the number of blocks.
+ * @param size the desired size of each block.
+ *
+ * @return the pointer to the memory block.
+ */
+void* cc_try_calloc(size_t quantity, size_t size);
+
 #endif /* _MEMORY_H_ */

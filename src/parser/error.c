@@ -32,7 +32,7 @@ void yyerror(char const* s, ...)
 
 char* cc_error_underline(size_t size, unsigned int start, unsigned int end)
 {
-    char* string = (char*)malloc((size + 1) * sizeof(char));
+    char* string = (char*)cc_try_malloc((size + 1) * sizeof(char));
 
     for (unsigned int i = 0; i < size; i++) {
         if (i < start - 1) {

@@ -19,7 +19,7 @@ char* cc_convert_escape_codes(const char* input, size_t limit)
         return NULL;
     }
 
-    char* new_string = (char*)calloc(limit + 1, sizeof(char));
+    char* new_string = (char*)cc_try_calloc(limit + 1, sizeof(char));
 
     /* ESC_SEQ [abfnrtv\\\"\'] */
 

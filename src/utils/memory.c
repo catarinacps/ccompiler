@@ -40,3 +40,16 @@ void* cc_try_malloc(size_t desired_size)
 
     return new_pointer;
 }
+
+void* cc_try_calloc(size_t quantity, size_t size)
+{
+    void* new_pointer = calloc(quantity, size);
+
+    if (new_pointer == NULL) {
+        D_PRINTF("calloc just failed! error code %u\n", CC_OOMEM);
+        D_PRINTF("required size was %lu blocks of size %lu\n", quantity, size);
+        cc_die("out of memory", CC_OOMEM);
+    }
+
+    return new_pointer;
+}
