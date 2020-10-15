@@ -88,13 +88,13 @@
 %type <node> expr
 %type <node> op_tern op_log op_bws op_eq op_cmp
 %type <node> op_add op_mul op_exp op_un op_elem
-%type <node> index
+%type <node> id_index id
 
 %type <lexic_value> tk_op_eq tk_op_log tk_op_cmp tk_op_add
 %type <lexic_value> tk_op_bws tk_op_mul tk_op_exp tk_op_un
 %type <lexic_value> tk_cmd_atrib tk_cmd_init tk_cmd_shift
 
-%type <lexic_value> literal decimal integer float boolean
+%type <node> literal decimal integer pos_int sign_int float pos_float sign_float boolean
 
 %type <expr> signal
 
@@ -199,18 +199,8 @@ command: atrib
     | block
     ;
 
-atrib: TK_IDENTIFICADOR tk_cmd_atrib expr {
-    cc_ast_t* id_node = cc_create_ast_node($1, NULL, NULL);
-    $$ = cc_create_ast_node($2, NULL, id_node, $3, NULL);
-    }
-    | TK_IDENTIFICADOR index tk_cmd_atrib expr {
-    cc_node_data_t input = { .expr = cc_expr_un_index };
-    cc_lexic_value_t* node_content = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
-    cc_ast_t* id_node = cc_create_ast_node($1, NULL, NULL);
-    cc_ast_t* index_node = cc_create_ast_node(node_content, NULL, id_node, $2, NULL);
-
-    $$ = cc_create_ast_node($3, NULL, index_node, $4, NULL);
-    }
+atrib: id tk_cmd_atrib expr { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
+    | id_index tk_cmd_atrib expr { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
     ;
 
 var_local: type id_var_local_rep { $$ = $2; }
@@ -232,17 +222,9 @@ id_var_local_rep: id_var_local
     ;
 
     /* and they can be initialized (using <=) */
-id_var_local: TK_IDENTIFICADOR { $$ = NULL; cc_free_lexic_value($1); }
-    | TK_IDENTIFICADOR tk_cmd_init TK_IDENTIFICADOR {
-    cc_ast_t* id_node = cc_create_ast_node($1, NULL, NULL);
-    cc_ast_t* init_val_node = cc_create_ast_node($3, NULL, NULL);
-    $$ = cc_create_ast_node($2, NULL, id_node, init_val_node, NULL);
-    }
-    | TK_IDENTIFICADOR tk_cmd_init literal {
-    cc_ast_t* id_node = cc_create_ast_node($1, NULL, NULL);
-    cc_ast_t* init_val_node = cc_create_ast_node($3, NULL, NULL);
-    $$ = cc_create_ast_node($2, NULL, id_node, init_val_node, NULL);
-    }
+id_var_local: id { $$ = NULL; cc_free_ast_node($1); }
+    | id tk_cmd_init id { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
+    | id tk_cmd_init literal { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
     ;
 
 control_flow: if
@@ -266,34 +248,13 @@ while: TK_PR_WHILE '(' expr ')' TK_PR_DO block {
     }
     ;
 
-io: TK_PR_INPUT TK_IDENTIFICADOR {
-    cc_ast_t* id_node = cc_create_ast_node($2, NULL, NULL);
-    $$ = cc_create_ast_node($1, NULL, id_node, NULL);
-    }
-    | TK_PR_OUTPUT TK_IDENTIFICADOR {
-    cc_ast_t* id_node = cc_create_ast_node($2, NULL, NULL);
-    $$ = cc_create_ast_node($1, NULL, id_node, NULL);
-    }
-    | TK_PR_OUTPUT literal {
-    cc_ast_t* lit_node = cc_create_ast_node($2, NULL, NULL);
-    $$ = cc_create_ast_node($1, NULL, lit_node, NULL);
-    }
+io: TK_PR_INPUT id { $$ = cc_create_ast_node($1, NULL, $2, NULL); }
+    | TK_PR_OUTPUT id { $$ = cc_create_ast_node($1, NULL, $2, NULL); }
+    | TK_PR_OUTPUT literal { $$ = cc_create_ast_node($1, NULL, $2, NULL); }
     ;
 
-shift: TK_IDENTIFICADOR tk_cmd_shift integer {
-    cc_ast_t* id_node = cc_create_ast_node($1, NULL, NULL);
-    cc_ast_t* lit_node = cc_create_ast_node($3, NULL, NULL);
-    $$ = cc_create_ast_node($2, NULL, id_node, lit_node, NULL);
-    }
-    | TK_IDENTIFICADOR index tk_cmd_shift integer {
-    cc_node_data_t input = { .expr = cc_expr_un_index };
-    cc_lexic_value_t* node_content = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
-    cc_ast_t* id_node = cc_create_ast_node($1, NULL, NULL);
-    cc_ast_t* lit_node = cc_create_ast_node($4, NULL, NULL);
-    cc_ast_t* index_node = cc_create_ast_node(node_content, NULL, id_node, $2, NULL);
-
-    $$ = cc_create_ast_node($3, NULL, index_node, lit_node, NULL);
-    }
+shift: id tk_cmd_shift integer { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
+    | id_index tk_cmd_shift integer { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
     ;
 
 return: TK_PR_RETURN expr { $$ = cc_create_ast_node($1, NULL, $2, NULL); }
@@ -361,17 +322,12 @@ op_un: tk_op_un op_un { $$ = cc_create_ast_node($1, NULL, $2, NULL); }
     | op_elem
     ;
 
-op_elem: TK_IDENTIFICADOR { $$ = cc_create_ast_node($1, NULL, NULL); }
-    | TK_IDENTIFICADOR index {
-    cc_node_data_t input = { .expr = cc_expr_un_index };
-    cc_lexic_value_t* node_content = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
-    cc_ast_t* id_node = cc_create_ast_node($1, NULL, NULL);
-    $$ = cc_create_ast_node(node_content, NULL, id_node, $2, NULL);
-    }
-    | TK_LIT_INT { $$ = cc_create_ast_node($1, NULL, NULL); }
-    | TK_LIT_FLOAT { $$ = cc_create_ast_node($1, NULL, NULL); }
+op_elem: id
+    | id_index
+    | pos_int
+    | pos_float
     | call
-    | boolean { $$ = cc_create_ast_node($1, NULL, NULL); }
+    | boolean
     | '(' expr ')' { $$ = $2; }
     ;
 
@@ -461,39 +417,65 @@ tk_op_un: '*' {
     }
     ;
 
+tk_cmd_atrib: '=' {
+    cc_node_data_t input = { .cmd = cc_cmd_atrib };
+    $$ = cc_create_lexic_value(input, cc_cmd, cc_match_line_number());
+    }
+    ;
+
+tk_cmd_init: TK_OC_LE {
+    cc_node_data_t input = { .cmd = cc_cmd_init };
+    $$ = cc_create_lexic_value(input, cc_cmd, cc_match_line_number());
+    }
+    ;
+
     /* ---------- LITERALS ----------  */
 
 literal: decimal
     | boolean
-    | TK_LIT_STRING
-    | TK_LIT_CHAR
+    | TK_LIT_STRING { $$ = cc_create_ast_node($1, NULL, NULL); }
+    | TK_LIT_CHAR { $$ = cc_create_ast_node($1, NULL, NULL); }
     ;
 
 decimal: integer
     | float
     ;
 
-integer: signal TK_LIT_INT {
+integer: pos_int
+    | sign_int
+    ;
+
+pos_int: TK_LIT_INT { $$ = cc_create_ast_node($1, NULL, NULL); }
+
+sign_int: signal TK_LIT_INT {
     cc_invert_number_literal(&($2->data.lit.value), $1, cc_type_int);
-    $$ = $2;
+    $$ = cc_create_ast_node($2, NULL, NULL);
     }
-    | TK_LIT_INT
+
+float: pos_float
+    | sign_float
     ;
 
-float: signal TK_LIT_FLOAT {
+pos_float: TK_LIT_FLOAT { $$ = cc_create_ast_node($1, NULL, NULL); }
+
+sign_float: signal TK_LIT_FLOAT {
     cc_invert_number_literal(&($2->data.lit.value), $1, cc_type_float);
-    $$ = $2;
+    $$ = cc_create_ast_node($2, NULL, NULL);
     }
-    | TK_LIT_FLOAT
-    ;
 
-boolean: TK_LIT_TRUE
-    | TK_LIT_FALSE
+boolean: TK_LIT_TRUE { $$ = cc_create_ast_node($1, NULL, NULL); }
+    | TK_LIT_FALSE { $$ = cc_create_ast_node($1, NULL, NULL); }
     ;
 
     /* ---------- MISC ----------  */
 
-index: '[' expr ']' { $$ = $2; }
+id: TK_IDENTIFICADOR { $$ = cc_create_ast_node($1, NULL, NULL); }
+
+id_index: id '[' expr ']' {
+    cc_node_data_t input = { .expr = cc_expr_un_index };
+    cc_lexic_value_t* node_content = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    $$ = cc_create_ast_node(node_content, NULL, $1, $3, NULL);
+    }
     ;
 
 signal: '+' { $$ = cc_expr_un_sign_pos; }
@@ -509,18 +491,6 @@ type: TK_PR_INT
 
 tk_cmd_shift: TK_OC_SR
     | TK_OC_SL
-    ;
-
-tk_cmd_atrib: '=' {
-    cc_node_data_t input = { .cmd = cc_cmd_atrib };
-    $$ = cc_create_lexic_value(input, cc_cmd, cc_match_line_number());
-    }
-    ;
-
-tk_cmd_init: TK_OC_LE {
-    cc_node_data_t input = { .cmd = cc_cmd_init };
-    $$ = cc_create_lexic_value(input, cc_cmd, cc_match_line_number());
-    }
     ;
 
 %%
