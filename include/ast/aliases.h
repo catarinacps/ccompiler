@@ -1,4 +1,4 @@
-/** aliases.h
+/** @file aliases.h
  *
  * @copyright (C) 2020 Henrique Silva
  *

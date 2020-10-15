@@ -1,4 +1,4 @@
-/** debug.c
+/** @file debug.c
  *
  * @copyright (C) 2020 Henrique Silva
  *

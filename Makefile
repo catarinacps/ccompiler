@@ -1,5 +1,4 @@
-##	-- ccompiler --
-#
+##	\file Makefile
 #	ccompiler's project Makefile.
 #
 #	Utilization example:
@@ -23,7 +22,6 @@
 #		When present, the final executable will be more verbose.
 #
 #	\author @hcpsilva - Henrique Silva
-#	\author @birromer - Bernardo Hummes
 #
 #	Make's default action is "all" when no parameters are provided.
 
@@ -164,7 +162,7 @@ $(LOG): %.log: %.y
 .DEFAULT_GOAL = all
 
 #	Create a symlink in the expected executable location
-all: gen $(TARGET) $(PDF)
+all: gen $(TARGET)
 	ln -sf $(shell readlink -f $(TARGET)) $(VERSION)
 
 #	Prerequisites are the wanted files

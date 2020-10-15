@@ -1,4 +1,4 @@
-/** ast.c
+/** @file ast.c
  *
  * @copyright (C) 2020 Henrique Silva
  *

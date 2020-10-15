@@ -1,8 +1,9 @@
-/** error.c
+/** @file error.c
  *
- * @file
+ * @copyright (C) 2020 Henrique Silva
+ *
+ *
  * @author Henrique Silva <hcpsilva@inf.ufrgs.br>
- * @author Bernardo Hummes <bhflores@inf.ufrgs.br>
  *
  * @section LICENSE
  *

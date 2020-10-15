@@ -1,4 +1,4 @@
-/** print.c
+/** @file print.c
  *
  * @copyright (C) 2020 Henrique Silva
  *
