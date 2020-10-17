@@ -44,11 +44,11 @@ typedef struct {
  *
  * @param key the key to hash.
  *
- * @return an unsigned integer index in [0, `max(uint32_t)`).
+ * @return an unsigned integer index between [0, 4294967295).
  *
  * @see https://en.wikipedia.org/wiki/MurmurHash
  */
-uint32_t cc_hash(const char* key);
+static uint32_t cc_hash(char const* key);
 
 /**
  * Creates a map entry in dynamic memory.
@@ -58,7 +58,7 @@ uint32_t cc_hash(const char* key);
  *
  * @return a pointer to the node, allocated in dynamic memory.
  */
-cc_map_node_t* cc_create_entry_map(char const* key, void* value);
+static cc_map_node_t* cc_create_entry_map(char const* key, void* value);
 
 /**
  * Creates the  map structure in dynamic  memory with the given  size in
@@ -76,14 +76,14 @@ cc_map_t* cc_create_map(uint32_t size);
  *
  * @param pointer a pointer to the node you wish to free both it and its collision list.
  */
-void cc_free_entry_list_map(cc_map_node_t* pointer);
+static void cc_free_entry_list_map(cc_map_node_t* pointer);
 
 /**
  * Frees a map entry.
  *
  * @param pointer a pointer to the node you wish to free.
  */
-void cc_free_entry_map(cc_map_node_t* pointer);
+static void cc_free_entry_map(cc_map_node_t* pointer);
 
 /**
  * Frees a hash map.
@@ -120,7 +120,7 @@ void* cc_get_entry_map(cc_map_t* map, char const* key);
  * @param existing_item the first item added to some index, is the start of the list.
  * @param new_item the item to be added to the collision list of this index.
  */
-void cc_handle_collision_map(cc_map_node_t* existing_item, cc_map_node_t* new_item);
+static void cc_handle_collision_map(cc_map_node_t* existing_item, cc_map_node_t* new_item);
 
 /**
  * Deletes a map node from the given character key.

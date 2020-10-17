@@ -13,7 +13,7 @@
 
 #include "semantics/map.h"
 
-uint32_t cc_hash(const char* key)
+uint32_t cc_hash(char const* key)
 {
     if (key == NULL)
         cc_die("tried to hash an empty key", CC_HASH);
