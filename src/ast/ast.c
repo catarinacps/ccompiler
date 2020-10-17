@@ -16,7 +16,7 @@
 /* declaration and definition of `ast_g` global */
 cc_ast_t* ast_g = NULL;
 
-cc_lexic_value_t* cc_create_lexic_value(cc_node_data_t data, cc_node_data_kind_t kind, unsigned int line)
+cc_lexic_value_t* cc_create_lexic_value(cc_node_data_t data, cc_node_data_kind_t kind, uint32_t line)
 {
     cc_lexic_value_t* pointer = (cc_lexic_value_t*)cc_try_malloc(sizeof(cc_lexic_value_t));
 
@@ -33,7 +33,7 @@ cc_ast_t* cc_create_ast_node(cc_lexic_value_t* content, cc_ast_t* next, ...)
     va_start(aux, next);
     va_copy(ap, aux);
 
-    unsigned int param_count = 0;
+    uint8_t param_count = 0;
 
     while (va_arg(aux, cc_ast_t*) != NULL)
         param_count++;
@@ -48,7 +48,7 @@ cc_ast_t* cc_create_ast_node(cc_lexic_value_t* content, cc_ast_t* next, ...)
     if (param_count > 0) {
         cc_ast_t** children = (cc_ast_t**)cc_try_malloc(param_count * sizeof(cc_ast_t*));
 
-        for (unsigned int i = 0; i < param_count; i++)
+        for (uint8_t i = 0; i < param_count; i++)
             children[i] = va_arg(ap, cc_ast_t*);
 
         pointer->children = children;
@@ -105,7 +105,7 @@ void cc_free_ast(cc_ast_t* ast)
     if (ast == NULL)
         return;
 
-    for (unsigned int i = 0; i < ast->num_children; i++)
+    for (uint8_t i = 0; i < ast->num_children; i++)
         cc_free_ast(ast->children[i]);
 
     if (ast->next != NULL)

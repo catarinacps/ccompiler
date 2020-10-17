@@ -40,12 +40,9 @@ typedef enum {
     cc_cmd_input,
     cc_cmd_output,
     cc_cmd_if,
-    /* cc_cmd_call, */
     cc_cmd_shift_left,
     cc_cmd_shift_right,
-    /* cc_cmd_block, */
     cc_cmd_atrib,
-    /* cc_cmd_decl, */
     cc_cmd_init
 } cc_command_t;
 

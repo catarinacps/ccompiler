@@ -26,11 +26,17 @@
 #include "utils/debug.h"
 #include "utils/memory.h"
 
+/* --------------------------------------------------------------------------- */
+/* Type definition: */
+
 typedef struct {
     uint32_t size;
     uint32_t top;
     void** data;
 } cc_stack_t;
+
+/* --------------------------------------------------------------------------- */
+/* Global function prototypes: */
 
 /**
  * Creates a stack with given initial capacity.

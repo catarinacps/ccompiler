@@ -12,13 +12,15 @@
  *
  * @section DESCRIPTION
  *
- *
+ * Implementation of an abstract syntax tree,  to be used in unison with
+ * the bison implementation of a grammar.
  */
 
 #ifndef _AST_H_
 #define _AST_H_
 
 #include <stdarg.h>
+#include <stdint.h>
 #include <stdio.h>
 
 #include "ast/base_types.h"
@@ -47,12 +49,12 @@ typedef union {
 typedef struct {
     cc_node_data_t data;
     cc_node_data_kind_t kind;
-    unsigned int line;
+    uint32_t line;
 } cc_lexic_value_t;
 
 typedef struct cc_ast_s {
     cc_lexic_value_t* content;
-    size_t num_children;
+    uint8_t num_children;
     struct cc_ast_s** children;
     struct cc_ast_s* next;
 } cc_ast_t;
@@ -74,10 +76,10 @@ extern void* arvore;
  *
  * @return the address of the created `cc_lexic_value_t`.
  */
-cc_lexic_value_t* cc_create_lexic_value(cc_node_data_t data, cc_node_data_kind_t kind, unsigned int line);
+cc_lexic_value_t* cc_create_lexic_value(cc_node_data_t data, cc_node_data_kind_t kind, uint32_t line);
 
 /**
- * Creates a new AST node in dynamic memory. The last argument must
+ * Creates a  new AST  node in  dynamic memory.  The last  argument must
  * always be `NULL`, even when there are no children nodes.
  *
  * @param content a pointer to the lexic value you wish to assign to the node.
