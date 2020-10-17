@@ -29,7 +29,7 @@ uint32_t cc_hash(const char* key)
     return hash;
 }
 
-cc_map_node_t* cc_create_map_node(char const* key, void* value)
+cc_map_node_t* cc_create_entry_map(char const* key, void* value)
 {
     if (key == NULL)
         return NULL;
@@ -54,20 +54,20 @@ cc_map_t* cc_create_map(uint32_t size)
     return map;
 }
 
-void cc_free_map_node_list(cc_map_node_t* pointer)
+void cc_free_entry_list_map(cc_map_node_t* pointer)
 {
     if (pointer == NULL)
         return;
 
     if (pointer->next != NULL)
-        cc_free_map_node(pointer->next);
+        cc_free_entry_map(pointer->next);
 
-    cc_free_map_node(pointer);
+    cc_free_entry_map(pointer);
 
     return;
 }
 
-void cc_free_map_node(cc_map_node_t* pointer)
+void cc_free_entry_map(cc_map_node_t* pointer)
 {
     if (pointer == NULL)
         return;
@@ -85,7 +85,7 @@ void cc_free_map(cc_map_t* pointer)
 
     for (uint32_t i = 0; i < pointer->size; i++) {
         if (pointer->items[i] != NULL)
-            cc_free_map_node_list(pointer->items[i]);
+            cc_free_entry_list_map(pointer->items[i]);
     }
 
     free(pointer->items);
@@ -94,12 +94,12 @@ void cc_free_map(cc_map_t* pointer)
     return;
 }
 
-bool cc_insert_map_node(cc_map_t* map, char const* key, void* value)
+bool cc_insert_entry_map(cc_map_t* map, char const* key, void* value)
 {
     if (map == NULL || key == NULL)
         return false;
 
-    cc_map_node_t* new_item = cc_create_map_node(key, value);
+    cc_map_node_t* new_item = cc_create_entry_map(key, value);
     uint32_t index = cc_hash(key) % map->size;
     bool success = false;
 
@@ -124,7 +124,7 @@ bool cc_insert_map_node(cc_map_t* map, char const* key, void* value)
     return success;
 }
 
-void* cc_search_map(cc_map_t* map, char const* key)
+void* cc_get_entry_map(cc_map_t* map, char const* key)
 {
     if (map == NULL || key == NULL)
         return NULL;
@@ -149,7 +149,7 @@ void cc_handle_collision_map(cc_map_node_t* existing_item, cc_map_node_t* new_it
     return;
 }
 
-void cc_delete_map_node(cc_map_t* map, char const* key)
+void cc_delete_map_entry(cc_map_t* map, char const* key)
 {
     if (map == NULL || key == NULL)
         return;
@@ -165,10 +165,10 @@ void cc_delete_map_node(cc_map_t* map, char const* key)
 
     if (item->next != NULL) {
         cc_map_node_t* new_next = item->next->next;
-        cc_free_map_node(item->next);
+        cc_free_entry_map(item->next);
         item->next = new_next;
     } else if (strcmp(item->key, key)) {
-        cc_free_map_node(item);
+        cc_free_entry_map(item);
         map->items[index] = NULL;
     }
 

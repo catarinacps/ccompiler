@@ -51,14 +51,14 @@ typedef struct {
 uint32_t cc_hash(const char* key);
 
 /**
- * Creates a map node in dynamic memory.
+ * Creates a map entry in dynamic memory.
  *
  * @param key the key value.
  * @param value pointer to the contents of the key.
  *
  * @return a pointer to the node, allocated in dynamic memory.
  */
-cc_map_node_t* cc_create_map_node(char const* key, void* value);
+cc_map_node_t* cc_create_entry_map(char const* key, void* value);
 
 /**
  * Creates the  map structure in dynamic  memory with the given  size in
@@ -71,19 +71,19 @@ cc_map_node_t* cc_create_map_node(char const* key, void* value);
 cc_map_t* cc_create_map(uint32_t size);
 
 /**
- * Frees all nodes  in the collision list, considering  `pointer` as the
+ * Frees all entries in the collision list, considering `pointer` as the
  * head of the list.
  *
  * @param pointer a pointer to the node you wish to free both it and its collision list.
  */
-void cc_free_map_node_list(cc_map_node_t* pointer);
+void cc_free_entry_list_map(cc_map_node_t* pointer);
 
 /**
- * Frees a map node.
+ * Frees a map entry.
  *
  * @param pointer a pointer to the node you wish to free.
  */
-void cc_free_map_node(cc_map_node_t* pointer);
+void cc_free_entry_map(cc_map_node_t* pointer);
 
 /**
  * Frees a hash map.
@@ -101,7 +101,7 @@ void cc_free_map(cc_map_t* pointer);
  *
  * @return a boolean indicating success.
  */
-bool cc_insert_map_node(cc_map_t* map, char const* key, void* value);
+bool cc_insert_entry_map(cc_map_t* map, char const* key, void* value);
 
 /**
  * Indexes the  map for  the given  key. If the  key doesn't  exist, the
@@ -112,7 +112,7 @@ bool cc_insert_map_node(cc_map_t* map, char const* key, void* value);
  *
  * @return the pointer to the value of the key or `NULL` on failure.
  */
-void* cc_search_map(cc_map_t* map, char const* key);
+void* cc_get_entry_map(cc_map_t* map, char const* key);
 
 /**
  * Adds `new_item` to the collision list (or bucket) of `existing_item`.
@@ -128,6 +128,6 @@ void cc_handle_collision_map(cc_map_node_t* existing_item, cc_map_node_t* new_it
  * @param map the map to delete from.
  * @param key the key we're looking to delete.
  */
-void cc_delete_map_node(cc_map_t* map, char const* key);
+void cc_delete_map_entry(cc_map_t* map, char const* key);
 
 #endif /* _MAP_H_ */

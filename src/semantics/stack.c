@@ -43,6 +43,14 @@ bool cc_is_full_stack(cc_stack_t* stack)
     return stack->top == stack->size;
 }
 
+bool cc_is_empty_stack(cc_stack_t* stack)
+{
+    if (stack == NULL)
+        return false;
+
+    return stack->top == 0;
+}
+
 bool cc_push_stack(cc_stack_t* stack, void* item)
 {
     if (stack == NULL || item == NULL)
@@ -50,7 +58,13 @@ bool cc_push_stack(cc_stack_t* stack, void* item)
 
     if (cc_is_full_stack(stack)) {
         D_PRINTF("failed to push to stack, all %lu positions are full\n", stack->size);
-        return false;
+        void** new_region = (void**)cc_try_calloc(stack->size * 2, sizeof(void*));
+
+        memcpy(new_region, stack->data, stack->size);
+        free(stack->data);
+
+        stack->data = new_region;
+        stack->size *= 2;
     }
 
     stack->data[stack->top] = item;

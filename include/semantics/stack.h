@@ -18,12 +18,13 @@
 #ifndef _STACK_H_
 #define _STACK_H_
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
-#include <stdbool.h>
+#include <string.h>
 
-#include "utils/memory.h"
 #include "utils/debug.h"
+#include "utils/memory.h"
 
 typedef struct {
     uint32_t size;
