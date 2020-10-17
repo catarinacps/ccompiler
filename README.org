@@ -1,6 +1,5 @@
 #+title: =ccompiler=
 #+author: Henrique Silva
-#+author: Bernardo Hummes
 #+email: hcpsilva@inf.ufrgs.br
 #+infojs_opt:
 #+property: cache yes
@@ -114,9 +113,8 @@ Utilization example:
 
 ** Contact
 
-You can contact either of us through the following e-mail addresses:
+You can contact me through the following e-mail address:
 
 #+begin_example
 hcpsilva@inf.ufrgs.br
-bhflores@inf.ufrgs.br
 #+end_example

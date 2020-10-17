@@ -25,7 +25,7 @@
 #include "utils/memory.h"
 
 /**
- * Copies the input string up until limit and converts the explicit
+ * Copies  the input  string up  until limit  and converts  the explicit
  * escape codes into their respective escape code characters. The caller
  * must free the returned string.
  *
