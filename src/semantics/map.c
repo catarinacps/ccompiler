@@ -114,10 +114,13 @@ bool cc_insert_entry_map(cc_map_t* map, char const* key, void* value)
     } else if (map->count == map->size) {
         /* map is full! */
         D_PRINTF("failed insertion to hash map because all %lu items were filled\n", map->size);
+
         success = false;
     } else {
         /* collision! */
         cc_handle_collision_map(current_item, new_item);
+        map->count++;
+
         success = true;
     }
 
@@ -171,6 +174,8 @@ void cc_delete_map_entry(cc_map_t* map, char const* key)
         cc_free_entry_map(item);
         map->items[index] = NULL;
     }
+
+    map->count--;
 
     return;
 }
