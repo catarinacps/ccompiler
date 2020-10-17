@@ -29,6 +29,7 @@
 typedef unsigned short error_t;
 
 #define CC_OOMEM ((error_t)128)
+#define CC_HASH ((error_t)129)
 
 #ifdef VERBOSE
 #define V_PRINTF(f_, ...) printf((f_), ##__VA_ARGS__)

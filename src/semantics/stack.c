@@ -24,13 +24,30 @@ cc_stack_t* cc_create_stack(uint32_t capacity)
     return stack;
 }
 
+void cc_free_stack(cc_stack_t* pointer)
+{
+    if (pointer == NULL)
+        return;
+
+    free(pointer->data);
+    free(pointer);
+
+    return;
+}
+
 bool cc_is_full_stack(cc_stack_t* stack)
 {
+    if (stack == NULL)
+        return false;
+
     return stack->top == stack->size;
 }
 
 bool cc_push_stack(cc_stack_t* stack, void* item)
 {
+    if (stack == NULL || item == NULL)
+        return false;
+
     if (cc_is_full_stack(stack)) {
         D_PRINTF("failed to push to stack, all %lu positions are full\n", stack->size);
         return false;
@@ -45,10 +62,26 @@ bool cc_push_stack(cc_stack_t* stack, void* item)
 
 void* cc_pop_stack(cc_stack_t* stack)
 {
+    if (stack == NULL)
+        return NULL;
+
     if (cc_is_empty_stack(stack)) {
         D_PRINTF("failed to pop the stack of capacity %lu, it is empty\n", stack->size);
         return NULL;
     }
 
     return stack->data[--stack->top];
+}
+
+void* cc_peek_stack(cc_stack_t* stack)
+{
+    if (stack == NULL)
+        return NULL;
+
+    if (cc_is_empty_stack(stack)) {
+        D_PRINTF("failed to pop the stack of capacity %lu, it is empty\n", stack->size);
+        return NULL;
+    }
+
+    return stack->data[stack->top - 1];
 }

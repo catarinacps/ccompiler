@@ -15,6 +15,9 @@
 
 uint32_t cc_hash(const char* key)
 {
+    if (key == NULL)
+        cc_die("tried to hash an empty key", CC_HASH);
+
     uint32_t hash = 3323198485ul;
 
     for (; *key; ++key) {
@@ -28,6 +31,9 @@ uint32_t cc_hash(const char* key)
 
 cc_map_node_t* cc_create_map_node(char const* key, void* value)
 {
+    if (key == NULL)
+        return NULL;
+
     cc_map_node_t* node = (cc_map_node_t*)cc_try_malloc(sizeof(cc_map_node_t));
 
     node->key = strdup(key);
@@ -50,6 +56,9 @@ cc_map_t* cc_create_map(uint32_t size)
 
 void cc_free_map_node_list(cc_map_node_t* pointer)
 {
+    if (pointer == NULL)
+        return;
+
     if (pointer->next != NULL)
         cc_free_map_node(pointer->next);
 
@@ -60,6 +69,9 @@ void cc_free_map_node_list(cc_map_node_t* pointer)
 
 void cc_free_map_node(cc_map_node_t* pointer)
 {
+    if (pointer == NULL)
+        return;
+
     free(pointer->key);
     free(pointer);
 
@@ -68,6 +80,9 @@ void cc_free_map_node(cc_map_node_t* pointer)
 
 void cc_free_map(cc_map_t* pointer)
 {
+    if (pointer == NULL)
+        return;
+
     for (uint32_t i = 0; i < pointer->size; i++) {
         if (pointer->items[i] != NULL)
             cc_free_map_node_list(pointer->items[i]);
@@ -81,6 +96,9 @@ void cc_free_map(cc_map_t* pointer)
 
 bool cc_insert_map_node(cc_map_t* map, char const* key, void* value)
 {
+    if (map == NULL || key == NULL)
+        return false;
+
     cc_map_node_t* new_item = cc_create_map_node(key, value);
     uint32_t index = cc_hash(key) % map->size;
     bool success = false;
@@ -108,6 +126,9 @@ bool cc_insert_map_node(cc_map_t* map, char const* key, void* value)
 
 void* cc_search_map(cc_map_t* map, char const* key)
 {
+    if (map == NULL || key == NULL)
+        return NULL;
+
     cc_map_node_t* item = map->items[cc_hash(key) % map->size];
 
     while (item != NULL && strcmp(item->key, key) != 0)
@@ -130,6 +151,9 @@ void cc_handle_collision_map(cc_map_node_t* existing_item, cc_map_node_t* new_it
 
 void cc_delete_map_node(cc_map_t* map, char const* key)
 {
+    if (map == NULL || key == NULL)
+        return;
+
     uint32_t index = cc_hash(key) % map->size;
     cc_map_node_t* item = map->items[index];
 

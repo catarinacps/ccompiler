@@ -41,6 +41,13 @@ typedef struct {
 cc_stack_t* cc_create_stack(uint32_t capacity);
 
 /**
+ * Frees the memory allocated for a given pointer to a stack.
+ *
+ * @param stack the stack to free.
+ */
+void cc_free_stack(cc_stack_t* pointer);
+
+/**
  * Checks if the stack is full.
  *
  * @param stack the stack you wish to check.
@@ -76,5 +83,14 @@ bool cc_push_stack(cc_stack_t* stack, void* item);
  * @return the item that was in the top of the stack or `NULL`.
  */
 void* cc_pop_stack(cc_stack_t* stack);
+
+/**
+ * Peeks at the first element of the stack. In case of failure, returns `NULL`.
+ *
+ * @param stack the stack to peek at.
+ *
+ * @return the item that is on the top or `NULL`.
+ */
+void* cc_peek_stack(cc_stack_t* stack);
 
 #endif /* _STACK_H_ */
