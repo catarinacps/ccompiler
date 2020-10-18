@@ -115,3 +115,16 @@ void cc_free_ast(cc_ast_t* ast)
 
     return;
 }
+
+void cc_invert_number_literal(cc_literal_data_t* num_literal, cc_expression_t expr, cc_type_t type)
+{
+    /* do nothing if the given literal is of the incorrect type */
+    if (expr == cc_expr_un_sign_neg) {
+        if (type == cc_type_int)
+            num_literal->integer = -num_literal->integer;
+        else
+            num_literal->floating = -num_literal->floating;
+    }
+
+    return;
+}
