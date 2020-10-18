@@ -9,6 +9,7 @@
 
 %code requires {
 #include "ast/ast.h"
+#include "semantics/list.h"
 }
 
 %code {
@@ -18,6 +19,7 @@
 %union {
     cc_ast_t* node;
     cc_lexic_value_t* lexic_value;
+    cc_list_t* list;
     cc_expression_t expr; /* only here for explicit signals on numeric literals*/
 }
 
@@ -286,7 +288,7 @@ expr: op_tern
 op_tern: op_log
     | op_log '?' op_tern ':' op_tern {
     cc_node_data_t input = { .expr = cc_expr_tern };
-    cc_lexic_value_t* node_content = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    cc_lexic_value_t* node_content = cc_create_lexic_value(input, cc_expr, cc_match_location());
     $$ = cc_create_ast_node(node_content, NULL, $1, $3, $5, NULL);
     }
     ;
@@ -343,90 +345,90 @@ tk_op_log: TK_OC_AND
 
 tk_op_cmp: TK_OC_LE {
     cc_node_data_t input = { .expr = cc_expr_log_le };
-    $$ = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    $$ = cc_create_lexic_value(input, cc_expr, cc_match_location());
     }
     | TK_OC_GE
     ;
 
 tk_op_add: '+' {
     cc_node_data_t input = { .expr = cc_expr_bin_add };
-    $$ = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    $$ = cc_create_lexic_value(input, cc_expr, cc_match_location());
     }
     | '-' {
     cc_node_data_t input = { .expr = cc_expr_bin_sub };
-    $$ = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    $$ = cc_create_lexic_value(input, cc_expr, cc_match_location());
     }
     ;
 
 tk_op_bws: '|' {
     cc_node_data_t input = { .expr = cc_expr_bin_or };
-    $$ = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    $$ = cc_create_lexic_value(input, cc_expr, cc_match_location());
     }
     | '&' {
     cc_node_data_t input = { .expr = cc_expr_bin_and };
-    $$ = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    $$ = cc_create_lexic_value(input, cc_expr, cc_match_location());
     }
     ;
 
 tk_op_mul: '*' {
     cc_node_data_t input = { .expr = cc_expr_bin_mul };
-    $$ = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    $$ = cc_create_lexic_value(input, cc_expr, cc_match_location());
     }
     | '/' {
     cc_node_data_t input = { .expr = cc_expr_bin_div };
-    $$ = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    $$ = cc_create_lexic_value(input, cc_expr, cc_match_location());
     }
     | '%' {
     cc_node_data_t input = { .expr = cc_expr_bin_rem };
-    $$ = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    $$ = cc_create_lexic_value(input, cc_expr, cc_match_location());
     }
     ;
 
 tk_op_exp: '^' {
     cc_node_data_t input = { .expr = cc_expr_bin_exp };
-    $$ = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    $$ = cc_create_lexic_value(input, cc_expr, cc_match_location());
     }
     ;
 
 tk_op_un: '*' {
     cc_node_data_t input = { .expr = cc_expr_un_deref };
-    $$ = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    $$ = cc_create_lexic_value(input, cc_expr, cc_match_location());
     }
     | '&' {
     cc_node_data_t input = { .expr = cc_expr_un_addr };
-    $$ = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    $$ = cc_create_lexic_value(input, cc_expr, cc_match_location());
     }
     | '#' {
     cc_node_data_t input = { .expr = cc_expr_un_hash };
-    $$ = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    $$ = cc_create_lexic_value(input, cc_expr, cc_match_location());
     }
     | '+' {
     cc_node_data_t input = { .expr = cc_expr_un_sign_pos };
-    $$ = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    $$ = cc_create_lexic_value(input, cc_expr, cc_match_location());
     }
     | '-' {
     cc_node_data_t input = { .expr = cc_expr_un_sign_neg };
-    $$ = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    $$ = cc_create_lexic_value(input, cc_expr, cc_match_location());
     }
     | '!' {
     cc_node_data_t input = { .expr = cc_expr_un_negat };
-    $$ = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    $$ = cc_create_lexic_value(input, cc_expr, cc_match_location());
     }
     | '?' {
     cc_node_data_t input = { .expr = cc_expr_un_logic };
-    $$ = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    $$ = cc_create_lexic_value(input, cc_expr, cc_match_location());
     }
     ;
 
 tk_cmd_atrib: '=' {
     cc_node_data_t input = { .cmd = cc_cmd_atrib };
-    $$ = cc_create_lexic_value(input, cc_cmd, cc_match_line_number());
+    $$ = cc_create_lexic_value(input, cc_cmd, cc_match_location());
     }
     ;
 
 tk_cmd_init: TK_OC_LE {
     cc_node_data_t input = { .cmd = cc_cmd_init };
-    $$ = cc_create_lexic_value(input, cc_cmd, cc_match_line_number());
+    $$ = cc_create_lexic_value(input, cc_cmd, cc_match_location());
     }
     ;
 
@@ -474,7 +476,7 @@ id: TK_IDENTIFICADOR { $$ = cc_create_ast_node($1, NULL, NULL); }
 
 id_index: id '[' expr ']' {
     cc_node_data_t input = { .expr = cc_expr_un_index };
-    cc_lexic_value_t* node_content = cc_create_lexic_value(input, cc_expr, cc_match_line_number());
+    cc_lexic_value_t* node_content = cc_create_lexic_value(input, cc_expr, cc_match_location());
     $$ = cc_create_ast_node(node_content, NULL, $1, $3, NULL);
     }
     ;

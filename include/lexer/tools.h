@@ -19,9 +19,12 @@
 #ifndef _TOOLS_H_
 #define _TOOLS_H_
 
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 
+#include "lexer/location.h"
+#include "parser/parser.tab.h"
 #include "utils/memory.h"
 
 #ifndef VERBOSE
@@ -44,7 +47,23 @@ extern size_t yylinebuf_len;
  *
  * @return the line number.
  */
-unsigned int cc_match_line_number(void);
+uint32_t cc_match_line_number(void);
+
+/**
+ * Retrieves the column where the last token was recognized.
+ *
+ * @return the column number.
+ */
+uint32_t cc_match_column_number(void);
+
+/**
+ * Gets the location (line and column) of the last match.
+ *
+ * @return the `cc_location_t` of the match.
+ *
+ * @see the header "lexer/location.h".
+ */
+cc_location_t cc_match_location(void);
 
 /**
  * Updates the global line buffer with the contents of `text` up until

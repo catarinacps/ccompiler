@@ -24,7 +24,6 @@
 #include <string.h>
 
 #include "lexer/tools.h"
-#include "parser/parser.tab.h"
 #include "utils/debug.h"
 #include "utils/string.h"
 #include "ast/ast.h"

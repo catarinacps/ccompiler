@@ -25,6 +25,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "lexer/location.h"
 #include "semantics/types.h"
 #include "utils/debug.h"
 #include "utils/memory.h"
@@ -105,7 +106,7 @@ typedef union {
 typedef struct {
     cc_node_data_t data;
     cc_node_data_kind_t kind;
-    uint32_t line;
+    cc_location_t location;
 } cc_lexic_value_t;
 
 typedef struct cc_ast_s {
@@ -128,11 +129,13 @@ extern void* arvore;
  *
  * @param data the new lexic value data (a union, check above).
  * @param kind the type of node, an enum.
- * @param line the line of match.
+ * @param loc the location of match.
  *
  * @return the address of the created `cc_lexic_value_t`.
+ *
+ * @see the header "lexer/location.h".
  */
-cc_lexic_value_t* cc_create_lexic_value(cc_node_data_t data, cc_node_data_kind_t kind, uint32_t line);
+cc_lexic_value_t* cc_create_lexic_value(cc_node_data_t data, cc_node_data_kind_t kind, cc_location_t loc);
 
 /**
  * Creates a  new AST  node in  dynamic memory.  The last  argument must
@@ -147,14 +150,23 @@ cc_lexic_value_t* cc_create_lexic_value(cc_node_data_t data, cc_node_data_kind_t
 cc_ast_t* cc_create_ast_node(cc_lexic_value_t* content, cc_ast_t* next, ...);
 
 /**
+ * Frees a lexic value type, given a pointer to it.
+ *
+ * @param value the pointer to the value.
  */
 void cc_free_lexic_value(cc_lexic_value_t* value);
 
 /**
+ * Frees a single node of an AST, given a pointer to it.
+ *
+ * @param node the pointer to the node.
  */
 void cc_free_ast_node(cc_ast_t* node);
 
 /**
+ * Frees an entire AST given its root pointer.
+ *
+ * @param ast the root of the AST.
  */
 void cc_free_ast(cc_ast_t* ast);
 

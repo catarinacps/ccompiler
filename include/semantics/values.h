@@ -1,4 +1,5 @@
 /** @file values.h
+ * Semantic values of a language.
  *
  * @copyright (C) 2020 Henrique Silva
  *
@@ -22,16 +23,14 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "ast/ast.h"
+#include "lexer/location.h"
 #include "semantics/list.h"
+#include "semantics/types.h"
 #include "utils/memory.h"
 
-typedef enum {
-    cc_type_string,
-    cc_type_float,
-    cc_type_int,
-    cc_type_char,
-    cc_type_bool
-} cc_symb_type_t;
+/* --------------------------------------------------------------------------- */
+/* Type definitions: */
 
 typedef enum {
     cc_symb_var,
@@ -45,17 +44,20 @@ typedef union {
 } cc_symb_opt;
 
 typedef struct {
-    uint32_t line;
-    uint32_t column;
-} cc_symb_loc_t;
-
-typedef struct {
-    cc_symb_loc_t location;
+    cc_location_t location;
     cc_symb_kind_t kind;
-    cc_symb_type_t type;
+    cc_type_t type;
     uint8_t size;
     cc_symb_opt optional_info;
 } cc_symb_t;
+
+typedef struct {
+    cc_symb_t* symbol;
+    char* name;
+} cc_symb_pair_t;
+
+/* --------------------------------------------------------------------------- */
+/* Function prototypes: */
 
 /**
  * Creates and initializes a new symbol in dynamic memory.
@@ -65,8 +67,21 @@ typedef struct {
  * @param type the type of this symbol (int, char, bool, string, float).
  *
  * @return a new symbol allocated in the heap.
+ *
+ * @see the header "lexer/location.h".
  */
-cc_symb_t* cc_create_symbol(cc_symb_loc_t location, cc_symb_kind_t kind, cc_symb_type_t type);
+cc_symb_t* cc_create_symbol(cc_location_t location, cc_symb_kind_t kind, cc_type_t type);
+
+/**
+ * Given a valid  lexic value of a identifier, create  a name and symbol
+ * pair. After operation, the given pointer  is invalid, as it is free'd
+ * in the process.
+ *
+ * @param lexic_value a lexic value given by the lexer.
+ *
+ * @return a `cc_symb_t` and `char*` pair.
+ */
+cc_symb_pair_t* cc_create_symbol_pair(cc_lexic_value_t* lexic_value);
 
 /**
  * Initializes a symbol of an array, given an already existing symbol.
@@ -83,13 +98,5 @@ void cc_init_array_symbol(cc_symb_t* symbol, uint16_t quantity);
  * @param names the names of the parameters, to be used as keys.
  */
 void cc_init_func_symbol(cc_symb_t* symbol, cc_list_t* parameters);
-
-/**
- * Initializes a symbol of a string variable, given an already existing symbol.
- *
- * @param symbol the symbol to be initialized.
- * @param lenght the lenght of the string.
- */
-void cc_init_string_symbol(cc_symb_t* symbol, uint16_t lenght);
 
 #endif /* _VALUES_H_ */

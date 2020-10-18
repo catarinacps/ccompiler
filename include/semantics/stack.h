@@ -1,4 +1,5 @@
 /** @file stack.h
+ * A generic stack implementation.
  *
  * @copyright (C) 2020 Henrique Silva
  *

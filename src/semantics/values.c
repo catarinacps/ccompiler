@@ -14,7 +14,7 @@
 #include "semantics/values.h"
 #include "utils/memory.h"
 
-cc_symb_t* cc_create_symbol(cc_symb_loc_t location, cc_symb_kind_t kind, cc_symb_type_t type)
+cc_symb_t* cc_create_symbol(cc_location_t location, cc_symb_kind_t kind, cc_type_t type)
 {
     cc_symb_t* new_symb = (cc_symb_t*)cc_try_malloc(sizeof(cc_symb_t));
 
@@ -41,6 +41,12 @@ cc_symb_t* cc_create_symbol(cc_symb_loc_t location, cc_symb_kind_t kind, cc_symb
     }
 
     return new_symb;
+}
+
+cc_symb_pair_t* cc_create_symbol_pair(cc_lexic_value_t* lexic_value)
+{
+    /* cc_symb_t* new_symbol = cc_create_symbol(lexic_value->location,); */
+    return NULL;
 }
 
 void cc_init_array_symbol(cc_symb_t* symbol, uint16_t quantity)

@@ -13,9 +13,21 @@
 
 #include "lexer/tools.h"
 
-unsigned int cc_match_line_number(void)
+uint32_t cc_match_line_number(void)
 {
-    return (unsigned int)yylineno;
+    return (uint32_t)yylineno;
+}
+
+uint32_t cc_match_column_number(void)
+{
+    return (uint32_t)yylloc.first_column;
+}
+
+cc_location_t cc_match_location(void)
+{
+    cc_location_t ret = {cc_match_line_number(), cc_match_column_number()};
+
+    return ret;
 }
 
 void cc_update_line_buffer(char* text, size_t match_length)

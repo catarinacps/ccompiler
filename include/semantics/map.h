@@ -1,4 +1,5 @@
 /** @file map.h
+ * A char*-keyed hash map.
  *
  * @copyright (C) 2020 Henrique Silva
  *
