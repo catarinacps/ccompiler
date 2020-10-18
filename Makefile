@@ -67,8 +67,7 @@ INC := -I$(INC_DIR)
 #	- Command line interface flags:
 #	Release or debug build?
 ifeq ($(RELEASE),true)
-#	Permanent fix for the usage of external files
-INC += $(patsubst %,-I%,$(shell find $(INC_DIR) -mindepth 1 -type d))
+#	Turn on RELEASE #define
 CFLAGS += -DRELEASE
 #	Optimize on release
 OPT := -O3 -march=native
@@ -81,7 +80,7 @@ YFLAGS += --debug
 OPT := -O0
 else
 #	Optimize if we aren't debugging
-OPT := -O3 -march=native
+OPT := -O2 -march=native
 endif
 
 #	Verbose flag

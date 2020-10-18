@@ -101,6 +101,7 @@
 /* the following options enable us more information when printing the
  * error */
 %define parse.error verbose
+%define api.header.include {"parser/parser.tab.h"}
 %locations
 
 /* explicitly define the starting state as source */
