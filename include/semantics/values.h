@@ -74,14 +74,16 @@ cc_symb_t* cc_create_symbol(cc_location_t location, cc_symb_kind_t kind, cc_type
 
 /**
  * Given a valid  lexic value of a identifier, create  a name and symbol
- * pair. After operation, the given pointer  is invalid, as it is free'd
- * in the process.
+ * pair. After operation, the given `lexic_value` pointer is invalid, as
+ * it is free'd in the process.
  *
  * @param lexic_value a lexic value given by the lexer.
+ * @param kind whether its a variable, an array or a function.
+ * @param type the type of this symbol (int, char, bool, string, float).
  *
  * @return a `cc_symb_t` and `char*` pair.
  */
-cc_symb_pair_t* cc_create_symbol_pair(cc_lexic_value_t* lexic_value);
+cc_symb_pair_t cc_create_symbol_pair(cc_lexic_value_t* lexic_value, cc_symb_kind_t kind, cc_type_t type);
 
 /**
  * Initializes a symbol of an array, given an already existing symbol.
@@ -98,5 +100,13 @@ void cc_init_array_symbol(cc_symb_t* symbol, uint16_t quantity);
  * @param names the names of the parameters, to be used as keys.
  */
 void cc_init_func_symbol(cc_symb_t* symbol, cc_list_t* parameters);
+
+/**
+ * Initializes a symbol of a string, given an already existing symbol.
+ *
+ * @param symbol the symbol to add info to.
+ * @param lenght the lenght of the string value.
+ */
+void cc_init_string_symbol(cc_symb_t* symbol, uint32_t lenght);
 
 #endif /* _VALUES_H_ */
