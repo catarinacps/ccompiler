@@ -15,13 +15,14 @@
 
 %code {
 #include "parser/parser.h"
+#include "semantics/scope.h"
 }
 
 %union {
     cc_ast_t* node;
     cc_lexic_value_t* lexic_value;
     cc_list_t* list;
-    cc_symb_pair_t pair;
+    cc_symb_pair_t* pair;
     cc_type_t type;
     cc_expression_t expr; /* only here for explicit signals on numeric literals*/
 }
@@ -101,7 +102,7 @@
 
 %type <node> literal decimal integer pos_int sign_int float pos_float sign_float boolean
 
-%type <list> id_var_global_rep
+%type <list> var_global id_var_global_rep
 %type <pair> id_var_global
 %type <type> type
 
@@ -148,8 +149,8 @@ id_var_global_rep: id_var_global
     ;
 
 id_var_global: TK_IDENTIFICADOR '[' TK_LIT_INT ']' {
-    cc_symb_pair_t val = cc_create_symbol_pair($1, cc_symb_array);
-    cc_init_array_symbol(val.symbol, $3);
+    cc_symb_pair_t* val = cc_create_symbol_pair($1, cc_symb_array);
+    cc_init_array_symbol(val->symbol, $3);
     $$ = val;
     }
     | TK_IDENTIFICADOR {
