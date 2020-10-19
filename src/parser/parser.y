@@ -22,16 +22,17 @@
     cc_lexic_value_t* lexic_value;
     cc_list_t* list;
     cc_symb_pair_t pair;
+    cc_type_t type;
     cc_expression_t expr; /* only here for explicit signals on numeric literals*/
 }
 
 /* all tokens, even the ones not utilized (as, in the first stage, we
  * did recognize them) */
-%token TK_PR_INT
-%token TK_PR_FLOAT
-%token TK_PR_BOOL
-%token TK_PR_CHAR
-%token TK_PR_STRING
+%token <type> TK_PR_INT
+%token <type> TK_PR_FLOAT
+%token <type> TK_PR_BOOL
+%token <type> TK_PR_CHAR
+%token <type> TK_PR_STRING
 %token <lexic_value> TK_PR_IF
 %token TK_PR_THEN
 %token TK_PR_ELSE
@@ -102,6 +103,7 @@
 
 %type <list> id_var_global_rep
 %type <pair> id_var_global
+%type <type> type
 
 %type <expr> signal
 

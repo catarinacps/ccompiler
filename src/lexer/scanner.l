@@ -146,11 +146,31 @@ BOOL_F "false"
 <WORD>{
 
     /* reserved keywords */
-{RK_INT}                               { V_LOG_LEXER("RK_INT"); return TK_PR_INT; }
-{RK_FLOAT}                             { V_LOG_LEXER("RK_FLOAT"); return TK_PR_FLOAT; }
-{RK_BOOL}                              { V_LOG_LEXER("RK_BOOL"); return TK_PR_BOOL; }
-{RK_CHAR}                              { V_LOG_LEXER("RK_CHAR"); return TK_PR_CHAR; }
-{RK_STRING}                            { V_LOG_LEXER("RK_STRING"); return TK_PR_STRING; }
+{RK_INT}                               {
+    yylval.type = cc_type_int;
+    V_LOG_LEXER("RK_INT");
+    return TK_PR_INT;
+    }
+{RK_FLOAT}                             {
+    yylval.type = cc_type_float;
+    V_LOG_LEXER("RK_FLOAT");
+    return TK_PR_FLOAT;
+    }
+{RK_BOOL}                              {
+    yylval.type = cc_type_bool;
+    V_LOG_LEXER("RK_BOOL");
+    return TK_PR_BOOL;
+    }
+{RK_CHAR}                              {
+    yylval.type = cc_type_char;
+    V_LOG_LEXER("RK_CHAR");
+    return TK_PR_CHAR;
+    }
+{RK_STRING}                            {
+    yylval.type = cc_type_string;
+    V_LOG_LEXER("RK_STRING");
+    return TK_PR_STRING;
+    }
 {RK_IF}                                {
     cc_node_data_t input = { .cmd = cc_cmd_if };
     yylval.lexic_value = cc_create_lexic_value(input, cc_cmd, cc_match_location());
