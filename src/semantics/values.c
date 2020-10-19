@@ -67,6 +67,17 @@ bool cc_init_type_symbol(cc_symb_t* symbol, cc_type_t type)
     return true;
 }
 
+bool cc_init_type_list_symbols(cc_list_t* list, cc_type_t type)
+{
+    while (list != NULL) {
+        if (cc_init_type_symbol(((cc_symb_pair_t*)list->data)->symbol, type) == false)
+            return false;
+        list = list->next;
+    }
+
+    return true;
+}
+
 void cc_init_array_symbol(cc_symb_t* symbol, cc_lexic_value_t* lexic_value)
 {
     if (symbol == NULL || symbol->kind != cc_symb_array)

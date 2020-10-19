@@ -95,6 +95,17 @@ cc_symb_pair_t* cc_create_symbol_pair(cc_lexic_value_t* lexic_value, cc_symb_kin
 bool cc_init_type_symbol(cc_symb_t* symbol, cc_type_t type);
 
 /**
+ * Given a list of pairs of  symbols and names, initialize them with the
+ * given type.
+ *
+ * @param list the list of symbols and names.
+ * @param type the type itsef (int, char, bool, string, float).
+ *
+ * @return a boolean indicating success.
+ */
+bool cc_init_type_list_symbols(cc_list_t* list, cc_type_t type);
+
+/**
  * Initializes a symbol of an array, given an already existing symbol.
  *
  * @param symbol the symbol to add info to.
