@@ -82,7 +82,7 @@ cc_symb_t* cc_create_symbol(cc_location_t location, cc_symb_kind_t kind);
  *
  * @return a `cc_symb_t` and `char*` pair.
  */
-cc_symb_pair_t cc_create_symbol_pair(cc_lexic_value_t* lexic_value, cc_symb_kind_t kind);
+cc_symb_pair_t* cc_create_symbol_pair(cc_lexic_value_t* lexic_value, cc_symb_kind_t kind);
 
 /**
  * Given an existing symbol, initialize its type parameter.

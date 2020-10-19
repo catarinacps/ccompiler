@@ -24,10 +24,13 @@ cc_symb_t* cc_create_symbol(cc_location_t location, cc_symb_kind_t kind)
     return new_symb;
 }
 
-cc_symb_pair_t cc_create_symbol_pair(cc_lexic_value_t* lexic_value, cc_symb_kind_t kind)
+cc_symb_pair_t* cc_create_symbol_pair(cc_lexic_value_t* lexic_value, cc_symb_kind_t kind)
 {
     cc_symb_t* new_symbol = cc_create_symbol(lexic_value->location, kind);
-    cc_symb_pair_t ret = { new_symbol, lexic_value->data.id };
+
+    cc_symb_pair_t* ret = (cc_symb_pair_t*)cc_try_malloc(sizeof(cc_symb_pair_t));
+    ret->symbol = new_symbol;
+    ret->name = lexic_value->data.id;
 
     free(lexic_value);
 
