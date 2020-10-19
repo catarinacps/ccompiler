@@ -10,6 +10,7 @@
 %code requires {
 #include "ast/ast.h"
 #include "semantics/list.h"
+#include "semantics/values.h"
 }
 
 %code {
@@ -20,6 +21,7 @@
     cc_ast_t* node;
     cc_lexic_value_t* lexic_value;
     cc_list_t* list;
+    cc_symb_pair_t pair;
     cc_expression_t expr; /* only here for explicit signals on numeric literals*/
 }
 
@@ -98,11 +100,15 @@
 
 %type <node> literal decimal integer pos_int sign_int float pos_float sign_float boolean
 
+%type <list> id_var_global_rep
+%type <pair> id_var_global
+
 %type <expr> signal
 
 /* the following options enable us more information when printing the
  * error */
 %define parse.error verbose
+/* and to include the generated header correctly */
 %define api.header.include {"parser/parser.tab.h"}
 %locations
 
@@ -117,11 +123,20 @@
 source: %empty { $$ = NULL; }
     | source var_global ';'
     | source function {
-    if ($1 != NULL) {
-        $1->next = $2;
-        $$ = $1;
-    } else {
+    if ($1 == NULL) {
         $$ = $2;
+    } else {
+        if ($1->next == NULL) {
+            $1->next = $2;
+        } else {
+            cc_ast_t *aux = $1->next, *cur = NULL;
+            while (aux != NULL) {
+                cur = aux;
+                aux = aux->next;
+            }
+            cur->next = $2;
+        }
+        $$ = $1;
     }
     ast_g = $$;
     arvore = (void*)$$;
@@ -134,14 +149,19 @@ var_global: type id_var_global_rep
 
     /* we can have multiple variables being initialized at once */
 id_var_global_rep: id_var_global
-    | id_var_global_rep ',' id_var_global
+    | id_var_global_rep ',' id_var_global {
+    /* placeholder */
+    }
     ;
 
 id_var_global: TK_IDENTIFICADOR '[' TK_LIT_INT ']' {
-    cc_free_lexic_value($1);
-    cc_free_lexic_value($3);
+    cc_symb_pair_t val = cc_create_symbol_pair($1, cc_symb_array);
+    cc_init_array_symbol(val.symbol, $3);
+    $$ = val;
     }
-    | TK_IDENTIFICADOR { cc_free_lexic_value($1); }
+    | TK_IDENTIFICADOR {
+    $$ = cc_create_symbol_pair($1, cc_symb_var);
+    }
     ;
 
 function: header block {
@@ -218,7 +238,16 @@ id_var_local_rep: id_var_local
     if ($1 == NULL) {
         $$ = $3;
     } else {
-        $1->next = $3;
+        if ($1->next == NULL) {
+            $1->next = $3;
+        } else {
+            cc_ast_t *aux = $1->next, *cur = NULL;
+            while (aux != NULL) {
+                cur = aux;
+                aux = aux->next;
+            }
+            cur->next = $3;
+        }
         $$ = $1;
     }
     }
@@ -276,7 +305,19 @@ call: TK_IDENTIFICADOR '(' param_rep ')' {
     ;
 
 param_rep: expr
-    | param_rep ',' expr { $1->next = $3; $$ = $1; }
+    | param_rep ',' expr {
+    if ($1->next == NULL) {
+        $1->next = $3;
+    } else {
+        cc_ast_t *aux = $1->next, *cur = NULL;
+        while (aux != NULL) {
+            cur = aux;
+            aux = aux->next;
+        }
+        cur->next = $3;
+    }
+    $$ = $1;
+    }
     ;
 
     /* ---------- EXPRESSIONS ---------- */
