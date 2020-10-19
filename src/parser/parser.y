@@ -124,7 +124,7 @@
 
     /* the source code can be empty, and variables require ; */
 source: %empty { $$ = NULL; }
-    | source var_global ';'
+    | source var_global ';' { scope = cc_add_list_scope(scope, $2); $$ = $1; }
     | source function {
     if ($1 == NULL) {
         $$ = $2;
@@ -137,15 +137,13 @@ source: %empty { $$ = NULL; }
     }
     ;
 
-var_global: type id_var_global_rep
-    | TK_PR_STATIC type id_var_global_rep
+var_global: type id_var_global_rep { cc_init_type_list_symbols($2, $1); $$ = $2; }
+    | TK_PR_STATIC type id_var_global_rep { cc_init_type_list_symbols($3, $2); $$ = $3; }
     ;
 
     /* we can have multiple variables being initialized at once */
-id_var_global_rep: id_var_global
-    | id_var_global_rep ',' id_var_global {
-    /* placeholder */
-    }
+id_var_global_rep: id_var_global { $$ = cc_insert_list(cc_create_list(), (void*)$1); }
+    | id_var_global_rep ',' id_var_global { $$ = cc_insert_list($1, (void*)$3); }
     ;
 
 id_var_global: TK_IDENTIFICADOR '[' TK_LIT_INT ']' {

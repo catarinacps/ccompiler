@@ -27,6 +27,8 @@
 #include "utils/debug.h"
 #include "utils/memory.h"
 
+#define DEFAULT_MAP_SIZE ((uint32_t)521)
+
 /* --------------------------------------------------------------------------- */
 /* Type definitions: */
 
