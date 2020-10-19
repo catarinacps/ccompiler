@@ -126,16 +126,7 @@ source: %empty { $$ = NULL; }
     if ($1 == NULL) {
         $$ = $2;
     } else {
-        if ($1->next == NULL) {
-            $1->next = $2;
-        } else {
-            cc_ast_t *aux = $1->next, *cur = NULL;
-            while (aux != NULL) {
-                cur = aux;
-                aux = aux->next;
-            }
-            cur->next = $2;
-        }
+        cc_set_next_ast_node($1, $2);
         $$ = $1;
     }
     ast_g = $$;
@@ -196,16 +187,7 @@ command_rep: command_rep command ';' {
     if ($1 == NULL) {
         $$ = $2;
     } else {
-        if ($1->next == NULL) {
-            $1->next = $2;
-        } else {
-            cc_ast_t *aux = $1->next, *cur = NULL;
-            while (aux != NULL) {
-                cur = aux;
-                aux = aux->next;
-            }
-            cur->next = $2;
-        }
+        cc_set_next_ast_node($1, $2);
         $$ = $1;
     }
     }
@@ -238,16 +220,7 @@ id_var_local_rep: id_var_local
     if ($1 == NULL) {
         $$ = $3;
     } else {
-        if ($1->next == NULL) {
-            $1->next = $3;
-        } else {
-            cc_ast_t *aux = $1->next, *cur = NULL;
-            while (aux != NULL) {
-                cur = aux;
-                aux = aux->next;
-            }
-            cur->next = $3;
-        }
+        cc_set_next_ast_node($1, $3);
         $$ = $1;
     }
     }
@@ -306,16 +279,7 @@ call: TK_IDENTIFICADOR '(' param_rep ')' {
 
 param_rep: expr
     | param_rep ',' expr {
-    if ($1->next == NULL) {
-        $1->next = $3;
-    } else {
-        cc_ast_t *aux = $1->next, *cur = NULL;
-        while (aux != NULL) {
-            cur = aux;
-            aux = aux->next;
-        }
-        cur->next = $3;
-    }
+    cc_set_next_ast_node($1, $3);
     $$ = $1;
     }
     ;

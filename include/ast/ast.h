@@ -150,6 +150,15 @@ cc_lexic_value_t* cc_create_lexic_value(cc_node_data_t data, cc_node_data_kind_t
 cc_ast_t* cc_create_ast_node(cc_lexic_value_t* content, cc_ast_t* next, ...);
 
 /**
+ * Given two  nodes, set the  second node as  the next in  the (possible
+ * multiple) first node(s).
+ *
+ * @param first a pointer to the first node. It can already have next nodes set.
+ * @param second the future next node of the sequence.
+ */
+void cc_set_next_ast_node(cc_ast_t* first, cc_ast_t* second);
+
+/**
  * Frees a lexic value type, given a pointer to it.
  *
  * @param value the pointer to the value.
