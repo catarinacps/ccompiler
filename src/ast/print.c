@@ -53,6 +53,8 @@ void cc_print_ast_node(cc_ast_t const* restrict node)
         case cc_type_bool:
             printf("%s", node->content->data.lit.value.boolean ? "true" : "false");
             break;
+        case cc_type_undef:
+            break;
         }
         break;
     }
@@ -109,6 +111,12 @@ void cc_print_ast_node(cc_ast_t const* restrict node)
             break;
         case cc_expr_log_le:
             fputs("<=", stdout);
+            break;
+        case cc_expr_log_gt:
+            fputs(">", stdout);
+            break;
+        case cc_expr_log_lt:
+            fputs("<", stdout);
             break;
         case cc_expr_log_eq:
             fputs("==", stdout);

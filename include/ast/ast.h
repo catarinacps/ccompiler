@@ -62,6 +62,8 @@ typedef enum {
     cc_expr_log_or,
     cc_expr_log_ge,
     cc_expr_log_le,
+    cc_expr_log_gt,
+    cc_expr_log_lt,
     cc_expr_log_eq,
     cc_expr_log_ne,
     cc_expr_un_deref,

@@ -353,6 +353,14 @@ tk_op_cmp: TK_OC_LE {
     $$ = cc_create_lexic_value(input, cc_expr, cc_match_location());
     }
     | TK_OC_GE
+    | '>' {
+    cc_node_data_t input = { .expr = cc_expr_log_gt };
+    $$ = cc_create_lexic_value(input, cc_expr, cc_match_location());
+    }
+    | '<' {
+    cc_node_data_t input = { .expr = cc_expr_log_lt };
+    $$ = cc_create_lexic_value(input, cc_expr, cc_match_location());
+    }
     ;
 
 tk_op_add: '+' {
