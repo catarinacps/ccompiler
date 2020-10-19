@@ -299,31 +299,31 @@ op_tern: op_log
     ;
 
 op_log: op_bws
-    | op_bws tk_op_log op_log { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
+    | op_log tk_op_log op_bws { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
     ;
 
 op_bws: op_eq
-    | op_eq tk_op_bws op_bws { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
+    | op_bws tk_op_bws op_eq { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
     ;
 
 op_eq: op_cmp
-    | op_cmp tk_op_eq op_eq { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
+    | op_eq tk_op_eq op_cmp { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
     ;
 
 op_cmp:  op_add
-    | op_add tk_op_cmp op_cmp { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
+    | op_cmp tk_op_cmp op_add { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
     ;
 
 op_add: op_mul
-    | op_mul tk_op_add op_add { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
+    | op_add tk_op_add op_mul { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
     ;
 
 op_mul: op_exp
-    | op_exp tk_op_mul op_mul { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
+    | op_mul tk_op_mul op_exp { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
     ;
 
 op_exp: op_un
-    | op_un tk_op_exp op_exp { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
+    | op_exp tk_op_exp op_un { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
     ;
 
 op_un: tk_op_un op_un { $$ = cc_create_ast_node($1, NULL, $2, NULL); }
