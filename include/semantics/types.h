@@ -23,7 +23,8 @@ typedef enum {
     cc_type_float,
     cc_type_int,
     cc_type_char,
-    cc_type_bool
+    cc_type_bool,
+    cc_type_undef
 } cc_type_t;
 
 #endif /* _TYPES_H_ */

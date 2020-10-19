@@ -48,6 +48,7 @@ typedef struct {
     cc_symb_kind_t kind;
     cc_type_t type;
     uint8_t size;
+    bool initialized;
     cc_symb_opt optional_info;
 } cc_symb_t;
 
@@ -64,13 +65,12 @@ typedef struct {
  *
  * @param location the location (line and column) of the symbol.
  * @param kind whether its a variable, an array or a function.
- * @param type the type of this symbol (int, char, bool, string, float).
  *
  * @return a new symbol allocated in the heap.
  *
  * @see the header "lexer/location.h".
  */
-cc_symb_t* cc_create_symbol(cc_location_t location, cc_symb_kind_t kind, cc_type_t type);
+cc_symb_t* cc_create_symbol(cc_location_t location, cc_symb_kind_t kind);
 
 /**
  * Given a valid  lexic value of a identifier, create  a name and symbol
@@ -79,19 +79,28 @@ cc_symb_t* cc_create_symbol(cc_location_t location, cc_symb_kind_t kind, cc_type
  *
  * @param lexic_value a lexic value given by the lexer.
  * @param kind whether its a variable, an array or a function.
- * @param type the type of this symbol (int, char, bool, string, float).
  *
  * @return a `cc_symb_t` and `char*` pair.
  */
-cc_symb_pair_t cc_create_symbol_pair(cc_lexic_value_t* lexic_value, cc_symb_kind_t kind, cc_type_t type);
+cc_symb_pair_t cc_create_symbol_pair(cc_lexic_value_t* lexic_value, cc_symb_kind_t kind);
+
+/**
+ * Given an existing symbol, initialize its type parameter.
+ *
+ * @param symbol the symbol to add type info to.
+ * @param type the type itself (int, char, bool, string, float).
+ *
+ * @return an indication of success.
+ */
+bool cc_init_type_symbol(cc_symb_t* symbol, cc_type_t type);
 
 /**
  * Initializes a symbol of an array, given an already existing symbol.
  *
  * @param symbol the symbol to add info to.
- * @param quantity how many elements are in the array.
+ * @param lexic_value lexic value of the array size integer.
  */
-void cc_init_array_symbol(cc_symb_t* symbol, uint16_t quantity);
+void cc_init_array_symbol(cc_symb_t* symbol, cc_lexic_value_t* lexic_value);
 
 /**
  * Initializes a symbol of a function, given an already existing symbol.
