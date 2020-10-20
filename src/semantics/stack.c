@@ -19,7 +19,7 @@ cc_stack_t* cc_create_stack(uint32_t capacity)
 
     stack->size = capacity;
     stack->data = capacity > 0 ? (void**)cc_try_calloc(capacity, sizeof(void*)) : NULL;
-    stack->top = 0;
+    stack->top  = 0;
 
     return stack;
 }
@@ -66,7 +66,7 @@ bool cc_push_stack(cc_stack_t* stack, void* item)
             free(stack->data);
         }
 
-        stack->data = new_region;
+        stack->data  = new_region;
         stack->size += stack->size + 1;
     }
 

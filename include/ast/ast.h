@@ -121,7 +121,7 @@ typedef struct cc_ast_s {
 /* pointer to global abstract syntax tree */
 extern cc_ast_t* ast_g;
 /* pointer to the alias of ast_g, arvore (again, terrible name) */
-extern void* arvore;
+extern void*     arvore;
 
 /* --------------------------------------------------------------------------- */
 /* Function declarations: */

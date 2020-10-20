@@ -20,9 +20,9 @@ cc_lexic_value_t* cc_create_lexic_value(cc_node_data_t data, cc_node_data_kind_t
 {
     cc_lexic_value_t* pointer = (cc_lexic_value_t*)cc_try_malloc(sizeof(cc_lexic_value_t));
 
-    pointer->data = data;
+    pointer->data     = data;
     pointer->location = loc;
-    pointer->kind = kind;
+    pointer->kind     = kind;
 
     return pointer;
 }
@@ -42,7 +42,7 @@ cc_ast_t* cc_create_ast_node(cc_lexic_value_t* content, cc_ast_t* next, ...)
 
     cc_ast_t* pointer = (cc_ast_t*)cc_try_malloc(sizeof(cc_ast_t));
 
-    pointer->content = content;
+    pointer->content      = content;
     pointer->num_children = param_count;
 
     if (param_count > 0) {
@@ -68,12 +68,10 @@ void cc_set_next_ast_node(cc_ast_t* first, cc_ast_t* second)
     if (first->next == NULL) {
         first->next = second;
     } else {
-        cc_ast_t *aux = first->next, *cur = NULL;
-        while (aux != NULL) {
-            cur = aux;
-            aux = aux->next;
-        }
-        cur->next = second;
+        while (first->next != NULL)
+            first = first->next;
+
+        first->next = second;
     }
 
     return;

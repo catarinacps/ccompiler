@@ -18,19 +18,19 @@ cc_symb_t* cc_create_symbol(cc_location_t location, cc_symb_kind_t kind)
     cc_symb_t* new_symb = (cc_symb_t*)cc_try_malloc(sizeof(cc_symb_t));
 
     new_symb->location = location;
-    new_symb->kind = kind;
-    new_symb->type = cc_type_undef;
+    new_symb->kind     = kind;
+    new_symb->type     = cc_type_undef;
 
     return new_symb;
 }
 
 cc_symb_pair_t* cc_create_symbol_pair(cc_lexic_value_t* lexic_value, cc_symb_kind_t kind)
 {
-    cc_symb_t* new_symbol = cc_create_symbol(lexic_value->location, kind);
+    cc_symb_t*      new_symbol = cc_create_symbol(lexic_value->location, kind);
+    cc_symb_pair_t* ret        = (cc_symb_pair_t*)cc_try_malloc(sizeof(cc_symb_pair_t));
 
-    cc_symb_pair_t* ret = (cc_symb_pair_t*)cc_try_malloc(sizeof(cc_symb_pair_t));
     ret->symbol = new_symbol;
-    ret->name = lexic_value->data.id;
+    ret->name   = lexic_value->data.id;
 
     free(lexic_value);
 
@@ -105,8 +105,8 @@ void cc_init_string_symbol(cc_symb_t* symbol, uint32_t lenght)
     if (symbol == NULL || symbol->type != cc_type_string)
         return;
 
-    symbol->size = lenght; /* the size  of a  string is  sizeof(char) *
-                             * lenght, and sizeof(char) is 1 */
+    /* the size of a string is sizeof(char) lenght, and sizeof(char) is 1 */
+    symbol->size        = lenght;
     symbol->initialized = true;
 
     return;

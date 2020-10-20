@@ -15,7 +15,6 @@
 
 %code {
 #include "parser/parser.h"
-#include "semantics/scope.h"
 }
 
 %union {
@@ -111,8 +110,6 @@
 /* the following options enable us more information when printing the
  * error */
 %define parse.error verbose
-/* and to include the generated header correctly */
-%define api.header.include {"parser/parser.tab.h"}
 %locations
 
 /* explicitly define the starting state as source */

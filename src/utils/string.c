@@ -24,7 +24,7 @@ char* cc_convert_escape_codes(const char* input, size_t limit)
 
     /* ESC_SEQ [abfnrtv\\\"\'] */
 
-    for (unsigned int i = 0, j = 0; i < limit; i++, j++) {
+    for (size_t i = 0, j = 0; i < limit; i++, j++) {
         if (input[i] == '\\') {
             switch (input[i + 1]) {
             case 'a':

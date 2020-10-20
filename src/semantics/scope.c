@@ -24,7 +24,7 @@ cc_stack_t* scope = NULL;
 cc_stack_t* cc_init_global_scope(void)
 {
     cc_stack_t* stack = cc_create_stack(128);
-    cc_map_t* map = cc_create_map(DEFAULT_MAP_SIZE);
+    cc_map_t*   map   = cc_create_map(DEFAULT_MAP_SIZE);
 
     cc_push_stack(stack, (void*)map);
 
@@ -36,7 +36,7 @@ cc_stack_t* cc_add_list_scope(cc_stack_t* stack, cc_list_t* list)
     if (stack == NULL)
         stack = cc_init_global_scope();
 
-    cc_map_t* top_scope = (cc_map_t*)cc_peek_stack(stack);
+    cc_map_t*       top_scope = (cc_map_t*)cc_peek_stack(stack);
     cc_symb_pair_t* aux;
 
     while (list != NULL) {

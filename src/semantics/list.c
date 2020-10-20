@@ -12,7 +12,6 @@
  */
 
 #include "semantics/list.h"
-#include "utils/memory.h"
 
 cc_list_t* cc_create_list()
 {
@@ -38,10 +37,11 @@ cc_list_t* cc_insert_list(cc_list_t* list, void* item)
 
     if (list->data != NULL) {
         cc_list_t* new_node = cc_create_list();
+
         new_node->data = item;
-        list->next = new_node;
+        list->next     = new_node;
     } else {
-        list->data = item;
+        list->data     = item;
     }
 
     return ret;

@@ -33,7 +33,7 @@ cc_location_t cc_match_location(void)
 void cc_update_line_buffer(char* text, size_t match_length)
 {
     if (match_length + 1 > yylinebuf_len) {
-        yylinebuf = (char*)cc_try_realloc(yylinebuf, (match_length + 100) * sizeof(char));
+        yylinebuf     = (char*)cc_try_realloc(yylinebuf, (match_length + 100) * sizeof(char));
         yylinebuf_len = match_length + 100;
     }
     strncpy(yylinebuf, text, yylinebuf_len - 1);

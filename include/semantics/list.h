@@ -1,4 +1,5 @@
 /** @file list.h
+ * A simple linked list.
  *
  * @copyright (C) 2020 Henrique Silva
  *
@@ -31,7 +32,13 @@ typedef struct cc_list_s {
 } cc_list_t;
 
 /**
+ * Inlined accessor  procedure. Takes an  index and tries to  return the
+ * data associated to that index. No bounds checking is done here.
  *
+ * @param list the list we wish to access.
+ * @param index the index.
+ *
+ * @return the associated data.
  */
 static inline void* cc_access_list(cc_list_t* list, uint32_t index)
 {

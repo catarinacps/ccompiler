@@ -23,5 +23,6 @@
 
 #include "lexer/scanner.h"
 #include "parser/error.h"
+#include "semantics/scope.h"
 
 #endif /* _PARSER_H_ */

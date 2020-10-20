@@ -81,9 +81,9 @@ cc_map_node_t* cc_create_entry_map(char const* key, void* value)
 {
     cc_map_node_t* node = (cc_map_node_t*)cc_try_malloc(sizeof(cc_map_node_t));
 
-    node->key = strdup(key);
+    node->key   = strdup(key);
     node->value = value;
-    node->next = NULL;
+    node->next  = NULL;
 
     return node;
 }
@@ -93,7 +93,7 @@ cc_map_t* cc_create_map(uint32_t size)
     cc_map_t* map = (cc_map_t*)cc_try_malloc(sizeof(cc_map_t));
 
     map->items = (cc_map_node_t**)cc_try_calloc(size, sizeof(cc_map_node_t*));
-    map->size = size;
+    map->size  = size;
     map->count = 0;
 
     return map;
@@ -138,9 +138,9 @@ bool cc_insert_entry_map(cc_map_t* map, char const* key, void* value)
     if (map == NULL || key == NULL)
         return false;
 
-    cc_map_node_t* new_item = cc_create_entry_map(key, value);
-    uint32_t index = cc_hash(key) % map->size;
-    bool success = false;
+    cc_map_node_t* new_item     = cc_create_entry_map(key, value);
+    uint32_t       index        = cc_hash(key) % map->size;
+    bool           success      = false;
 
     cc_map_node_t* current_item = map->items[index];
 
@@ -194,8 +194,8 @@ void cc_delete_map_entry(cc_map_t* map, char const* key)
     if (map == NULL || key == NULL)
         return;
 
-    uint32_t index = cc_hash(key) % map->size;
-    cc_map_node_t* item = map->items[index];
+    uint32_t       index = cc_hash(key) % map->size;
+    cc_map_node_t* item  = map->items[index];
 
     if (item == NULL)
         return;
@@ -204,11 +204,13 @@ void cc_delete_map_entry(cc_map_t* map, char const* key)
         item = item->next;
 
     if (item->next != NULL) {
-        cc_map_node_t* new_next = item->next->next;
         cc_free_entry_map(item->next);
+        cc_map_node_t* new_next = item->next->next;
+
         item->next = new_next;
-    } else if (strcmp(item->key, key)) {
+    } else if (strcmp(item->key, key) == 0) {
         cc_free_entry_map(item);
+
         map->items[index] = NULL;
     }
 

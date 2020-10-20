@@ -134,7 +134,7 @@ $(LSRC): %.yy.c: %.l
 
 #	- Generated grammar files:
 $(YSRC): $(SRC_DIR)/%.tab.c: $(SRC_DIR)/%.y
-	$(YACC) $(YFLAGS) --output=$@ --defines=$(INC_DIR)/$*.tab.h $<
+	$(YACC) $(YFLAGS) --output=$@ --defines=$(INC_DIR)/$*.tab.h -D api.header.include=\<$*.tab.h\> $<
 
 #	- Objects:
 $(OBJ): $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
