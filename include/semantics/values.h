@@ -101,9 +101,9 @@ bool cc_init_type_symbol(cc_symb_t* symbol, cc_type_t type);
  * @param list the list of symbols and names.
  * @param type the type itsef (int, char, bool, string, float).
  *
- * @return a boolean indicating success.
+ * @return the pointer start of the list.
  */
-bool cc_init_type_list_symbols(cc_list_t* list, cc_type_t type);
+cc_list_t* cc_init_type_list_symbols(cc_list_t* list, cc_type_t type);
 
 /**
  * Initializes a symbol of an array, given an already existing symbol.

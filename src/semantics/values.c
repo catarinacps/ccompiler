@@ -67,15 +67,13 @@ bool cc_init_type_symbol(cc_symb_t* symbol, cc_type_t type)
     return true;
 }
 
-bool cc_init_type_list_symbols(cc_list_t* list, cc_type_t type)
+cc_list_t* cc_init_type_list_symbols(cc_list_t* list, cc_type_t type)
 {
-    while (list != NULL) {
-        if (cc_init_type_symbol(((cc_symb_pair_t*)list->data)->symbol, type) == false)
-            return false;
-        list = list->next;
-    }
+    for (cc_list_t* i = list; i != NULL; i = i->next)
+        if (cc_init_type_symbol(((cc_symb_pair_t*)i->data)->symbol, type) == false)
+            return NULL;
 
-    return true;
+    return list;
 }
 
 void cc_init_array_symbol(cc_symb_t* symbol, cc_lexic_value_t* lexic_value)

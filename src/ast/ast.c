@@ -63,8 +63,11 @@ cc_ast_t* cc_create_ast_node(cc_lexic_value_t* content, cc_ast_t* next, ...)
     return pointer;
 }
 
-void cc_set_next_ast_node(cc_ast_t* first, cc_ast_t* second)
+cc_ast_t* cc_set_next_ast_node(cc_ast_t* first, cc_ast_t* second)
 {
+    if (first == NULL)
+        return second;
+
     if (first->next == NULL) {
         first->next = second;
     } else {
@@ -74,7 +77,7 @@ void cc_set_next_ast_node(cc_ast_t* first, cc_ast_t* second)
         first->next = second;
     }
 
-    return;
+    return first;
 }
 
 void cc_free_lexic_value(cc_lexic_value_t* value)

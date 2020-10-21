@@ -123,23 +123,18 @@
 source: %empty { $$ = NULL; }
     | source var_global ';' { scope = cc_add_list_scope(scope, $2); $$ = $1; }
     | source function {
-    if ($1 == NULL) {
-        $$ = $2;
-    } else {
-        cc_set_next_ast_node($1, $2);
-        $$ = $1;
-    }
-    ast_g = $$;
+    $$     = cc_set_next_ast_node($1, $2);
+    ast_g  = $$;
     arvore = (void*)$$;
     }
     ;
 
-var_global: type id_var_global_rep { cc_init_type_list_symbols($2, $1); $$ = $2; }
-    | TK_PR_STATIC type id_var_global_rep { cc_init_type_list_symbols($3, $2); $$ = $3; }
+var_global: type id_var_global_rep        { $$ = cc_init_type_list_symbols($2, $1); }
+    | TK_PR_STATIC type id_var_global_rep { $$ = cc_init_type_list_symbols($3, $2); }
     ;
 
     /* we can have multiple variables being initialized at once */
-id_var_global_rep: id_var_global { $$ = cc_insert_list(cc_create_list(), (void*)$1); }
+id_var_global_rep: id_var_global          { $$ = cc_insert_list(cc_create_list(), (void*)$1); }
     | id_var_global_rep ',' id_var_global { $$ = cc_insert_list($1, (void*)$3); }
     ;
 
@@ -160,35 +155,28 @@ function: header block {
     ;
 
     /* definition parameters can be empty, as well as calling parameters */
-header: type TK_IDENTIFICADOR '(' def_params_rep ')' { $$ = $2; }
+header: type TK_IDENTIFICADOR '(' def_params_rep ')'            { $$ = $2; }
     | TK_PR_STATIC type TK_IDENTIFICADOR '(' def_params_rep ')' { $$ = $3; }
-    | type TK_IDENTIFICADOR '(' ')' { $$ = $2; }
-    | TK_PR_STATIC type TK_IDENTIFICADOR '(' ')' { $$ = $3; }
+    | type TK_IDENTIFICADOR '(' ')'                             { $$ = $2; }
+    | TK_PR_STATIC type TK_IDENTIFICADOR '(' ')'                { $$ = $3; }
     ;
 
 def_params_rep: def_params
     | def_params_rep ',' def_params
     ;
 
-def_params: type TK_IDENTIFICADOR { cc_free_lexic_value($2); }
+def_params: type TK_IDENTIFICADOR       { cc_free_lexic_value($2); }
     | TK_PR_CONST type TK_IDENTIFICADOR { cc_free_lexic_value($3); }
     ;
 
-block: '{' '}' { $$ = NULL; }
+block: '{' '}'            { $$ = NULL; }
     | '{' command_rep '}' { $$ = $2; }
     ;
 
     /* ---------- COMMANDS ---------- */
 
     /* commands are chained through ; */
-command_rep: command_rep command ';' {
-    if ($1 == NULL) {
-        $$ = $2;
-    } else {
-        cc_set_next_ast_node($1, $2);
-        $$ = $1;
-    }
-    }
+command_rep: command_rep command ';' { $$ = cc_set_next_ast_node($1, $2); }
     | command ';'
     ;
 
@@ -202,31 +190,24 @@ command: atrib
     | block
     ;
 
-atrib: id tk_cmd_atrib expr { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
+atrib: id tk_cmd_atrib expr      { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
     | id_index tk_cmd_atrib expr { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
     ;
 
-var_local: type id_var_local_rep { $$ = $2; }
-    | TK_PR_STATIC type id_var_local_rep { $$ = $3; }
-    | TK_PR_CONST type id_var_local_rep { $$ = $3; }
+var_local: type id_var_local_rep                     { $$ = $2; }
+    | TK_PR_STATIC type id_var_local_rep             { $$ = $3; }
+    | TK_PR_CONST type id_var_local_rep              { $$ = $3; }
     | TK_PR_STATIC TK_PR_CONST type id_var_local_rep { $$ = $4; }
     ;
 
     /* again, we can have multiple variables being declared at once */
 id_var_local_rep: id_var_local
-    | id_var_local_rep ',' id_var_local {
-    if ($1 == NULL) {
-        $$ = $3;
-    } else {
-        cc_set_next_ast_node($1, $3);
-        $$ = $1;
-    }
-    }
+    | id_var_local_rep ',' id_var_local { $$ = cc_set_next_ast_node($1, $3); }
     ;
 
     /* and they can be initialized (using <=) */
-id_var_local: id { $$ = NULL; cc_free_ast_node($1); }
-    | id tk_cmd_init id { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
+id_var_local: id             { $$ = NULL; cc_free_ast_node($1); }
+    | id tk_cmd_init id      { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
     | id tk_cmd_init literal { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
     ;
 
@@ -251,18 +232,18 @@ while: TK_PR_WHILE '(' expr ')' TK_PR_DO block {
     }
     ;
 
-io: TK_PR_INPUT id { $$ = cc_create_ast_node($1, NULL, $2, NULL); }
-    | TK_PR_OUTPUT id { $$ = cc_create_ast_node($1, NULL, $2, NULL); }
+io: TK_PR_INPUT id         { $$ = cc_create_ast_node($1, NULL, $2, NULL); }
+    | TK_PR_OUTPUT id      { $$ = cc_create_ast_node($1, NULL, $2, NULL); }
     | TK_PR_OUTPUT literal { $$ = cc_create_ast_node($1, NULL, $2, NULL); }
     ;
 
-shift: id tk_cmd_shift integer { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
+shift: id tk_cmd_shift integer      { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
     | id_index tk_cmd_shift integer { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
     ;
 
 return: TK_PR_RETURN expr { $$ = cc_create_ast_node($1, NULL, $2, NULL); }
-    | TK_PR_BREAK { $$ = cc_create_ast_node($1, NULL, NULL); }
-    | TK_PR_CONTINUE { $$ = cc_create_ast_node($1, NULL, NULL); }
+    | TK_PR_BREAK         { $$ = cc_create_ast_node($1, NULL, NULL); }
+    | TK_PR_CONTINUE      { $$ = cc_create_ast_node($1, NULL, NULL); }
     ;
 
 call: TK_IDENTIFICADOR '(' param_rep ')' {
@@ -276,10 +257,7 @@ call: TK_IDENTIFICADOR '(' param_rep ')' {
     ;
 
 param_rep: expr
-    | param_rep ',' expr {
-    cc_set_next_ast_node($1, $3);
-    $$ = $1;
-    }
+    | param_rep ',' expr { $$ = cc_set_next_ast_node($1, $3); }
     ;
 
     /* ---------- EXPRESSIONS ---------- */
@@ -301,11 +279,11 @@ op_log: op_bws
     ;
 
 op_bws: op_eq
-    | op_bws tk_op_bws op_eq { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
+    | op_bws tk_op_bws op_eq  { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
     ;
 
 op_eq: op_cmp
-    | op_eq tk_op_eq op_cmp { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
+    | op_eq tk_op_eq op_cmp   { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
     ;
 
 op_cmp:  op_add
@@ -321,10 +299,10 @@ op_mul: op_exp
     ;
 
 op_exp: op_un
-    | op_exp tk_op_exp op_un { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
+    | op_exp tk_op_exp op_un  { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
     ;
 
-op_un: tk_op_un op_un { $$ = cc_create_ast_node($1, NULL, $2, NULL); }
+op_un: tk_op_un op_un         { $$ = cc_create_ast_node($1, NULL, $2, NULL); }
     | op_elem
     ;
 
@@ -448,7 +426,7 @@ tk_cmd_init: TK_OC_LE {
 literal: decimal
     | boolean
     | TK_LIT_STRING { $$ = cc_create_ast_node($1, NULL, NULL); }
-    | TK_LIT_CHAR { $$ = cc_create_ast_node($1, NULL, NULL); }
+    | TK_LIT_CHAR   { $$ = cc_create_ast_node($1, NULL, NULL); }
     ;
 
 decimal: integer
@@ -478,7 +456,7 @@ sign_float: signal TK_LIT_FLOAT {
     }
 
 boolean: TK_LIT_TRUE { $$ = cc_create_ast_node($1, NULL, NULL); }
-    | TK_LIT_FALSE { $$ = cc_create_ast_node($1, NULL, NULL); }
+    | TK_LIT_FALSE   { $$ = cc_create_ast_node($1, NULL, NULL); }
     ;
 
     /* ---------- MISC ----------  */
@@ -486,14 +464,15 @@ boolean: TK_LIT_TRUE { $$ = cc_create_ast_node($1, NULL, NULL); }
 id: TK_IDENTIFICADOR { $$ = cc_create_ast_node($1, NULL, NULL); }
 
 id_index: id '[' expr ']' {
-    cc_node_data_t input = { .expr = cc_expr_un_index };
+    cc_node_data_t    input        = { .expr = cc_expr_un_index };
     cc_lexic_value_t* node_content = cc_create_lexic_value(input, cc_expr, cc_match_location());
+
     $$ = cc_create_ast_node(node_content, NULL, $1, $3, NULL);
     }
     ;
 
 signal: '+' { $$ = cc_expr_un_sign_pos; }
-    | '-' { $$ = cc_expr_un_sign_neg; }
+    | '-'   { $$ = cc_expr_un_sign_neg; }
     ;
 
 type: TK_PR_INT
