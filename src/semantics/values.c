@@ -30,9 +30,13 @@ cc_symb_pair_t* cc_create_symbol_pair(cc_lexic_value_t* lexic_value, cc_symb_kin
     cc_symb_pair_t* ret        = (cc_symb_pair_t*)cc_try_malloc(sizeof(cc_symb_pair_t));
 
     ret->symbol = new_symbol;
-    ret->name   = lexic_value->data.id;
+    ret->name   = strdup(lexic_value->data.id);
 
-    free(lexic_value);
+    if (kind != cc_symb_func) {
+        cc_free_lexic_value(lexic_value);
+    } else {
+        ret->symbol->optional_info.temp_value = lexic_value;
+    }
 
     return ret;
 }
@@ -83,7 +87,7 @@ void cc_init_array_symbol(cc_symb_t* symbol, cc_lexic_value_t* lexic_value)
 
     symbol->optional_info.quantity = lexic_value->data.lit.value.integer;
 
-    free(lexic_value);
+    cc_free_lexic_value(lexic_value);
 
     return;
 }

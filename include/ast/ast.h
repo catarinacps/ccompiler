@@ -193,4 +193,12 @@ void cc_free_ast(cc_ast_t* ast);
  */
 void cc_invert_number_literal(cc_literal_data_t* num_literal, cc_expression_t expr, cc_type_t type);
 
+/**
+ * Function  that  encapsulates  the  update  of  the  global  variables
+ * pointing to the start of the AST.
+ *
+ * @param new_value the new value to be set.
+ */
+void cc_update_global_ast(cc_ast_t* new_value);
+
 #endif /* _AST_H_ */

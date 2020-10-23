@@ -22,6 +22,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <string.h>
 
 #include "ast/ast.h"
 #include "lexer/location.h"
@@ -41,6 +42,7 @@ typedef enum {
 typedef union {
     uint16_t quantity;
     cc_list_t* parameters;
+    cc_lexic_value_t* temp_value;
 } cc_symb_opt;
 
 typedef struct {

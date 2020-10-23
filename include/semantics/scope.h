@@ -46,13 +46,30 @@ extern cc_stack_t* scope;
 cc_stack_t* cc_init_global_scope(void);
 
 /**
- * Adds all symbols in the given list to the current scope.
+ * Pushes a new empty  scope to the stack. In other  words, create a new
+ * hash map and push it to the scope stack.
+ */
+void cc_push_new_scope(void);
+
+/**
+ * Pops the current scope into oblivion.
+ */
+void cc_pop_top_scope(void);
+
+/**
+ * Adds all symbols in the given list to the current global scope.
  *
- * @param stack the scope stack.
  * @param list the list of pairs between symbols and names to be added.
  *
- * @return a pointer to the scope stack.
+ * @see the global variable `scope`.
  */
-cc_stack_t* cc_add_list_scope(cc_stack_t* stack, cc_list_t* list);
+void cc_add_list_scope(cc_list_t* list);
+
+/**
+ * Adds the pair name and symbol to the current scope.
+ *
+ * @param pair the pair of types `char*` and `cc_symb_t*`
+ */
+void cc_add_pair_scope(cc_symb_pair_t* pair);
 
 #endif /* _SCOPE_H_ */

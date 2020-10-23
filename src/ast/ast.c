@@ -145,3 +145,11 @@ void cc_invert_number_literal(cc_literal_data_t* num_literal, cc_expression_t ex
 
     return;
 }
+
+void cc_update_global_ast(cc_ast_t* new_value)
+{
+    ast_g = new_value;
+    arvore = (void*)new_value;
+
+    return;
+}

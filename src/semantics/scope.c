@@ -31,20 +31,55 @@ cc_stack_t* cc_init_global_scope(void)
     return stack;
 }
 
-cc_stack_t* cc_add_list_scope(cc_stack_t* stack, cc_list_t* list)
+void cc_push_new_scope(void)
 {
-    if (stack == NULL)
-        stack = cc_init_global_scope();
+    cc_map_t* new_scope_map = cc_create_map(DEFAULT_MAP_SIZE);
 
-    cc_map_t*       top_scope = (cc_map_t*)cc_peek_stack(stack);
-    cc_symb_pair_t* aux;
+    cc_push_stack(scope, (void*)new_scope_map);
+
+    return;
+}
+
+void cc_pop_top_scope(void)
+{
+    cc_map_t* current_scope = cc_pop_stack(scope);
+
+    cc_free_map(current_scope);
+
+    return;
+}
+
+void cc_add_list_scope(cc_list_t* list)
+{
+    if (scope == NULL)
+        scope = cc_init_global_scope();
+
+    cc_map_t* top_scope = (cc_map_t*)cc_peek_stack(scope);
 
     while (list != NULL) {
-        aux = ((cc_symb_pair_t*)list->data);
+        cc_symb_pair_t* aux = ((cc_symb_pair_t*)list->data);
         cc_insert_entry_map(top_scope, aux->name, (void*)aux->symbol);
 
         list = list->next;
+
+        free(aux->name);
+        free(aux);
     }
 
-    return stack;
+    return;
+}
+
+void cc_add_pair_scope(cc_symb_pair_t* pair)
+{
+    if (scope == NULL)
+        scope = cc_init_global_scope();
+
+    cc_map_t* top_scope = (cc_map_t*)cc_peek_stack(scope);
+
+    cc_insert_entry_map(top_scope, pair->name, (void*)pair->symbol);
+
+    free(pair->name);
+    free(pair);
+
+    return;
 }
