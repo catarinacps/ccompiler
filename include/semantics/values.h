@@ -75,6 +75,19 @@ typedef struct {
 cc_symb_t* cc_create_symbol(cc_location_t location, cc_symb_kind_t kind);
 
 /**
+ * Frees  a heap-allocated  symbol type  given  a pointer  to it,  while
+ * taking in consideration its kind.
+ *
+ * @param symbol the pointer to the symbol.
+ */
+void cc_free_symbol(cc_symb_t* symbol);
+
+/**
+ * A void wrapper to the function above.
+ */
+void cc_free_symbol_void(void* pointer);
+
+/**
  * Given a valid  lexic value of a identifier, create  a name and symbol
  * pair. After operation, the given `lexic_value` pointer is invalid, as
  * it is free'd in the process.

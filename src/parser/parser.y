@@ -88,7 +88,7 @@
 %type <node> shift
 %type <node> return
 %type <node> call param_rep
-%type <node> block
+%type <node> block func_block
 
 %type <node> expr
 %type <node> op_tern op_log op_bws op_eq op_cmp
@@ -150,10 +150,9 @@ id_var_global
     ;
 
 function
-    : header block {
+    : header func_block {
         $1->kind = cc_func;
         $$ = cc_create_ast_node($1, NULL, $2, NULL);
-        cc_pop_top_scope();
     }
     ;
 
@@ -163,6 +162,8 @@ header
         $$ = $1->symbol->optional_info.temp_value;
         cc_init_func_symbol($1->symbol, $2);
         cc_add_pair_scope($1);
+        cc_push_new_scope();
+        cc_add_list_scope($2);
     }
     ;
 
@@ -186,20 +187,16 @@ def_params
     | TK_PR_CONST type TK_IDENTIFICADOR  { $$ = cc_create_symbol_pair($3, cc_symb_var); }
     ;
 
-block
+func_block
     : '{' '}'                            { $$ = NULL; }
-    | new_scope command_rep '}'          { $$ = $2; }
-    ;
-
-new_scope
-    : '{'                                { cc_push_new_scope(); }
+    | '{' command_rep close_scope        { $$ = $2; }
     ;
 
     /* ---------- COMMANDS ---------- */
 
     /* commands are chained through ; */
 command_rep
-    : command_rep command ';'    { $$ = cc_set_next_ast_node($1, $2); }
+    : command_rep command ';'            { $$ = cc_set_next_ast_node($1, $2); }
     | command ';'
     ;
 
@@ -212,6 +209,19 @@ command
     | return
     | call
     | block
+    ;
+
+block
+    : '{' '}'                            { $$ = NULL; }
+    | new_scope command_rep close_scope  { $$ = $2; }
+    ;
+
+new_scope
+    : '{' { cc_push_new_scope(); }
+    ;
+
+close_scope
+    : '}' { cc_pop_top_scope(); }
     ;
 
 atrib
@@ -300,7 +310,8 @@ param_rep
     /* ---------- EXPRESSIONS ---------- */
 
     /* the expression rules are implemented following precedence orders */
-expr: op_tern
+expr
+    : op_tern
     ;
 
 op_tern

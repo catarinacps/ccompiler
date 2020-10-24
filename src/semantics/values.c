@@ -24,6 +24,28 @@ cc_symb_t* cc_create_symbol(cc_location_t location, cc_symb_kind_t kind)
     return new_symb;
 }
 
+void cc_free_symbol(cc_symb_t* symbol)
+{
+    switch (symbol->kind) {
+    case cc_symb_func:
+        cc_free_list(symbol->optional_info.parameters);
+        break;
+    default:
+        break;
+    }
+
+    free(symbol);
+
+    return;
+}
+
+void cc_free_symbol_void(void* pointer)
+{
+    cc_free_symbol((cc_symb_t*)pointer);
+
+    return;
+}
+
 cc_symb_pair_t* cc_create_symbol_pair(cc_lexic_value_t* lexic_value, cc_symb_kind_t kind)
 {
     cc_symb_t*      new_symbol = cc_create_symbol(lexic_value->location, kind);

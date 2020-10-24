@@ -24,7 +24,7 @@ cc_stack_t* scope = NULL;
 cc_stack_t* cc_init_global_scope(void)
 {
     cc_stack_t* stack = cc_create_stack(128);
-    cc_map_t*   map   = cc_create_map(DEFAULT_MAP_SIZE);
+    cc_map_t*   map   = cc_create_map(DEFAULT_MAP_SIZE, &cc_free_symbol_void);
 
     cc_push_stack(stack, (void*)map);
 
@@ -33,7 +33,7 @@ cc_stack_t* cc_init_global_scope(void)
 
 void cc_push_new_scope(void)
 {
-    cc_map_t* new_scope_map = cc_create_map(DEFAULT_MAP_SIZE);
+    cc_map_t* new_scope_map = cc_create_map(DEFAULT_MAP_SIZE, &cc_free_symbol_void);
 
     cc_push_stack(scope, (void*)new_scope_map);
 

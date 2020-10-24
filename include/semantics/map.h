@@ -42,6 +42,7 @@ typedef struct {
     uint32_t size; /** The size of this map. */
     uint32_t count; /** How many elements are occupied in this map. */
     cc_map_node_t** items; /** Pointer to the elements of the map. */
+    void (*custom_free)(void*); /** Cleaning function to the elements of the map */
 } cc_map_t;
 
 /* --------------------------------------------------------------------------- */
@@ -55,7 +56,7 @@ typedef struct {
  *
  * @return a pointer to the just created map.
  */
-cc_map_t* cc_create_map(uint32_t size);
+cc_map_t* cc_create_map(uint32_t size, void (*custom_free)(void*));
 
 /**
  * Frees a hash map.
