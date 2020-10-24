@@ -53,10 +53,14 @@ typedef struct {
  * the parameter `size`.
  *
  * @param size the size of the map.
+ * @param custom_free the custom free function that will be used to free
+ *                    the values when necessary.
  *
  * @return a pointer to the just created map.
  */
-cc_map_t* cc_create_map(uint32_t size, void (*custom_free)(void*));
+cc_map_t* cc_create_map(
+    uint32_t size,
+    void   (*custom_free)(void*));
 
 /**
  * Frees a hash map.
@@ -74,7 +78,10 @@ void cc_free_map(cc_map_t* pointer);
  *
  * @return a boolean indicating success.
  */
-bool cc_insert_entry_map(cc_map_t* map, char const* key, void* value);
+bool cc_insert_entry_map(
+    cc_map_t*   map,
+    char const* key,
+    void*       value);
 
 /**
  * Indexes the  map for  the given  key. If the  key doesn't  exist, the
@@ -85,7 +92,9 @@ bool cc_insert_entry_map(cc_map_t* map, char const* key, void* value);
  *
  * @return the pointer to the value of the key or `NULL` on failure.
  */
-void* cc_get_entry_map(cc_map_t* map, char const* key);
+void* cc_get_entry_map(
+    cc_map_t*   map,
+    char const* key);
 
 /**
  * Deletes a map node from the given character key.
@@ -93,6 +102,8 @@ void* cc_get_entry_map(cc_map_t* map, char const* key);
  * @param map the map to delete from.
  * @param key the key we're looking to delete.
  */
-void cc_delete_map_entry(cc_map_t* map, char const* key);
+void cc_delete_map_entry(
+    cc_map_t*   map,
+    char const* key);
 
 #endif /* _MAP_H_ */

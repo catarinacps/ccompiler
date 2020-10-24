@@ -13,7 +13,9 @@
 
 #include "utils/debug.h"
 
-void cc_die(const char* message, error_t code)
+void cc_die(
+    char const* message,
+    error_t     code)
 {
     perror(message);
     exit(code);

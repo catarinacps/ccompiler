@@ -16,18 +16,26 @@
 /* declaration and definition of `ast_g` global */
 cc_ast_t* ast_g = NULL;
 
-cc_lexic_value_t* cc_create_lexic_value(cc_node_data_t data, cc_node_data_kind_t kind, cc_location_t loc)
+cc_lexic_value_t* cc_create_lexic_value(
+    cc_node_data_t      data,
+    cc_node_data_kind_t kind,
+    cc_type_t           type,
+    cc_location_t       loc)
 {
     cc_lexic_value_t* pointer = (cc_lexic_value_t*)cc_try_malloc(sizeof(cc_lexic_value_t));
 
     pointer->data     = data;
     pointer->location = loc;
     pointer->kind     = kind;
+    pointer->type     = type;
 
     return pointer;
 }
 
-cc_ast_t* cc_create_ast_node(cc_lexic_value_t* content, cc_ast_t* next, ...)
+cc_ast_t* cc_create_ast_node(
+    cc_lexic_value_t* content,
+    cc_ast_t*         next,
+    ...                   )
 {
     va_list ap, aux;
     va_start(aux, next);
@@ -63,7 +71,9 @@ cc_ast_t* cc_create_ast_node(cc_lexic_value_t* content, cc_ast_t* next, ...)
     return pointer;
 }
 
-cc_ast_t* cc_set_next_ast_node(cc_ast_t* first, cc_ast_t* second)
+cc_ast_t* cc_set_next_ast_node(
+    cc_ast_t* first,
+    cc_ast_t* second)
 {
     if (first == NULL)
         return second;
@@ -92,8 +102,8 @@ void cc_free_lexic_value(cc_lexic_value_t* value)
         free(value->data.id);
         break;
     case cc_lit:
-        if (value->data.lit.type == cc_type_string)
-            free(value->data.lit.value.string);
+        if (value->type == cc_type_string)
+            free(value->data.lit.string);
         break;
     default:
         break;
@@ -133,7 +143,10 @@ void cc_free_ast(cc_ast_t* ast)
     return;
 }
 
-void cc_invert_number_literal(cc_literal_data_t* num_literal, cc_expression_t expr, cc_type_t type)
+void cc_invert_number_literal(
+    cc_literal_t*   num_literal,
+    cc_expression_t expr,
+    cc_type_t       type)
 {
     /* do nothing if the given literal is of the incorrect type */
     if (expr == cc_expr_un_sign_neg) {

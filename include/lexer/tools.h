@@ -72,6 +72,8 @@ cc_location_t cc_match_location(void);
  * @param text the input character array.
  * @param match_length the size of the input character array.
  */
-void cc_update_line_buffer(char* text, size_t match_length);
+void cc_update_line_buffer(
+    char*  text,
+    size_t match_length);
 
 #endif /* _TOOLS_H_ */

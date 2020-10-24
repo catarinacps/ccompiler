@@ -36,7 +36,9 @@ static inline uint32_t cc_hash(char const* key);
  *
  * @return a pointer to the node, allocated in dynamic memory.
  */
-static inline cc_map_node_t* cc_create_entry_map(char const* key, void* value);
+static inline cc_map_node_t* cc_create_entry_map(
+    char const* key,
+    void*       value);
 
 /**
  * Frees all entries in the collision list, considering `pointer` as the
@@ -45,7 +47,9 @@ static inline cc_map_node_t* cc_create_entry_map(char const* key, void* value);
  * @param pointer a pointer to the node you wish to free both it and its collision list.
  * @param custom_free the custom (or not) free function to free the value of said node(s).
  */
-static inline void cc_free_entry_list_map(cc_map_node_t* pointer, void (*custom_free)(void*));
+static inline void cc_free_entry_list_map(
+    cc_map_node_t* pointer,
+    void         (*custom_free)(void*));
 
 /**
  * Frees a map entry.
@@ -53,7 +57,9 @@ static inline void cc_free_entry_list_map(cc_map_node_t* pointer, void (*custom_
  * @param pointer a pointer to the node you wish to free.
  * @param custom_free the custom (or not) free function to free the value of said node.
  */
-static inline void cc_free_entry_map(cc_map_node_t* pointer, void (*custom_free)(void*));
+static inline void cc_free_entry_map(
+    cc_map_node_t* pointer,
+    void         (*custom_free)(void*));
 
 /**
  * Adds `new_item` to the collision list (or bucket) of `existing_item`.
@@ -61,7 +67,9 @@ static inline void cc_free_entry_map(cc_map_node_t* pointer, void (*custom_free)
  * @param existing_item the first item added to some index, is the start of the list.
  * @param new_item the item to be added to the collision list of this index.
  */
-static inline void cc_handle_collision_map(cc_map_node_t* existing_item, cc_map_node_t* new_item);
+static inline void cc_handle_collision_map(
+    cc_map_node_t* existing_item,
+    cc_map_node_t* new_item);
 
 /* --------------------------------------------------------------------------- */
 /* Function definitions: */
@@ -79,7 +87,9 @@ uint32_t cc_hash(char const* key)
     return hash;
 }
 
-cc_map_node_t* cc_create_entry_map(char const* key, void* value)
+cc_map_node_t* cc_create_entry_map(
+    char const* key,
+    void*       value)
 {
     cc_map_node_t* node = (cc_map_node_t*)cc_try_malloc(sizeof(cc_map_node_t));
 
@@ -90,7 +100,9 @@ cc_map_node_t* cc_create_entry_map(char const* key, void* value)
     return node;
 }
 
-cc_map_t* cc_create_map(uint32_t size, void (*custom_free)(void*))
+cc_map_t* cc_create_map(
+    uint32_t size,
+    void   (*custom_free)(void*))
 {
     cc_map_t* map = (cc_map_t*)cc_try_malloc(sizeof(cc_map_t));
 
@@ -102,7 +114,9 @@ cc_map_t* cc_create_map(uint32_t size, void (*custom_free)(void*))
     return map;
 }
 
-void cc_free_entry_list_map(cc_map_node_t* pointer, void (*custom_free)(void*))
+void cc_free_entry_list_map(
+    cc_map_node_t* pointer,
+    void         (*custom_free)(void*))
 {
     if (pointer->next != NULL)
         cc_free_entry_list_map(pointer->next, custom_free);
@@ -112,7 +126,9 @@ void cc_free_entry_list_map(cc_map_node_t* pointer, void (*custom_free)(void*))
     return;
 }
 
-void cc_free_entry_map(cc_map_node_t* pointer, void (*custom_free)(void*))
+void cc_free_entry_map(
+    cc_map_node_t* pointer,
+    void         (*custom_free)(void*))
 {
     (*custom_free)(pointer->value);
     free(pointer->key);
@@ -137,7 +153,10 @@ void cc_free_map(cc_map_t* pointer)
     return;
 }
 
-bool cc_insert_entry_map(cc_map_t* map, char const* key, void* value)
+bool cc_insert_entry_map(
+    cc_map_t*   map,
+    char const* key,
+    void*       value)
 {
     if (map == NULL || key == NULL)
         return false;
@@ -170,7 +189,9 @@ bool cc_insert_entry_map(cc_map_t* map, char const* key, void* value)
     return success;
 }
 
-void* cc_get_entry_map(cc_map_t* map, char const* key)
+void* cc_get_entry_map(
+    cc_map_t*   map,
+    char const* key)
 {
     if (map == NULL || key == NULL)
         return NULL;
@@ -183,7 +204,9 @@ void* cc_get_entry_map(cc_map_t* map, char const* key)
     return item != NULL ? item->value : NULL;
 }
 
-void cc_handle_collision_map(cc_map_node_t* existing_item, cc_map_node_t* new_item)
+void cc_handle_collision_map(
+    cc_map_node_t* existing_item,
+    cc_map_node_t* new_item)
 {
     while (existing_item->next != NULL)
         existing_item = existing_item->next;
@@ -193,7 +216,9 @@ void cc_handle_collision_map(cc_map_node_t* existing_item, cc_map_node_t* new_it
     return;
 }
 
-void cc_delete_map_entry(cc_map_t* map, char const* key)
+void cc_delete_map_entry(
+    cc_map_t*   map,
+    char const* key)
 {
     if (map == NULL || key == NULL)
         return;

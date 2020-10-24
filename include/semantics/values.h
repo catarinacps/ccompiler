@@ -72,7 +72,9 @@ typedef struct {
  *
  * @see the header "lexer/location.h".
  */
-cc_symb_t* cc_create_symbol(cc_location_t location, cc_symb_kind_t kind);
+cc_symb_t* cc_create_symbol(
+    cc_location_t  location,
+    cc_symb_kind_t kind);
 
 /**
  * Frees  a heap-allocated  symbol type  given  a pointer  to it,  while
@@ -97,7 +99,9 @@ void cc_free_symbol_void(void* pointer);
  *
  * @return a `cc_symb_t` and `char*` pair.
  */
-cc_symb_pair_t* cc_create_symbol_pair(cc_lexic_value_t* lexic_value, cc_symb_kind_t kind);
+cc_symb_pair_t* cc_create_symbol_pair(
+    cc_lexic_value_t* lexic_value,
+    cc_symb_kind_t    kind);
 
 /**
  * Given an existing symbol, initialize its type parameter.
@@ -107,7 +111,9 @@ cc_symb_pair_t* cc_create_symbol_pair(cc_lexic_value_t* lexic_value, cc_symb_kin
  *
  * @return an indication of success.
  */
-bool cc_init_type_symbol(cc_symb_t* symbol, cc_type_t type);
+bool cc_init_type_symbol(
+    cc_symb_t* symbol,
+    cc_type_t  type);
 
 /**
  * Given a list of pairs of  symbols and names, initialize them with the
@@ -118,7 +124,9 @@ bool cc_init_type_symbol(cc_symb_t* symbol, cc_type_t type);
  *
  * @return the pointer start of the list.
  */
-cc_list_t* cc_init_type_list_symbols(cc_list_t* list, cc_type_t type);
+cc_list_t* cc_init_type_list_symbols(
+    cc_list_t* list,
+    cc_type_t  type);
 
 /**
  * Initializes a symbol of an array, given an already existing symbol.
@@ -126,7 +134,9 @@ cc_list_t* cc_init_type_list_symbols(cc_list_t* list, cc_type_t type);
  * @param symbol the symbol to add info to.
  * @param lexic_value lexic value of the array size integer.
  */
-void cc_init_array_symbol(cc_symb_t* symbol, cc_lexic_value_t* lexic_value);
+void cc_init_array_symbol(
+    cc_symb_t*        symbol,
+    cc_lexic_value_t* lexic_value);
 
 /**
  * Initializes a symbol of a function, given an already existing symbol.
@@ -134,7 +144,9 @@ void cc_init_array_symbol(cc_symb_t* symbol, cc_lexic_value_t* lexic_value);
  * @param symbol the symbol to add info to.
  * @param names the names of the parameters, to be used as keys.
  */
-void cc_init_func_symbol(cc_symb_t* symbol, cc_list_t* parameters);
+void cc_init_func_symbol(
+    cc_symb_t* symbol,
+    cc_list_t* parameters);
 
 /**
  * Initializes a symbol of a string, given an already existing symbol.
@@ -142,6 +154,8 @@ void cc_init_func_symbol(cc_symb_t* symbol, cc_list_t* parameters);
  * @param symbol the symbol to add info to.
  * @param lenght the lenght of the string value.
  */
-void cc_init_string_symbol(cc_symb_t* symbol, uint32_t lenght);
+void cc_init_string_symbol(
+    cc_symb_t* symbol,
+    uint32_t   lenght);
 
 #endif /* _VALUES_H_ */

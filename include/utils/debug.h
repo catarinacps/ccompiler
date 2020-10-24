@@ -53,6 +53,8 @@ typedef unsigned short error_t;
  * @param message the string literal to print.
  * @param code the error code to throw.
  */
-void cc_die(const char* message, error_t code);
+void cc_die(
+    char const* message,
+    error_t     code);
 
 #endif /* _DEBUG_H_ */

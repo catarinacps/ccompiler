@@ -52,7 +52,9 @@ bool cc_is_empty_stack(cc_stack_t* stack)
     return stack->top == 0;
 }
 
-bool cc_push_stack(cc_stack_t* stack, void* item)
+bool cc_push_stack(
+    cc_stack_t* stack,
+    void*       item)
 {
     if (stack == NULL || item == NULL)
         return false;

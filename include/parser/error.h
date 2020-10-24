@@ -34,7 +34,9 @@
  *
  * @return nothing
  */
-void yyerror(char const* s, ...);
+void yyerror(
+    char const* s,
+    ...         );
 
 /**
  * Allocates and returns a pointer to a string that underlines a given
@@ -46,6 +48,9 @@ void yyerror(char const* s, ...);
  *
  * @return a pointer to the generated string
  */
-char* cc_error_underline(size_t size, unsigned int start, unsigned int end);
+char* cc_error_underline(
+    size_t       size,
+    unsigned int start,
+    unsigned int end);
 
 #endif /* _ERROR_H_ */

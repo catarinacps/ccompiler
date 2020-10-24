@@ -28,7 +28,9 @@ void cc_free_list(cc_list_t* list)
     return;
 }
 
-cc_list_t* cc_insert_list(cc_list_t* list, void* item)
+cc_list_t* cc_insert_list(
+    cc_list_t* list,
+    void*      item)
 {
     cc_list_t* ret = list;
 
@@ -47,7 +49,9 @@ cc_list_t* cc_insert_list(cc_list_t* list, void* item)
     return ret;
 }
 
-cc_list_t* cc_append_list(cc_list_t* list, void* item)
+cc_list_t* cc_append_list(
+    cc_list_t* list,
+    void*      item)
 {
     cc_list_t* new_node = cc_create_list();
 

@@ -40,7 +40,9 @@ typedef struct cc_list_s {
  *
  * @return the associated data.
  */
-static inline void* cc_access_list(cc_list_t* list, uint32_t index)
+static inline void* cc_access_list(
+    cc_list_t* list,
+    uint32_t   index)
 {
     for (uint32_t i = 0; i < index; i++)
         list = list->next;
@@ -70,7 +72,9 @@ void cc_free_list(cc_list_t* list);
  *
  * @return the start of the list.
  */
-cc_list_t* cc_insert_list(cc_list_t* list, void* item);
+cc_list_t* cc_insert_list(
+    cc_list_t* list,
+    void*      item);
 
 /**
  * Append an item to the start of the list.
@@ -80,6 +84,8 @@ cc_list_t* cc_insert_list(cc_list_t* list, void* item);
  *
  * @return the start of the list.
  */
-cc_list_t* cc_append_list(cc_list_t* list, void* item);
+cc_list_t* cc_append_list(
+    cc_list_t* list,
+    void*      item);
 
 #endif /* _LIST_H_ */

@@ -82,11 +82,6 @@ typedef union {
     int integer;
     char character;
     bool boolean;
-} cc_literal_data_t;
-
-typedef struct {
-    cc_type_t type;
-    cc_literal_data_t value;
 } cc_literal_t;
 
 typedef enum {
@@ -109,6 +104,7 @@ typedef struct {
     cc_node_data_t data;
     cc_node_data_kind_t kind;
     cc_location_t location;
+    cc_type_t type;
 } cc_lexic_value_t;
 
 typedef struct cc_ast_s {
@@ -131,13 +127,18 @@ extern void*     arvore;
  *
  * @param data the new lexic value data (a union, check above).
  * @param kind the type of node, an enum.
+ * @param type the type of the given lexic value.
  * @param loc the location of match.
  *
  * @return the address of the created `cc_lexic_value_t`.
  *
  * @see the header "lexer/location.h".
  */
-cc_lexic_value_t* cc_create_lexic_value(cc_node_data_t data, cc_node_data_kind_t kind, cc_location_t loc);
+cc_lexic_value_t* cc_create_lexic_value(
+    cc_node_data_t      data,
+    cc_node_data_kind_t kind,
+    cc_type_t           type,
+    cc_location_t       loc);
 
 /**
  * Creates a  new AST  node in  dynamic memory.  The last  argument must
@@ -145,11 +146,14 @@ cc_lexic_value_t* cc_create_lexic_value(cc_node_data_t data, cc_node_data_kind_t
  *
  * @param content a pointer to the lexic value you wish to assign to the node.
  * @param next a pointer to the next command, if there is any.
- * @param elipse a list of addresses to the children of this node, followed by a `NULL`.
+ * @param elipse a list of addresses to the children of this node, ALWAYS terminated by a `NULL`.
  *
  * @return the address of the created `cc_ast_t`.
  */
-cc_ast_t* cc_create_ast_node(cc_lexic_value_t* content, cc_ast_t* next, ...);
+cc_ast_t* cc_create_ast_node(
+    cc_lexic_value_t* content,
+    cc_ast_t*         next,
+    ...                  );
 
 /**
  * Given two  nodes, set the  second node as  the next in  the (possible
@@ -161,7 +165,9 @@ cc_ast_t* cc_create_ast_node(cc_lexic_value_t* content, cc_ast_t* next, ...);
  *
  * @return the first node in the list.
  */
-cc_ast_t* cc_set_next_ast_node(cc_ast_t* first, cc_ast_t* second);
+cc_ast_t* cc_set_next_ast_node(
+    cc_ast_t* first,
+    cc_ast_t* second);
 
 /**
  * Frees a lexic value type, given a pointer to it.
@@ -188,10 +194,15 @@ void cc_free_ast(cc_ast_t* ast);
  * Inverts the signal of the given `cc_literal_t` if it's a numeric literal.
  *
  * @param num_literal the numeric literal to be inverted.
+ * @param expr the (hopefully) unary expression whose logic to follow.
+ * @param type the type of the literal.
  *
  * @return an updated copy of the numeric literal.
  */
-void cc_invert_number_literal(cc_literal_data_t* num_literal, cc_expression_t expr, cc_type_t type);
+void cc_invert_number_literal(
+    cc_literal_t*   num_literal,
+    cc_expression_t expr,
+    cc_type_t       type);
 
 /**
  * Function  that  encapsulates  the  update  of  the  global  variables

@@ -13,7 +13,9 @@
 
 #include "semantics/values.h"
 
-cc_symb_t* cc_create_symbol(cc_location_t location, cc_symb_kind_t kind)
+cc_symb_t* cc_create_symbol(
+    cc_location_t  location,
+    cc_symb_kind_t kind)
 {
     cc_symb_t* new_symb = (cc_symb_t*)cc_try_malloc(sizeof(cc_symb_t));
 
@@ -46,7 +48,9 @@ void cc_free_symbol_void(void* pointer)
     return;
 }
 
-cc_symb_pair_t* cc_create_symbol_pair(cc_lexic_value_t* lexic_value, cc_symb_kind_t kind)
+cc_symb_pair_t* cc_create_symbol_pair(
+    cc_lexic_value_t* lexic_value,
+    cc_symb_kind_t    kind)
 {
     cc_symb_t*      new_symbol = cc_create_symbol(lexic_value->location, kind);
     cc_symb_pair_t* ret        = (cc_symb_pair_t*)cc_try_malloc(sizeof(cc_symb_pair_t));
@@ -63,7 +67,9 @@ cc_symb_pair_t* cc_create_symbol_pair(cc_lexic_value_t* lexic_value, cc_symb_kin
     return ret;
 }
 
-bool cc_init_type_symbol(cc_symb_t* symbol, cc_type_t type)
+bool cc_init_type_symbol(
+    cc_symb_t* symbol,
+    cc_type_t  type)
 {
     if (symbol->type != cc_type_undef && symbol->type != type)
         return false;
@@ -93,7 +99,9 @@ bool cc_init_type_symbol(cc_symb_t* symbol, cc_type_t type)
     return true;
 }
 
-cc_list_t* cc_init_type_list_symbols(cc_list_t* list, cc_type_t type)
+cc_list_t* cc_init_type_list_symbols(
+    cc_list_t* list,
+    cc_type_t  type)
 {
     for (cc_list_t* i = list; i != NULL; i = i->next)
         if (cc_init_type_symbol(((cc_symb_pair_t*)i->data)->symbol, type) == false)
@@ -102,19 +110,23 @@ cc_list_t* cc_init_type_list_symbols(cc_list_t* list, cc_type_t type)
     return list;
 }
 
-void cc_init_array_symbol(cc_symb_t* symbol, cc_lexic_value_t* lexic_value)
+void cc_init_array_symbol(
+    cc_symb_t*        symbol,
+    cc_lexic_value_t* lexic_value)
 {
     if (symbol == NULL || symbol->kind != cc_symb_array)
         return;
 
-    symbol->optional_info.quantity = lexic_value->data.lit.value.integer;
+    symbol->optional_info.quantity = lexic_value->data.lit.integer;
 
     cc_free_lexic_value(lexic_value);
 
     return;
 }
 
-void cc_init_func_symbol(cc_symb_t* symbol, cc_list_t* parameters)
+void cc_init_func_symbol(
+    cc_symb_t* symbol,
+    cc_list_t* parameters)
 {
     if (symbol == NULL || parameters == NULL || symbol->kind != cc_symb_func)
         return;
@@ -124,7 +136,9 @@ void cc_init_func_symbol(cc_symb_t* symbol, cc_list_t* parameters)
     return;
 }
 
-void cc_init_string_symbol(cc_symb_t* symbol, uint32_t lenght)
+void cc_init_string_symbol(
+    cc_symb_t* symbol,
+    uint32_t   lenght)
 {
     if (symbol == NULL || symbol->type != cc_type_string)
         return;

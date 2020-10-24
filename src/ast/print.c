@@ -37,21 +37,21 @@ void cc_print_ast_node(cc_ast_t const* restrict node)
         printf("%s", node->content->data.id);
         break;
     case cc_lit: {
-        switch (node->content->data.lit.type) {
+        switch (node->content->type) {
         case cc_type_string:
-            printf("%s", node->content->data.lit.value.string);
+            printf("%s", node->content->data.lit.string);
             break;
         case cc_type_char:
-            printf("%c", node->content->data.lit.value.character);
+            printf("%c", node->content->data.lit.character);
             break;
         case cc_type_int:
-            printf("%d", node->content->data.lit.value.integer);
+            printf("%d", node->content->data.lit.integer);
             break;
         case cc_type_float:
-            printf("%.5f", node->content->data.lit.value.floating);
+            printf("%.5f", node->content->data.lit.floating);
             break;
         case cc_type_bool:
-            printf("%s", node->content->data.lit.value.boolean ? "true" : "false");
+            printf("%s", node->content->data.lit.boolean ? "true" : "false");
             break;
         case cc_type_undef:
             break;
