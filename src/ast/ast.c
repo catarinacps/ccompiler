@@ -90,6 +90,16 @@ cc_ast_t* cc_set_next_ast_node(
     return first;
 }
 
+cc_ast_t* cc_get_nth_child_node(
+    cc_ast_t* parent,
+    uint8_t   ordinal)
+{
+    if (ordinal > parent->num_children || ordinal == 0)
+        return NULL;
+
+    return parent->children[ordinal - 1];
+}
+
 void cc_free_lexic_value(cc_lexic_value_t* value)
 {
     if (value == NULL)

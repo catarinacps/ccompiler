@@ -170,6 +170,20 @@ cc_ast_t* cc_set_next_ast_node(
     cc_ast_t* second);
 
 /**
+ * Gets the  Nth child of the  given parent node. Returns  `NULL` if the
+ * given ordinal  is greater than  the number  of children of  the given
+ * node.
+ *
+ * @param parent the parent node.
+ * @param ordinal the ordinal position of the child.
+ *
+ * @return a valid pointer to a node if successful.
+ */
+cc_ast_t* cc_get_nth_child_node(
+    cc_ast_t* parent,
+    uint8_t   ordinal);
+
+/**
  * Frees a lexic value type, given a pointer to it.
  *
  * @param value the pointer to the value.

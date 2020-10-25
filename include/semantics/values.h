@@ -158,4 +158,16 @@ void cc_init_string_symbol(
     cc_symb_t* symbol,
     uint32_t   lenght);
 
+/**
+ * Given an existing symbol, check if it matches the given kind.
+ *
+ * @param symbol the symbol to check.
+ * @param kind the kind we'd want that symbol to be of.
+ *
+ * @return a boolean indicating if it IS of the given kind.
+ */
+bool cc_check_kind_symbol(
+    cc_symb_t*       symbol,
+    cc_symb_kind_t   kind);
+
 #endif /* _VALUES_H_ */

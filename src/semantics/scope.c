@@ -83,3 +83,46 @@ void cc_add_pair_scope(cc_symb_pair_t* pair)
 
     return;
 }
+
+cc_query_answer_t cc_check_id_existence_scope(char const* name)
+{
+    cc_query_answer_t ret       = { cc_undeclared, NULL };
+    cc_stack_t*       aux_stack = cc_create_stack(scope->size);
+    bool              found     = false;
+    bool              current   = true;
+
+    while (!cc_is_empty_stack(scope) && found != true) {
+        cc_map_t*  current_scope = cc_pop_stack(scope);
+        cc_symb_t* symbol        = cc_get_entry_map(current_scope, name);
+
+        if (symbol != NULL) {
+            ret.where  = current == true ? cc_declared_current : cc_declared_previous;
+            ret.symbol = symbol;
+
+            found = true;
+        }
+
+        cc_push_stack(aux_stack, current_scope);
+        current = false;
+    }
+
+    while (!cc_is_empty_stack(aux_stack))
+        cc_push_stack(scope, cc_pop_stack(aux_stack));
+
+    cc_free_stack(aux_stack);
+
+    return ret;
+}
+
+void cc_check_name_usage_scope(
+    char const*    name,
+    cc_symb_kind_t kind)
+{
+    cc_query_answer_t answer = cc_check_id_existence_scope(name);
+
+    if (answer.where == cc_undeclared) {
+        // error!
+    } else if (!cc_check_kind_symbol(answer.symbol, kind)) {
+        // error!
+    }
+}

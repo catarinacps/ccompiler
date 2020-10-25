@@ -23,10 +23,23 @@
 #ifndef _SCOPE_H_
 #define _SCOPE_H_
 
+#include <stdbool.h>
+
 #include "semantics/list.h"
 #include "semantics/map.h"
 #include "semantics/stack.h"
 #include "semantics/values.h"
+
+typedef enum {
+    cc_declared_current,
+    cc_declared_previous,
+    cc_undeclared
+} cc_declaration_t;
+
+typedef struct {
+    cc_declaration_t where;
+    cc_symb_t* symbol;
+} cc_query_answer_t;
 
 /**
  * The  scope variable  is global,  as  everything in  Bison is  global.
@@ -71,5 +84,29 @@ void cc_add_list_scope(cc_list_t* list);
  * @param pair the pair of types `char*` and `cc_symb_t*`
  */
 void cc_add_pair_scope(cc_symb_pair_t* pair);
+
+/**
+ * Unwinds  the scope  stack  searching  for the  existance  of a  given
+ * identifier  node. In  other words,  we check  to see  if it  has been
+ * declared at any point.
+ *
+ * @param name the name of the identifier.
+ *
+ * @return the  query answer, containing  where it was declared  and the
+ *         symbol itself.
+ */
+cc_query_answer_t cc_check_id_existence_scope(char const* name);
+
+/**
+ * Checks the  usage of the  given name in  the current scope  stack and
+ * compares it to the expected kind  of declaration that the name should
+ * be bound to.
+ *
+ * @param name the name of the identifier.
+ * @param kind the type of declaration (variable, array or function).
+ */
+void cc_check_name_usage_scope(
+    char const*    name,
+    cc_symb_kind_t kind);
 
 #endif /* _SCOPE_H_ */

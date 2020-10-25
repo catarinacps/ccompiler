@@ -149,3 +149,10 @@ void cc_init_string_symbol(
 
     return;
 }
+
+bool cc_check_kind_symbol(
+    cc_symb_t*       symbol,
+    cc_symb_kind_t   kind)
+{
+    return symbol->kind == kind;
+}
