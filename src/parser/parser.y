@@ -146,7 +146,9 @@ id_var_global
         $$ = cc_create_symbol_pair($1, cc_symb_array);
         cc_init_array_symbol($$->symbol, $3);
     }
-    | TK_IDENTIFICADOR { $$ = cc_create_symbol_pair($1, cc_symb_var); }
+    | TK_IDENTIFICADOR                    {
+        $$ = cc_create_symbol_pair($1, cc_symb_var);
+    }
     ;
 
 function
@@ -244,9 +246,16 @@ id_var_local_rep
 
     /* and they can be initialized (using <=) */
 id_var_local
-    : id                     { $$ = NULL; cc_free_ast_node($1); }
-    | id tk_cmd_init id      { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
-    | id tk_cmd_init literal { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
+    : TK_IDENTIFICADOR       {
+        $$ = NULL;
+        cc_free_ast_node($1);
+    }
+    | id tk_cmd_init id      {
+        $$ = cc_create_ast_node($2, NULL, $1, $3, NULL);
+    }
+    | id tk_cmd_init literal {
+        $$ = cc_create_ast_node($2, NULL, $1, $3, NULL);
+    }
     ;
 
 control_flow
@@ -256,7 +265,9 @@ control_flow
     ;
 
 if
-    : TK_PR_IF '(' expr ')' block { $$ = cc_create_ast_node($1, NULL, $3, $5, NULL); }
+    : TK_PR_IF '(' expr ')' block                  {
+        $$ = cc_create_ast_node($1, NULL, $3, $5, NULL);
+    }
     | TK_PR_IF '(' expr ')' block TK_PR_ELSE block {
         $$ = cc_create_ast_node($1, NULL, $3, $5, $7, NULL);
     }

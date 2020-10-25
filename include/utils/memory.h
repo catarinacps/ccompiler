@@ -1,4 +1,4 @@
-/** @file memory.h
+/** @file utils/memory.h
  * Memory related procedures
  *
  * @copyright (C) 2020 Henrique Silva
@@ -8,7 +8,7 @@
  *
  * @section LICENSE
  *
- * This file is subject to the terms and conditions defined in the file
+ * This file is subject to the  terms and conditions defined in the file
  * 'LICENSE', which is part of this source code package.
  *
  * @section DESCRIPTION
@@ -16,8 +16,8 @@
  * Wrappers over common dynamic memory management function.
  */
 
-#ifndef _MEMORY_H_
-#define _MEMORY_H_
+#ifndef _UTILS_MEMORY_H_
+#define _UTILS_MEMORY_H_
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,7 +32,9 @@
  *
  * @return the pointer to the reallocated memory block.
  */
-void* cc_try_realloc(void* pointer, size_t new_size);
+void* cc_try_realloc(
+    void*  pointer,
+    size_t new_size);
 
 /**
  * Tries to malloc the memory region, doing all required safety checks.
@@ -51,6 +53,8 @@ void* cc_try_malloc(size_t desired_size);
  *
  * @return the pointer to the memory block.
  */
-void* cc_try_calloc(size_t quantity, size_t size);
+void* cc_try_calloc(
+    size_t quantity,
+    size_t size);
 
-#endif /* _MEMORY_H_ */
+#endif /* _UTILS_MEMORY_H_ */
