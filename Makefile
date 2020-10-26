@@ -57,7 +57,7 @@ CFLAGS :=\
 	-Wshadow \
 	-Wunreachable-code
 #	Feature flags for the lex program
-LFLAGS := --nomain --yylineno
+LFLAGS := --yylineno
 #	Basic warnings for the yacc program
 YFLAGS := -Wall
 #	Lookup directories
@@ -67,17 +67,18 @@ INC := -I$(INC_DIR)
 #	- Command line interface flags:
 #	Release or debug build?
 ifeq ($(RELEASE),true)
-#	Turn on RELEASE #define
-CFLAGS += -DRELEASE
+#	Turn on RELEASE #define and off any warning flags
+CFLAGS := -DRELEASE
+YFLAGS :=
 #	Optimize on release
-OPT := -O3 -march=native
+OPT := -s -O3 -march=native -flto -funroll-loops
 else ifeq ($(DEBUG),true)
 #	If DEBUG is true, we'll turn on the debug flag and attach address
 #	sanitizer on the executables.
 CFLAGS += -g -fsanitize=address -DDEBUG
 LFLAGS += -d
 YFLAGS += --debug
-OPT := -O0
+OPT := -Og
 else
 #	Optimize if we aren't debugging
 OPT := -O2 -march=native
@@ -98,8 +99,8 @@ VERSION := etapa4
 #	Presumes that all "main" source files are in the root of SRC_DIR
 MAIN := $(wildcard $(SRC_DIR)/*.c)
 
-#	- Path to all final binaries:
-TARGET := $(MAIN:$(SRC_DIR)/%.c=$(OUT_DIR)/%)
+#	- Path to all final executable binaries:
+EXE := $(MAIN:$(SRC_DIR)/%.c=$(OUT_DIR)/%)
 
 #	- Yacc files:
 YSRC := $(shell find $(SRC_DIR) -name '*.y')
@@ -121,12 +122,21 @@ PDF := $(DOC_DIR)/$(VERSION).pdf
 GV  := $(YSRC:.tab.c=.gv)
 LOG := $(YSRC:.tab.c=.log)
 
+#	- Define build targets
+TARGET := $(LSRC) $(YSRC) $(EXE)
+
+#	- Add the report to the target if on release
+ifeq ($(RELEASE),true)
+TARGET += $(PDF)
+endif
+
 ################################################################################
 #	Rules:
 
 #	- Executables:
-$(TARGET): $(OUT_DIR)/%: $(SRC_DIR)/%.c $(OBJ)
+$(EXE): $(OUT_DIR)/%: $(SRC_DIR)/%.c $(OBJ)
 	$(CC) -o $@ $^ $(INC) $(CFLAGS) $(OPT) $(LIB)
+	ln -sf $(shell readlink -f $@) $(VERSION)
 
 #	- Generated lexer source:
 $(LSRC): %.yy.c: %.l
@@ -156,16 +166,12 @@ $(LOG): %.log: %.y
 	$(YACC) --report=all --report-file=$(DOC_DIR)/$(notdir $@) $<
 
 ################################################################################
-#	Targets:
+#	CLI make targets (or goals):
 
 .DEFAULT_GOAL = all
 
-#	Create a symlink in the expected executable location
-all: gen $(TARGET) $(PDF)
-	ln -sf $(shell readlink -f $(TARGET)) $(VERSION)
-
-#	Prerequisites are the wanted files
-gen: $(LSRC) $(YSRC)
+#	Build everything required
+all: $(TARGET)
 
 clean:
 	rm -rf $(OBJ_DIR)/* $(OUT_DIR)/* $(DOC_DIR)/*.{pdf,log} $(VERSION){,.tgz}
