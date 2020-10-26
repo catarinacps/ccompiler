@@ -246,7 +246,7 @@ id_var_local_rep
 
     /* and they can be initialized (using <=) */
 id_var_local
-    : TK_IDENTIFICADOR       {
+    : id                     {
         $$ = NULL;
         cc_free_ast_node($1);
     }

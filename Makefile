@@ -161,7 +161,7 @@ $(LOG): %.log: %.y
 .DEFAULT_GOAL = all
 
 #	Create a symlink in the expected executable location
-all: gen $(TARGET)
+all: gen $(TARGET) $(PDF)
 	ln -sf $(shell readlink -f $(TARGET)) $(VERSION)
 
 #	Prerequisites are the wanted files
