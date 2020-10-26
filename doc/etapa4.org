@@ -1,0 +1,98 @@
+# -*- mode: org; org-export-babel-evaluate: nil; coding: utf-8  -*-
+
+#+title: Relatório de Entrega
+#+subtitle: /INF01147 - Compiladores/
+#+options: toc:nil author:nil
+#+language: pt-br
+
+#+latex_class: article
+#+latex_class_options: [twocolumn, a4paper]
+
+#+latex_header: \usepackage[margin=1in]{geometry}
+#+latex_header: \usepackage{authblk}
+#+latex_header: \usepackage{titling}
+#+latex_header: \usepackage{palatino}
+#+latex_header: \usepackage{enumitem}
+#+latex_header: \usepackage{listings}
+#+latex_header: \usepackage{fancyvrb}
+#+latex_header: \usepackage{minted}
+#+latex_header: \setlength{\droptitle}{-1.5cm}
+#+latex_header: \author{Henrique Corrêa Pereira da Silva}
+#+latex_header: \affil[]{Instituto de Informática\\Universidade Federal do Rio Grande do Sul}
+#+latex_header: \affil[]{\normalsize\texttt{hcpsilva@inf.ufrgs.br}}
+#+latex_header: \lstset{basicstyle=\tiny}
+#+latex_header: \setminted{fontsize=\tiny}
+
+#+begin_abstract
+Nessa  etapa, ao  invés de  um relatório  feito em  cima de  um trabalho
+completo e funcional,  trago uma reflexão. Se não  estava esperando isso
+desse  documento,  sinta-se  livre   para  fechá-lo  agora  mesmo.  Aqui
+comentarei sobre as cargas horárias esperadas de um aluno da disciplina,
+e sobre o que achei dessa etapa em geral.
+#+end_abstract
+
+* Introdução
+
+Nessa quarta etapa do trabalho  de compiladores, que agora entrego tanto
+incompleta  quanto  atrasada,  me  questionei  sobre o  que  de  fato  é
+importante no processo  de aprendizado da disciplina.  Quero dizer, será
+que  uma  simples  etapa  de  um  trabalho  da  faculdade,  de  qualquer
+disciplina que seja, deveria demandar mais que 20h de dedicação do aluno
+que essa tenta completar? O velho  argumento de que todas as disciplinas
+da  nossa  área  estouram  facilmente  a  carga  horária  prevista  para
+atividades autônomas deveria ser considerado? Espero que, após a leitura
+desse documento, a minha visão sobre essas questões fique clara.
+
+* Um Esforço Simples
+
+Todos  passamos   dificuldades  para  aprender  e   para  aplicar  novos
+conceitos.  Alguns mais,  outros  menos, mas  o  ponto permanece:  todos
+passam horas para  entender qualquer assunto de maneira  a aplicá-lo com
+confiança. Eventualmente, com  prática vem experiência, e  a tarefa fica
+mais  simples. Esse  é o  processo  de aprendizado  humano. No  entanto,
+também  é parte  desse processo  a organização  das memórias  no cérebro
+humano. Adquirida a experiência, faz sentido guardar memórias sobre como
+foi difícil nosso aprendizado?
+
+É somente esperado que, após  certo tempo, se acabarmos esbarrando nesse
+conceito, veremos  ele de  sem lembrar da  dificuldade que  tivemos para
+aprender. Nos  parece trivial e,  logo, sem sentido sequer  imaginar que
+alguém poderia ter dificuldade para  aprender ou realizar dada tarefa. O
+nome dessa distorção cognitiva é "A maldição do conhecimento". Isso pode
+nos afetar ou afetar àqueles com quem temos contato negativamente.
+
+* Uma Só Etapa
+
+Agora  trago  um   pouco  de  experiência  pessoal:   passei  quase  30h
+trabalhando para tentar terminar essa  tarefa. É desnecessário dizer que
+esse processo foi bastante cansativo  e frustrante. Chega um momento que
+nós (alunos) nos perguntamos se era  de fato essa a intenção? Deveríamos
+estar tendo tanto trabalho? Será que  não sou o suficientemente bom para
+sequer  fazer um  simples programa  =C=?  Claro, são  nesses momentos  que
+perguntamos uns aos outros isso.
+
+Nenhum dos meus colegas tinha uma opinião diferente. A carga de trabalho
+dessa etapa  foi uma ordem  de grandeza maior  que a da  etapa anterior.
+Nesses dias  que passei  trabalhando, deixei  de fazer  quaisquer outras
+atividades acadêmicas na  esperança de chegar mais perto  do término. Em
+qualquer  momento de  descanso eu  pensava sobre  como eu  deveria estar
+programando. Não  é difícil imaginar como  isso pode vir a  ser danoso e
+estressante.
+
+* Conclusão
+
+Levanto duas opções: aumentar o número  de créditos da disciplina para 8
+ou 10 a fim de melhor representar a real carga horária dela ou ajustar o
+trabalho  a fim  de se  aproximar das  supostas 18h  totais de  trabalho
+autônomo. Sei que estou sozinho no meu grupo e, idealmente, eu teria uma
+dupla. Também não quis copiar o trabalho dos meus colegas, esperando que
+assim eu  aprenderia melhor. Talvez  eu tenha, mas quando  esse trabalho
+custa a minha dedicação na parte teórica da disciplina eu me pergunto se
+há porquê de passar por essa experiência.
+
+Pelo o que eu li da quinta  etapa, essa situação só tende a piorar. Isso
+me  entristece  profundamente, mas  não  serei  capaz de  terminar  esse
+trabalho  dessa maneira.  Entrego  essa  etapa feita  com  toda a  minha
+dedicação e trabalharei na próxima só após de ver as aulas e de realizar
+minhas  outras  tarefas  extracurriculares,  e,  nesse  esquema,  espero
+atingir nota o suficiente para um desempenho aceitável na disciplina.
