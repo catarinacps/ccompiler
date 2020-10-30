@@ -78,6 +78,7 @@ else ifeq ($(DEBUG),true)
 CFLAGS += -g -fsanitize=address -DDEBUG
 LFLAGS += -d
 YFLAGS += --debug
+#	Debug optimization
 OPT := -Og
 else
 #	Optimize if we aren't debugging
@@ -122,8 +123,12 @@ PDF := $(DOC_DIR)/$(VERSION).pdf
 GV  := $(YSRC:.tab.c=.gv)
 LOG := $(YSRC:.tab.c=.log)
 
+################################################################################
+#	File targets:
+
 #	- Define build targets
-TARGET := $(LSRC) $(YSRC) $(EXE)
+GEN	   := $(LSRC) $(YSRC)
+TARGET := $(GEN) $(EXE)
 
 #	- Add the report to the target if on release
 ifeq ($(RELEASE),true)
@@ -177,6 +182,10 @@ clean:
 	rm -rf $(OBJ_DIR)/* $(OUT_DIR)/* $(DOC_DIR)/*.{pdf,log} $(VERSION){,.tgz}
 	rm -f $(YSRC) $(YSRC:$(SRC_DIR)/%.c=$(INC_DIR)/%.h) $(LSRC)
 
+#	Automatically generated sources
+gen: $(GEN)
+
+#	Clean and rebuild everything
 redo: clean all
 
 #	There should be a script with the version name in the test dir

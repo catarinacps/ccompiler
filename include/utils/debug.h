@@ -21,31 +21,32 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 /**
  * All errors  are defined using  the 'error_t'  type, as an  attempt to
  * easily recognize parameters that intend to carry error codes.
  */
-typedef unsigned short error_t;
+typedef uint8_t cc_error_t;
 
-#define CC_ERR_UNDECLARED       ((error_t)10)
-#define CC_ERR_DECLARED         ((error_t)11)
-#define CC_ERR_VARIABLE         ((error_t)20)
-#define CC_ERR_VECTOR           ((error_t)21)
-#define CC_ERR_FUNCTION         ((error_t)22)
-#define CC_ERR_WRONG_TYPE       ((error_t)30)
-#define CC_ERR_STRING_TO_X      ((error_t)31)
-#define CC_ERR_CHAR_TO_X        ((error_t)32)
-#define CC_ERR_STRING_SIZE      ((error_t)33)
-#define CC_ERR_MISSING_ARGS     ((error_t)40)
-#define CC_ERR_EXCESS_ARGS      ((error_t)41)
-#define CC_ERR_WRONG_TYPE_ARGS  ((error_t)42)
-#define CC_ERR_WRONG_PAR_INPUT  ((error_t)50)
-#define CC_ERR_WRONG_PAR_OUTPUT ((error_t)51)
-#define CC_ERR_WRONG_PAR_RETURN ((error_t)52)
-#define CC_ERR_WRONG_PAR_SHIFT  ((error_t)53)
-#define CC_ERR_OOMEM            ((error_t)64)
-#define CC_ERR_HASH             ((error_t)65)
+#define CC_ERR_UNDECLARED       ((cc_error_t)10)
+#define CC_ERR_DECLARED         ((cc_error_t)11)
+#define CC_ERR_VARIABLE         ((cc_error_t)20)
+#define CC_ERR_VECTOR           ((cc_error_t)21)
+#define CC_ERR_FUNCTION         ((cc_error_t)22)
+#define CC_ERR_WRONG_TYPE       ((cc_error_t)30)
+#define CC_ERR_STRING_TO_X      ((cc_error_t)31)
+#define CC_ERR_CHAR_TO_X        ((cc_error_t)32)
+#define CC_ERR_STRING_SIZE      ((cc_error_t)33)
+#define CC_ERR_MISSING_ARGS     ((cc_error_t)40)
+#define CC_ERR_EXCESS_ARGS      ((cc_error_t)41)
+#define CC_ERR_WRONG_TYPE_ARGS  ((cc_error_t)42)
+#define CC_ERR_WRONG_PAR_INPUT  ((cc_error_t)50)
+#define CC_ERR_WRONG_PAR_OUTPUT ((cc_error_t)51)
+#define CC_ERR_WRONG_PAR_RETURN ((cc_error_t)52)
+#define CC_ERR_WRONG_PAR_SHIFT  ((cc_error_t)53)
+#define CC_ERR_OOMEM            ((cc_error_t)64)
+#define CC_ERR_HASH             ((cc_error_t)65)
 
 #ifdef VERBOSE
 #define V_PRINTF(f_, ...) printf((f_), ##__VA_ARGS__)
@@ -71,6 +72,6 @@ typedef unsigned short error_t;
  */
 void cc_die(
     char const* message,
-    error_t     code);
+    cc_error_t     code);
 
 #endif /* _UTILS_DEBUG_H_ */

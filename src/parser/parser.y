@@ -227,8 +227,17 @@ close_scope
     ;
 
 atrib
-    : id tk_cmd_atrib expr       { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
-    | id_index tk_cmd_atrib expr { $$ = cc_create_ast_node($2, NULL, $1, $3, NULL); }
+    : id tk_cmd_atrib expr       {
+        $$ = cc_create_ast_node($2, NULL, $1, $3, NULL);
+        cc_check_name_usage_scope($1->content->data.id, cc_symb_var);
+        /* TODO: check type of expr */
+    }
+    | id_index tk_cmd_atrib expr {
+        $$ = cc_create_ast_node($2, NULL, $1, $3, NULL);
+        cc_ast_t* id_node = cc_get_nth_child_node($1, 1);
+        cc_check_name_usage_scope(id_node->content->data.id, cc_symb_array);
+        /* TODO: check type of expr */
+    }
     ;
 
 var_local
@@ -327,6 +336,7 @@ expr
 
 op_tern
     : op_log
+
     | op_log '?' op_tern ':' op_tern {
         cc_lexic_value_t* node_content = cc_create_lexic_value(
             (cc_node_data_t) { .expr = cc_expr_tern },

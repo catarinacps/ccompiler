@@ -15,7 +15,7 @@
 
 void cc_die(
     char const* message,
-    error_t     code)
+    cc_error_t     code)
 {
     perror(message);
     exit(code);
