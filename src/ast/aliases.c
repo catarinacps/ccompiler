@@ -23,11 +23,7 @@ void exporta(void* raiz)
 void libera(void* raiz)
 {
     cc_free_ast((cc_ast_t*)raiz);
-
-    if (yylinebuf != NULL) {
-        free(yylinebuf);
-        yylinebuf_len = 0;
-    }
+    cc_free_list(yytextbuf);
 
     return;
 }

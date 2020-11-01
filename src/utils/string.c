@@ -1,4 +1,4 @@
-/** @file string.c
+/** @file utils/string.c
  *
  * @copyright (C) 2020 Henrique Silva
  *
@@ -13,7 +13,7 @@
 
 #include "utils/string.h"
 
-char* cc_convert_escape_codes(const char* input, size_t limit)
+char* cc_convert_escape_codes(char const* input, size_t limit)
 {
     if (limit < 2) {
         D_PRINTF("tried to expand escape codes of string of size %lu\n", limit);

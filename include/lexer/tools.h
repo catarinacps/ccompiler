@@ -25,6 +25,7 @@
 
 #include "lexer/location.h"
 #include "parser/parser.tab.h"
+#include "utils/list.h"
 #include "utils/memory.h"
 
 #ifndef VERBOSE
@@ -39,8 +40,7 @@
 
 extern int yylineno;
 
-extern char* yylinebuf;
-extern size_t yylinebuf_len;
+extern cc_list_t* yytextbuf;
 
 /**
  * Retrieves the line where the last token was recognized.
@@ -72,7 +72,7 @@ cc_location_t cc_match_location(void);
  * @param text the input character array.
  * @param match_length the size of the input character array.
  */
-void cc_update_line_buffer(
+void cc_update_text_buffer(
     char*  text,
     size_t match_length);
 

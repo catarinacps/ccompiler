@@ -1,4 +1,4 @@
-/** @file map.c
+/** @file utils/map.c
  *
  * @copyright (C) 2020 Henrique Silva
  *
@@ -11,7 +11,7 @@
  * 'LICENSE', which is part of this source code package.
  */
 
-#include "semantics/map.h"
+#include "utils/map.h"
 
 /* --------------------------------------------------------------------------- */
 /* Static declarations: */

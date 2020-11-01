@@ -1,4 +1,4 @@
-/** @file values.h
+/** @file semantics/values.h
  * Semantic values of a language.
  *
  * @copyright (C) 2020 Henrique Silva
@@ -17,8 +17,8 @@
  * used in the hash map.
  */
 
-#ifndef _VALUES_H_
-#define _VALUES_H_
+#ifndef _SEMANTICS_VALUES_H_
+#define _SEMANTICS_VALUES_H_
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -26,8 +26,8 @@
 
 #include "ast/ast.h"
 #include "lexer/location.h"
-#include "semantics/list.h"
 #include "semantics/types.h"
+#include "utils/list.h"
 #include "utils/memory.h"
 
 /* --------------------------------------------------------------------------- */
@@ -104,6 +104,19 @@ cc_symb_pair_t* cc_create_symbol_pair(
     cc_symb_kind_t    kind);
 
 /**
+ * Frees a  heap-allocated symbol-name pair.  Does not free  the symbol,
+ * but only the name.
+ *
+ * @param pair the pointer to the pair.
+ */
+void cc_free_symbol_pair(cc_symb_pair_t* pair);
+
+/**
+ * A void wrapper to the function above.
+ */
+void cc_free_symbol_pair_void(void* pointer);
+
+/**
  * Given an existing symbol, initialize its type parameter.
  *
  * @param symbol the symbol to add type info to.
@@ -170,4 +183,4 @@ bool cc_check_kind_symbol(
     cc_symb_t*       symbol,
     cc_symb_kind_t   kind);
 
-#endif /* _VALUES_H_ */
+#endif /* _SEMANTICS_VALUES_H_ */

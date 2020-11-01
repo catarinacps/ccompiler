@@ -14,11 +14,13 @@
 #include "semantics/error.h"
 
 void cc_semantic_error(
-    cc_error_t error,
-    uint16_t   num_locations,
+    cc_error_t   error,
+    unsigned int num_locations,
     ...                    )
 {
-    va_list       ap;
+    va_list ap;
+    va_start(ap, num_locations);
+
     cc_location_t loc[num_locations];
 
     for (uint16_t i = 0; i < num_locations; i++)
@@ -81,6 +83,13 @@ void cc_semantic_error(
 
     fputs("\n", stderr);
 
+    for (uint16_t i = 0; i < num_locations; i++)
+        loc[i] = va_arg(ap, cc_location_t);
+
     if (num_locations > 0)
         fprintf(stderr, "%d:%d: error: ", loc[0].line, loc[0].column);
+
+    va_end(ap);
+
+    exit(error);
 }

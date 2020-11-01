@@ -13,6 +13,14 @@
 
 #include "lexer/tools.h"
 
+/* --------------------------------------------------------------------------- */
+/* Static declarations: */
+
+cc_list_t* yytextbuf = NULL;
+
+/* --------------------------------------------------------------------------- */
+/* Function definitions: */
+
 uint32_t cc_match_line_number(void)
 {
     return (uint32_t)yylineno;
@@ -25,16 +33,15 @@ uint32_t cc_match_column_number(void)
 
 cc_location_t cc_match_location(void)
 {
-    cc_location_t ret = {cc_match_line_number(), cc_match_column_number()};
-
-    return ret;
+    return (cc_location_t) {cc_match_line_number(), cc_match_column_number()};
 }
 
-void cc_update_line_buffer(char* text, size_t match_length)
+void cc_update_text_buffer(char* text, size_t match_length)
 {
-    if (match_length + 1 > yylinebuf_len) {
-        yylinebuf     = (char*)cc_try_realloc(yylinebuf, (match_length + 100) * sizeof(char));
-        yylinebuf_len = match_length + 100;
-    }
-    strncpy(yylinebuf, text, yylinebuf_len - 1);
+    if (yytextbuf == NULL)
+        yytextbuf = cc_create_list(free);
+
+    cc_insert_list(yytextbuf, strndup(text, match_length));
+
+    return;
 }

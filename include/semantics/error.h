@@ -1,5 +1,6 @@
 /** @file semantics/error.h
- * Semantic error functions.
+ *
+ * @brief Semantic error functions.
  *
  * @copyright (C) 2020 Henrique Silva
  *
@@ -40,8 +41,8 @@
  * @param elipse locations to print as well.
  */
 void cc_semantic_error(
-    cc_error_t error,
-    uint16_t   num_locations,
+    cc_error_t   error,
+    unsigned int num_locations,
     ...                    );
 
 #endif /* _SEMANTICS_ERROR_H_ */

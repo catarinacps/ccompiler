@@ -23,7 +23,7 @@ void yyerror(char const* s, ...)
         fprintf(stderr, "%d:%d: error: ", yylloc.first_line, yylloc.first_column);
 
     vfprintf(stderr, s, ap);
-    fprintf(stderr, "\n    | %s\n    | %s\n", yylinebuf, underline);
+    fprintf(stderr, "\n    | %s\n    | %s\n", (char*)yytextbuf->end->data, underline);
 
     free(underline);
     va_end(ap);

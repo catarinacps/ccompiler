@@ -1,5 +1,6 @@
-/** @file parser.y
- * Syntax parser specification file.
+/** @file parser/parser.y
+ *
+ * @brief Syntax parser specification file.
  *
  * @copyright (C) 2020 Henrique Silva
  *
@@ -9,7 +10,7 @@
 
 %code requires {
 #include "ast/ast.h"
-#include "semantics/list.h"
+#include "utils/list.h"
 #include "semantics/values.h"
 }
 
@@ -137,7 +138,9 @@ var_global
 
     /* we can have multiple variables being initialized at once */
 id_var_global_rep
-    : id_var_global                       { $$ = cc_insert_list(cc_create_list(), (void*)$1); }
+    : id_var_global                       {
+        $$ = cc_insert_list(cc_create_list(cc_free_symbol_pair_void), (void*)$1);
+    }
     | id_var_global_rep ',' id_var_global { $$ = cc_insert_list($1, (void*)$3); }
     ;
 
@@ -180,7 +183,9 @@ header_params
     ;
 
 def_params_rep
-    : def_params                         { $$ = cc_insert_list(cc_create_list(), (void*)$1); }
+    : def_params                         {
+        $$ = cc_insert_list(cc_create_list(cc_free_symbol_pair_void), (void*)$1);
+    }
     | def_params_rep ',' def_params      { $$ = cc_insert_list($1, (void*)$3); }
     ;
 

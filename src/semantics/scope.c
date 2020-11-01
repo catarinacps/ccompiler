@@ -1,4 +1,4 @@
-/** @file scope.c
+/** @file semantics/scope.c
  *
  * @copyright (C) 2020 Henrique Silva
  *
@@ -54,17 +54,17 @@ void cc_add_list_scope(cc_list_t* list)
     if (scope == NULL)
         scope = cc_init_global_scope();
 
-    cc_map_t* top_scope = (cc_map_t*)cc_peek_stack(scope);
+    cc_map_t*       top_scope = (cc_map_t*)cc_peek_stack(scope);
+    cc_list_node_t* it        = list->start;
 
-    while (list != NULL) {
-        cc_symb_pair_t* aux = ((cc_symb_pair_t*)list->data);
+    while (it != NULL) {
+        cc_symb_pair_t* aux = ((cc_symb_pair_t*)it->data);
         cc_insert_entry_map(top_scope, aux->name, (void*)aux->symbol);
 
-        list = list->next;
-
-        free(aux->name);
-        free(aux);
+        it = it->next;
     }
+
+    cc_free_list(list);
 
     return;
 }

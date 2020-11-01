@@ -1,5 +1,7 @@
 /** @file utils/string.h
  *
+ * @brief String related utilities.
+ *
  * @copyright (C) 2020 Henrique Silva
  *
  *

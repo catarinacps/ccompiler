@@ -1,5 +1,6 @@
-/** @file map.h
- * A char*-keyed hash map.
+/** @file utils/map.h
+ *
+ * @brief A char*-keyed hash map.
  *
  * @copyright (C) 2020 Henrique Silva
  *
@@ -8,7 +9,7 @@
  *
  * @section LICENSE
  *
- * This file is subject to the terms and conditions defined in the file
+ * This file is subject to the  terms and conditions defined in the file
  * 'LICENSE', which is part of this source code package.
  *
  * @section DESCRIPTION
@@ -16,8 +17,8 @@
  * Contains the implementation of a hash table, all bateries included.
  */
 
-#ifndef _MAP_H_
-#define _MAP_H_
+#ifndef _UTILS_MAP_H_
+#define _UTILS_MAP_H_
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -34,14 +35,14 @@
 
 typedef struct cc_map_node_s {
     struct cc_map_node_s* next;
-    void* value;
-    char* key;
+    void*                 value;
+    char*                 key;
 } cc_map_node_t;
 
 typedef struct {
-    uint32_t size; /** The size of this map. */
-    uint32_t count; /** How many elements are occupied in this map. */
-    cc_map_node_t** items; /** Pointer to the elements of the map. */
+    uint32_t        size;       /** The size of this map. */
+    uint32_t        count;      /** How many elements are occupied in this map. */
+    cc_map_node_t** items;      /** Pointer to the elements of the map. */
     void (*custom_free)(void*); /** Cleaning function to the elements of the map */
 } cc_map_t;
 
@@ -106,4 +107,4 @@ void cc_delete_map_entry(
     cc_map_t*   map,
     char const* key);
 
-#endif /* _MAP_H_ */
+#endif /* _UTILS_MAP_H_ */

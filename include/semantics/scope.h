@@ -1,4 +1,4 @@
-/** @file scope.h
+/** @file semantics/scope.h
  * Operations over scopes.
  *
  * @copyright (C) 2020 Henrique Silva
@@ -20,15 +20,15 @@
  * smoother and cleaner.
  */
 
-#ifndef _SCOPE_H_
-#define _SCOPE_H_
+#ifndef _SEMANTICS_SCOPE_H_
+#define _SEMANTICS_SCOPE_H_
 
 #include <stdbool.h>
 
-#include "semantics/list.h"
-#include "semantics/map.h"
-#include "semantics/stack.h"
 #include "semantics/values.h"
+#include "utils/list.h"
+#include "utils/map.h"
+#include "utils/stack.h"
 
 typedef enum {
     cc_declared_current,
@@ -109,4 +109,4 @@ void cc_check_name_usage_scope(
     char const*    name,
     cc_symb_kind_t kind);
 
-#endif /* _SCOPE_H_ */
+#endif /* _SEMANTICS_SCOPE_H_ */

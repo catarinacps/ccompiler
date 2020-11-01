@@ -1,5 +1,6 @@
 /** @file utils/memory.h
- * Memory related procedures
+ *
+ * @brief Memory related procedures
  *
  * @copyright (C) 2020 Henrique Silva
  *

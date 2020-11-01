@@ -1,4 +1,4 @@
-/** @file values.c
+/** @file semantics/values.c
  *
  * @copyright (C) 2020 Henrique Silva
  *
@@ -28,6 +28,9 @@ cc_symb_t* cc_create_symbol(
 
 void cc_free_symbol(cc_symb_t* symbol)
 {
+    if (symbol == NULL)
+        return;
+
     switch (symbol->kind) {
     case cc_symb_func:
         cc_free_list(symbol->optional_info.parameters);
@@ -67,6 +70,21 @@ cc_symb_pair_t* cc_create_symbol_pair(
     return ret;
 }
 
+void cc_free_symbol_pair(cc_symb_pair_t* pair)
+{
+    free(pair->name);
+    free(pair);
+
+    return;
+}
+
+void cc_free_symbol_pair_void(void* pointer)
+{
+    cc_free_symbol_pair((cc_symb_pair_t*)pointer);
+
+    return;
+}
+
 bool cc_init_type_symbol(
     cc_symb_t* symbol,
     cc_type_t  type)
@@ -103,7 +121,7 @@ cc_list_t* cc_init_type_list_symbols(
     cc_list_t* list,
     cc_type_t  type)
 {
-    for (cc_list_t* i = list; i != NULL; i = i->next)
+    for (cc_list_node_t* i = list->start; i != NULL; i = i->next)
         if (cc_init_type_symbol(((cc_symb_pair_t*)i->data)->symbol, type) == false)
             return NULL;
 

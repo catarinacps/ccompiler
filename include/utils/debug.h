@@ -29,6 +29,7 @@
  */
 typedef uint8_t cc_error_t;
 
+#define CC_OK                   ((cc_error_t)0)
 #define CC_ERR_UNDECLARED       ((cc_error_t)10)
 #define CC_ERR_DECLARED         ((cc_error_t)11)
 #define CC_ERR_VARIABLE         ((cc_error_t)20)
@@ -72,6 +73,6 @@ typedef uint8_t cc_error_t;
  */
 void cc_die(
     char const* message,
-    cc_error_t     code);
+    cc_error_t  code);
 
 #endif /* _UTILS_DEBUG_H_ */

@@ -1,5 +1,6 @@
-/** @file stack.h
- * A generic stack implementation.
+/** @file utils/stack.h
+ *
+ * @brief A generic stack implementation.
  *
  * @copyright (C) 2020 Henrique Silva
  *
@@ -8,7 +9,7 @@
  *
  * @section LICENSE
  *
- * This file is subject to the terms and conditions defined in the file
+ * This file is subject to the  terms and conditions defined in the file
  * 'LICENSE', which is part of this source code package.
  *
  * @section DESCRIPTION
@@ -16,8 +17,8 @@
  * An array-implemented stack, with utility functions!
  */
 
-#ifndef _STACK_H_
-#define _STACK_H_
+#ifndef _UTILS_STACK_H_
+#define _UTILS_STACK_H_
 
 #include <stdbool.h>
 #include <stddef.h>
@@ -103,4 +104,4 @@ void* cc_pop_stack(cc_stack_t* stack);
  */
 void* cc_peek_stack(cc_stack_t* stack);
 
-#endif /* _STACK_H_ */
+#endif /* _UTILS_STACK_H_ */

@@ -1,4 +1,4 @@
-/** @file stack.c
+/** @file utils/stack.c
  *
  * @copyright (C) 2020 Henrique Silva
  *
@@ -11,7 +11,7 @@
  * 'LICENSE', which is part of this source code package.
  */
 
-#include "semantics/stack.h"
+#include "utils/stack.h"
 
 cc_stack_t* cc_create_stack(uint32_t capacity)
 {

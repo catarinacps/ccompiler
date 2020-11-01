@@ -1,4 +1,4 @@
-/** @file memory.c
+/** @file utils/memory.c
  *
  * @copyright (C) 2020 Henrique Silva
  *

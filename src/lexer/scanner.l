@@ -11,9 +11,6 @@
 #include "lexer/scanner.h"
 /* to track the initial column of matched tokens */
 int yycolumn = 1;
-/* to save the line of the current matches*/
-char* yylinebuf = NULL;
-size_t yylinebuf_len = 0;
 
 /* helpful flex feature that helps us to track the location of the tokens */
 #define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno; \
@@ -106,7 +103,7 @@ BOOL_F "false"
      * input to the error function */
 .*                                     {
     /* if our line buffer is small, we grow it by 100 characters */
-    cc_update_line_buffer(yytext, yyleng);
+    cc_update_text_buffer(yytext, yyleng);
     yycolumn = 1;
     yyless(0);
     BEGIN(NORMAL);
@@ -417,7 +414,7 @@ BOOL_F "false"
 <NORMAL>{WHITE}+
     /* same thing as the first line, but we read the whole next line */
 <NORMAL>\n.*                           {
-    cc_update_line_buffer(yytext + 1, yyleng);
+    cc_update_text_buffer(yytext + 1, yyleng);
     yycolumn = 1;
     yyless(1);
     }
