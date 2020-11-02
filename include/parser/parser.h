@@ -22,7 +22,17 @@
 #include <stdio.h>
 
 #include "lexer/scanner.h"
-#include "parser/error.h"
 #include "semantics/scope.h"
+
+/**
+ * Prints to stderr a message with interesting information regarding the
+ * current context.
+ *
+ * @param s the string you wish to print along with the current context.
+ * @param elipse optional objects to format into the error string.
+ */
+void yyerror(
+    char const*  s,
+    /* format */ ...);
 
 #endif /* _PARSER_H_ */

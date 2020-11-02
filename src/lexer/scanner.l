@@ -1,5 +1,6 @@
-/** @file lexer.l
- * Lexer specification definition.
+/** @file lexer/scanner.l
+ *
+ * @brief Lexer specification definition.
  *
  * @copyright (C) 2020 Henrique Silva
  *
@@ -325,7 +326,7 @@ BOOL_F "false"
 <NORMAL>"\""                           { BEGIN(STRING); yymore(); V_LOG_LEXER("STRING STATE"); }
 <STRING>("\\".|[^\"\n\\])*"\""         {
     /* TODO: add read string to global set */
-    char* converted_string = cc_convert_escape_codes(yytext + 1, yyleng - 2);
+    char* converted_string = cc_text_convert_escapes(yytext + 1, yyleng - 2);
     cc_node_data_t input = { .lit = { .string = converted_string } };
     yylval.lexic_value = cc_create_lexic_value(input, cc_lit, cc_type_string, cc_match_location());
     BEGIN(NORMAL);
@@ -344,7 +345,7 @@ BOOL_F "false"
 <QUOTE>("\\".|[^\'\n\\])"\'"           {
     cc_node_data_t input;
     if (yyleng > 3) {
-        char* escaped_char = cc_convert_escape_codes(yytext + 1, 2);
+        char* escaped_char = cc_text_convert_escapes(yytext + 1, 2);
         input.lit.character = escaped_char[0];
         free(escaped_char);
     } else {

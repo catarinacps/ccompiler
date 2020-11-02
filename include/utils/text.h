@@ -1,6 +1,6 @@
-/** @file utils/string.h
+/** @file utils/text.h
  *
- * @brief String related utilities.
+ * @brief Text related utilities.
  *
  * @copyright (C) 2020 Henrique Silva
  *
@@ -14,17 +14,22 @@
  *
  * @section DESCRIPTION
  *
- * String conversion procedures implemented in a convenient way.
+ * String conversion and other text  related procedures implemented in a
+ * convenient way.
  */
 
-#ifndef _UTILS_STRING_H_
-#define _UTILS_STRING_H_
+#ifndef _UTILS_TEXT_H_
+#define _UTILS_TEXT_H_
 
-#include <string.h>
+#include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "utils/debug.h"
 #include "utils/memory.h"
+
+/* --------------------------------------------------------------------------- */
+/* Function prototypes: */
 
 /**
  * Copies  the input  string up  until limit  and converts  the explicit
@@ -36,8 +41,20 @@
  *
  * @return a duplicated converted version of the input string.
  */
-char* cc_convert_escape_codes(
+char* cc_text_convert_escapes(
     char const* input,
     size_t      limit);
 
-#endif /* _UTILS_STRING_H_ */
+/**
+ * Prints a string that underlines a given starting point and range.
+ *
+ * @param size desired final size of the string.
+ * @param start the starting column.
+ * @param end the ending column.
+ */
+void cc_text_underline(
+    size_t   size,
+    uint16_t start,
+    uint16_t end);
+
+#endif /* _UTILS_TEXT_H_ */

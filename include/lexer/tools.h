@@ -27,14 +27,15 @@
 #include "parser/parser.tab.h"
 #include "utils/list.h"
 #include "utils/memory.h"
+#include "utils/text.h"
 
 #ifndef VERBOSE
-#define V_LOG_LEXER(STR) ((void)0)
-#define PRINT_NAME(TOKEN) printf("%u " #TOKEN " [%s]\n", cc_match_line_number(), yytext)
-#define PRINT_SPC_NAME(TOKEN) printf("%u TK_ESPECIAL [%c]\n", cc_match_line_number(), TOKEN)
+#define V_LOG_LEXER(STR)      ((void)0)
+#define PRINT_NAME(TOKEN)     printf("%u " #TOKEN " [%s]\n", cc_match_line(), yytext)
+#define PRINT_SPC_NAME(TOKEN) printf("%u TK_ESPECIAL [%c]\n", cc_match_line(), TOKEN)
 #else
-#define V_LOG_LEXER(STR) printf("\n==> [%d]: " STR " {%s}\n", cc_match_line_number(), yytext)
-#define PRINT_NAME(TOKEN) ((void)0)
+#define V_LOG_LEXER(STR)      printf("\n==> [%d]: " STR " {%s}\n", cc_match_line(), yytext)
+#define PRINT_NAME(TOKEN)     ((void)0)
 #define PRINT_SPC_NAME(TOKEN) ((void)0)
 #endif
 
@@ -47,17 +48,24 @@ extern cc_list_t* yytextbuf;
  *
  * @return the line number.
  */
-uint32_t cc_match_line_number(void);
+uint32_t cc_match_line(void);
 
 /**
  * Retrieves the column where the last token was recognized.
  *
  * @return the column number.
  */
-uint32_t cc_match_column_number(void);
+uint32_t cc_match_column(void);
 
 /**
- * Gets the location (line and column) of the last match.
+ * Calculates the last match length.
+ *
+ * @return the last match length.
+ */
+uint32_t cc_match_length(void);
+
+/**
+ * Gets the location (line, column and length) of the last match.
  *
  * @return the `cc_location_t` of the match.
  *
@@ -75,5 +83,16 @@ cc_location_t cc_match_location(void);
 void cc_update_text_buffer(
     char*  text,
     size_t match_length);
+
+/**
+ * Prints a given location of the text, if within the current boundaries
+ * of the text.
+ *
+ * @param location the location of the point we wish to print.
+ * @param stream were to print to.
+ */
+void cc_print_location(
+    cc_location_t  location,
+    FILE* restrict stream);
 
 #endif /* _TOOLS_H_ */

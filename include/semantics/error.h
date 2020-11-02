@@ -26,6 +26,7 @@
 #include <stdarg.h>
 
 #include "lexer/location.h"
+#include "lexer/tools.h"
 #include "utils/debug.h"
 
 /* --------------------------------------------------------------------------- */
@@ -40,9 +41,10 @@
  * @param num_locations number of locations to be read from the elipse.
  * @param elipse locations to print as well.
  */
+
 void cc_semantic_error(
-    cc_error_t   error,
-    unsigned int num_locations,
-    ...                    );
+    cc_error_t          error,
+    unsigned int        num_locations,
+    /* cc_location_t */ ...);
 
 #endif /* _SEMANTICS_ERROR_H_ */

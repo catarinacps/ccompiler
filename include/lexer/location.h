@@ -25,6 +25,7 @@
 typedef struct {
     uint32_t line;
     uint32_t column;
+    uint16_t length;
 } cc_location_t;
 
 #endif /* _LOCATION_H_ */

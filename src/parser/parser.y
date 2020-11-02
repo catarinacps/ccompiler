@@ -19,12 +19,12 @@
 }
 
 %union {
-    cc_ast_t* node;
+    cc_ast_t*         node;
     cc_lexic_value_t* lexic_value;
-    cc_list_t* list;
-    cc_symb_pair_t* pair;
-    cc_type_t type;
-    cc_expression_t expr; /* only here for explicit signals on numeric literals*/
+    cc_list_t*        list;
+    cc_symb_pair_t*   pair;
+    cc_type_t         type;
+    cc_expression_t   expr;     /* only here for explicit signals on numeric literals*/
 }
 
 /* all tokens, even the ones not utilized (as, in the first stage, we
@@ -602,3 +602,24 @@ tk_cmd_shift
     ;
 
 %%
+
+void yyerror(
+    char const*  s,
+    /* format */ ...)
+{
+    va_list ap;
+    va_start(ap, s);
+
+    if (yylloc.first_line)
+        fprintf(stderr, "%d:%d: error: ", yylloc.first_line, yylloc.first_column);
+
+    vfprintf(stderr, s, ap);
+    fprintf(stderr, "\n    | %s\n    | ", (char*)yytextbuf->end->data);
+
+    cc_text_underline(yylloc.last_column + 2, yylloc.first_column, yylloc.last_column);
+    fputs("\n", stdout);
+
+    va_end(ap);
+
+    return;
+}

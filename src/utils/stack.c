@@ -60,7 +60,7 @@ bool cc_push_stack(
         return false;
 
     if (cc_is_full_stack(stack)) {
-        D_PRINTF("failed to push to stack, all %lu positions are full\n", stack->size);
+        D_PRINTF("failed to push to stack, all %"PRIu32" positions are full\n", stack->size);
         void** new_region = (void**)cc_try_calloc((stack->size + 1) * 2, sizeof(void*));
 
         if (stack->data != NULL) {
@@ -85,7 +85,7 @@ void* cc_pop_stack(cc_stack_t* stack)
         return NULL;
 
     if (cc_is_empty_stack(stack)) {
-        D_PRINTF("failed to pop the stack of capacity %lu, it is empty\n", stack->size);
+        D_PRINTF("failed to pop the stack of capacity %"PRIu32", it is empty\n", stack->size);
         return NULL;
     }
 
@@ -98,7 +98,7 @@ void* cc_peek_stack(cc_stack_t* stack)
         return NULL;
 
     if (cc_is_empty_stack(stack)) {
-        D_PRINTF("failed to pop the stack of capacity %lu, it is empty\n", stack->size);
+        D_PRINTF("failed to pop the stack of capacity %"PRIu32", it is empty\n", stack->size);
         return NULL;
     }
 

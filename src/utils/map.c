@@ -175,7 +175,7 @@ bool cc_insert_entry_map(
         success = true;
     } else if (map->count == map->size) {
         /* map is full! */
-        D_PRINTF("failed insertion to hash map because all %lu items were filled\n", map->size);
+        D_PRINTF("failed insertion to hash map because all %"PRIu32" items were filled\n", map->size);
 
         success = false;
     } else {

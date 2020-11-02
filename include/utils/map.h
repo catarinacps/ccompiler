@@ -20,6 +20,7 @@
 #ifndef _UTILS_MAP_H_
 #define _UTILS_MAP_H_
 
+#include <inttypes.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>

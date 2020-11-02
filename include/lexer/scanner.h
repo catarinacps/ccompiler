@@ -1,5 +1,6 @@
 /** @file scanner.h
- * Lexical analysis scanner header.
+ *
+ * @brief Lexical analysis scanner header.
  *
  * @copyright (C) 2020 Henrique Silva
  *
@@ -23,16 +24,16 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ast/ast.h"
 #include "lexer/tools.h"
 #include "utils/debug.h"
-#include "utils/string.h"
-#include "ast/ast.h"
+#include "utils/text.h"
 
 extern int yylex(void);
 extern int yylex_destroy(void);
 
 extern FILE* yyin;
 extern char* yytext;
-extern int yycolumn;
+extern int   yycolumn;
 
 #endif /* _SCANNER_H_ */

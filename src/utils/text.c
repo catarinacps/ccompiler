@@ -1,4 +1,4 @@
-/** @file utils/string.c
+/** @file utils/text.c
  *
  * @copyright (C) 2020 Henrique Silva
  *
@@ -11,9 +11,11 @@
  * 'LICENSE', which is part of this source code package.
  */
 
-#include "utils/string.h"
+#include "utils/text.h"
 
-char* cc_convert_escape_codes(char const* input, size_t limit)
+char* cc_text_convert_escapes(
+    char const* input,
+    size_t      limit)
 {
     if (limit < 2) {
         D_PRINTF("tried to expand escape codes of string of size %lu\n", limit);
@@ -59,4 +61,30 @@ char* cc_convert_escape_codes(char const* input, size_t limit)
     }
 
     return new_string;
+}
+
+void cc_text_underline(
+    size_t   size,
+    uint16_t start,
+    uint16_t end)
+{
+    char string[size];
+
+    for (uint16_t i = 0; i < size; i++) {
+        if (i < start - 1) {
+            string[i] = ' ';
+        } else if (i == start - 1) {
+            string[i] = '^';
+        } else if (i < end) {
+            string[i] = '~';
+        } else {
+            string[i] = ' ';
+        }
+    }
+
+    string[size] = '\0';
+
+    fputs(string, stdout);
+
+    return;
 }

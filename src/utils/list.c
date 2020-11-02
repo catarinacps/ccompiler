@@ -33,7 +33,7 @@ void cc_free_list_nodes(
     if (node->next != NULL)
         cc_free_list_nodes(node->next, custom_free);
 
-    custom_free(node->data);
+    (*custom_free)(node->data);
     free(node);
 
     return;
