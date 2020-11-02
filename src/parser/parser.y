@@ -610,14 +610,10 @@ void yyerror(
     va_list ap;
     va_start(ap, s);
 
-    if (yylloc.first_line)
-        fprintf(stderr, "%d:%d: error: ", yylloc.first_line, yylloc.first_column);
-
     vfprintf(stderr, s, ap);
-    fprintf(stderr, "\n    | %s\n    | ", (char*)yytextbuf->end->data);
 
-    cc_text_underline(yylloc.last_column + 2, yylloc.first_column, yylloc.last_column);
-    fputs("\n", stdout);
+    cc_print_location(cc_match_location(), stderr);
+    fputs("\n", stderr);
 
     va_end(ap);
 
